@@ -12,8 +12,8 @@
 |Project Title:       | Bingo Community            |
 |Student 1 Name:      | Brendan Simms            |
 |Student 1 ID:        | 19500949          |
-|Student 2 Name:      | xxxxxx            |
-|Student 2 ID:        | xxxxxx            |
+|Student 2 Name:      | Shane Lennon            |
+|Student 2 ID:        | 17496766          |
 |Project Supervisor:  | Dr. Mark Humphreys           |
 
 > Ensure that the Supervisor formally agrees to supervise your project; this is only recognised once the
@@ -33,7 +33,7 @@
 
 ### Introduction
 
-> We plan to create an online web application that can be used to host and play games of both pongo and bingo. The areas this project will cover include data security, UI Design....
+> We plan to create an online web application that can be used to host and play games of both pongo and bingo both in person at the hosted bingo event and also simultaneously online so players can play from home. The areas this project will cover include data security, UI Design, front-end and back end using javascript or python.
 
 ### Outline
 
@@ -55,18 +55,22 @@
 ### Programming language(s)
 
 > List the proposed language(s) to be used.
+  The programming languages we plan to use are javascript, MySQL, the back-end may be programmed using either python or javascript.
 
 ### Programming tools / Tech stack
 
 > Describe the compiler, database, web server, etc., and any other software tools you plan to use.
+  We plan to use java script maybe react for the front end with some specific UI javascript librarys. We also will plan to use websockets to interact the client with the server. We will be using MySql database to store users information. Possibly using AWS to host server.
 
 ### Hardware
 
 > Describe any non-standard hardware components which will be required.
+  There will be non-standard hardware require as this will be a web application.
 
 ### Learning Challenges
 
 > List the main new things (technologies, languages, tools, etc) that you will have to learn.
+  We are not too familiar with javascript due to limited use in our course, we will also have to learn websockets in javascript. Cyber security is another area wich will be new to us but its also crucial to our project due to us handling users information.
 
 ### Breakdown of work
 
@@ -78,11 +82,11 @@
 
 #### Student 1
 
-> *Student 1 should complete this section.*
+> Will be looking into front-end javascript, Ui librarys, cyber-security, testing (potentially in person due to ties with a local bingo hall), project research.
 
 #### Student 2
 
-> *Student 2 should complete this section.*
+> Will be looking into back-end javascript/python, also looking into AWS to host app, Cyber-security and testing, project research.
 
 ## Example
 
