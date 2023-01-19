@@ -68,7 +68,7 @@ def CheckPossibility(Numbers):
             if CalculateLimits(tmp) == CalculateLimits(item):
                 counter += 1
             
-        if counter == 4:
+        if counter >= 4:
             Possible = False
 
         i += 1
