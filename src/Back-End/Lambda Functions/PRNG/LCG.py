@@ -49,5 +49,4 @@ def LCG_Test():
         FinalNumber = LCG_Main()
         test_results.append(FinalNumber)
     return test_results
-    
-    
+

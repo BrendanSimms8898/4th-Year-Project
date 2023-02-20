@@ -1,7 +1,8 @@
 import secrets
+from timeit import default_timer
 
 #Resets all Data Structure for stroing Tickets and Books to Empty
-def Restart():
+def Restart(Book, Ticket_One, Ticket_Two, Ticket_Three, Ticket_Four, Ticket_Five, Ticket_Six):
     Book.clear()
     Ticket_One.clear()
     Ticket_Two.clear()
@@ -11,7 +12,7 @@ def Restart():
     Ticket_Six.clear()
 
 # Append contents of the Lists of Lines back into the Numbers List used to contain all Numbers between 1-90 for one Book Generation
-def ClearLinesOfTicket(x, y, z):
+def ClearLinesOfTicket(x, y, z, Numbers):
     for item in x:
         Numbers.append(item)
 
@@ -57,7 +58,7 @@ def CalculateLimits(x):
 
 # Checks the Possibility of a Ticket being able to be created for the final ticket by comparing the LowerLimits for each number in the list to all the numbers in the list
 # If there are more than 4 instances where this comparison is true it is impossible to generate the final ticket
-def CheckPossibility(Numbers):
+def CheckPossibility(Numbers, x):
     
     i = 0
     Possible = True
@@ -68,7 +69,7 @@ def CheckPossibility(Numbers):
             if CalculateLimits(tmp) == CalculateLimits(item):
                 counter += 1
             
-        if counter >= 4:
+        if counter >= x:
             Possible = False
 
         i += 1
@@ -80,16 +81,16 @@ def CheckPossibility(Numbers):
         return False
               
 # Used to Populate the Tickets within a Book, Tickets are stored in the form of a list with a tuple denoting each line
-def PopulateTickets():
+def PopulateTickets(Numbers, Book, Ticket_One, Ticket_Two, Ticket_Three, Ticket_Four, Ticket_Five, Ticket_Six):
 
     # If on the final run of PopulaateTickets
     if len(Numbers) == 15:
         # If it is possible
-        if CheckPossibility(Numbers) == True:
+        if CheckPossibility(Numbers, 4) == True:
             pass
         #If its not possible restart the entire process
         else:
-            Restart()
+            Restart(Book, Ticket_One, Ticket_Two, Ticket_Three, Ticket_Four, Ticket_Five, Ticket_Six)
             Numbers.clear()
             new_number_list = FillNumbersList()
             for item in new_number_list:
@@ -122,8 +123,23 @@ def PopulateTickets():
             Numbers.remove(number)
             number = secrets.choice(Numbers)
 
+    Breaks_On_Second_Line_Run = False
+    
+    if len(Numbers) == 10:
+        # If it is possible
+        if CheckPossibility(Numbers, 3) == True:
+            pass
+        #If its not possible restart the entire process
+        else:
+            Breaks_On_Second_Line_Run = True
+            Restart(Book, Ticket_One, Ticket_Two, Ticket_Three, Ticket_Four, Ticket_Five, Ticket_Six)
+            Numbers.clear()
+            new_number_list = FillNumbersList()
+            for item in new_number_list:
+                Numbers.append(item)
+
     # Repeats the Above for the second Line    
-    while len(second_line) < 5:
+    while len(second_line) < 5 and Breaks_On_Second_Line_Run != True:
         range_exists = False
         if len(second_line) != 0:
             for item in second_line:
@@ -137,7 +153,7 @@ def PopulateTickets():
             number = secrets.choice(Numbers)
 
     # Repeats the Above for the Third Line            
-    while len(third_line) < 5:
+    while len(third_line) < 5 and Breaks_On_Second_Line_Run != True:
         range_exists = False
         if len(third_line) != 0:
             for item in third_line:
@@ -148,7 +164,7 @@ def PopulateTickets():
             # Additional Case for when Numbers List has 5 items in it as if a range collision occurs here we need to restart for the ticket
             if len(Numbers) < 5:
                 # Appends the Lists to Numbers List then empties them
-                ClearLinesOfTicket(first_line, second_line, third_line)
+                ClearLinesOfTicket(first_line, second_line, third_line, Numbers)
                 first_line.clear()
                 second_line.clear()
                 third_line.clear()
@@ -200,21 +216,37 @@ def PopulateTickets():
     third_line = []   
     
     return Book
+
+def Test_Book_Generation():
+    test_count = 50000
+    i = 0
+    
+    while i < test_count:
+        GenerateBook()
+        i += 1
     
     
-Total_Books = []
-Book = []
+def GenerateBook():    
+    Total_Books = []
+    Book = []
 
-Ticket_One = []
-Ticket_Two = []
-Ticket_Three = []
-Ticket_Four = []
-Ticket_Five = []
-Ticket_Six = []
+    Ticket_One = []
+    Ticket_Two = []
+    Ticket_Three = []
+    Ticket_Four = []
+    Ticket_Five = []
+    Ticket_Six = []
 
-Numbers = FillNumbersList()
+    Numbers = FillNumbersList()
 
-while len(Numbers) != 0:
-    PopulateTickets()
 
-print(Book)
+    while len(Numbers) != 0:
+        PopulateTickets(Numbers, Book, Ticket_One, Ticket_Two, Ticket_Three, Ticket_Four, Ticket_Five, Ticket_Six)
+
+    print(Book)
+
+GenerateBook()
+
+
+# Used For Testing
+# Test_Book_Generation()
