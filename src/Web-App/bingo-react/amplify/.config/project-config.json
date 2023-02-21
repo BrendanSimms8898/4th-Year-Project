@@ -1,12 +1,12 @@
 {
-  "projectName": "BingoApp",
+  "projectName": "Bingo",
   "version": "3.1",
   "frontend": "javascript",
   "javascript": {
-    "framework": "react-native",
+    "framework": "react",
     "config": {
       "SourceDir": "src",
-      "DistributionDir": "/",
+      "DistributionDir": "build",
       "BuildCommand": "npm.cmd run-script build",
       "StartCommand": "npm.cmd run-script start"
     }
