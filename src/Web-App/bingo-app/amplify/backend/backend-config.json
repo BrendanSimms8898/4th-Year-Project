@@ -1,0 +1,79 @@
+{
+  "auth": {
+    "bingoapp5240f64b": {
+      "customAuth": false,
+      "dependsOn": [],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "ADDRESS",
+          "BIRTHDATE",
+          "EMAIL",
+          "NAME"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito"
+    }
+  },
+  "function": {
+    "bingoapp1a82e3eaCreateAuthChallenge": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "bingoapp1a82e3eaDefineAuthChallenge": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_bingoapp1a82e3eaCreateAuthChallenge_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bingoapp1a82e3eaCreateAuthChallenge"
+        }
+      ]
+    },
+    "AMPLIFY_function_bingoapp1a82e3eaCreateAuthChallenge_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bingoapp1a82e3eaCreateAuthChallenge"
+        }
+      ]
+    },
+    "AMPLIFY_function_bingoapp1a82e3eaDefineAuthChallenge_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bingoapp1a82e3eaDefineAuthChallenge"
+        }
+      ]
+    },
+    "AMPLIFY_function_bingoapp1a82e3eaDefineAuthChallenge_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bingoapp1a82e3eaDefineAuthChallenge"
+        }
+      ]
+    }
+  }
+}
