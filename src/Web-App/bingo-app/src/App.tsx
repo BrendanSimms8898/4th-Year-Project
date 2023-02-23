@@ -1,26 +1,59 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Amplify, Auth } from 'aws-amplify';
 
-function App() {
+import { Authenticator, useAuthenticator, CheckboxField, SelectField } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
+
+
+import awsExports from './aws-exports';
+Amplify.configure(awsExports);
+
+
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Authenticator
+      // Default to Sign Up screen
+      initialState="signUp"
+      // Customize `Authenticator.SignUp.FormFields`
+      components={{
+        SignUp: {
+          FormFields() {
+            const { validationErrors } = useAuthenticator();
+
+            return (
+              <>
+                {/* Re-use default `Authenticator.SignUp.FormFields` */}
+                <Authenticator.SignUp.FormFields />
+
+                {/* Append & require Terms & Conditions field to sign up  */}
+
+                <CheckboxField
+                  errorMessage={validationErrors.acknowledgement as string}
+                  hasError={!!validationErrors.acknowledgement}
+                  name="acknowledgement"
+                  value="yes"
+                  label="I agree with the Terms & Conditions"
+                />
+              </>
+            );
+          },
+        },
+      }}
+      services={{
+        async validateCustomSignUp(formData) {
+          if (!formData.acknowledgement) {
+            return {
+              acknowledgement: 'You must agree to the Terms & Conditions',
+            };
+          }
+        },
+      }}
+    >
+      {({ signOut, user }) => (
+        <main>
+          <h1>hi</h1>
+          <button onClick={signOut}>Sign out</button>
+        </main>
+      )}
+    </Authenticator>
   );
 }
-
-export default App;
