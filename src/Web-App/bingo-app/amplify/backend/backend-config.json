@@ -1,6 +1,6 @@
 {
   "auth": {
-    "bingoapp5240f64b": {
+    "bingoappa65a901c": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {
@@ -13,7 +13,6 @@
           "passwordPolicyMinLength": 8
         },
         "signupAttributes": [
-          "ADDRESS",
           "BIRTHDATE",
           "EMAIL",
           "NAME"

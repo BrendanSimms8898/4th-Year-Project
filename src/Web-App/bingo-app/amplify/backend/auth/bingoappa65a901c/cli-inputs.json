@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "bingoapp1a82e3ea_identitypool_1a82e3ea",
+    "identityPoolName": "bingoappa65a901c_identitypool_a65a901c",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "bingoa1a82e3ea",
-    "userPoolName": "bingoapp1a82e3ea_userpool_1a82e3ea",
+    "resourceNameTruncated": "bingoaa65a901c",
+    "userPoolName": "bingoappa65a901c_userpool_a65a901c",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -20,7 +20,6 @@
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
     "requiredAttributes": [
-      "address",
       "birthdate",
       "email",
       "name"
@@ -34,26 +33,16 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "bingoa1a82e3ea_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "bingoaa65a901c_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "1a82e3ea",
-    "resourceName": "bingoapp1a82e3ea",
+    "sharedId": "a65a901c",
+    "resourceName": "bingoappa65a901c",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "default",
     "usernameAttributes": [
       "email"
     ],
-    "triggers": {
-      "DefineAuthChallenge": [
-        "captcha-define-challenge"
-      ],
-      "CreateAuthChallenge": [
-        "captcha-create-challenge"
-      ],
-      "VerifyAuthChallengeResponse": [
-        "captcha-verify"
-      ]
-    },
+    "triggers": {},
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,

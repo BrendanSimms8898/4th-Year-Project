@@ -13,8 +13,7 @@
     },
     "categories": {
       "auth": {
-        "bingoapp1a82e3ea": {},
-        "bingoapp5240f64b": {}
+        "bingoapp1a82e3ea": {}
       },
       "function": {
         "bingoapp1a82e3eaDefineAuthChallenge": {
@@ -25,6 +24,35 @@
           "deploymentBucketName": "amplify-bingoapp-alpha-150504-deployment",
           "s3Key": "amplify-builds/bingoapp1a82e3eaCreateAuthChallenge-44477a722f794b625752-build.zip"
         }
+      }
+    }
+  },
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-bingoapp-dev-165727-authRole",
+      "UnauthRoleArn": "arn:aws:iam::765447302059:role/amplify-bingoapp-dev-165727-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::765447302059:role/amplify-bingoapp-dev-165727-authRole",
+      "Region": "eu-west-1",
+      "DeploymentBucketName": "amplify-bingoapp-dev-165727-deployment",
+      "UnauthRoleName": "amplify-bingoapp-dev-165727-unauthRole",
+      "StackName": "amplify-bingoapp-dev-165727",
+      "StackId": "arn:aws:cloudformation:eu-west-1:765447302059:stack/amplify-bingoapp-dev-165727/27c5f160-b39b-11ed-8b29-024038ce8e69",
+      "AmplifyAppId": "d1i3j2wgo7dxy9"
+    },
+    "categories": {
+      "function": {
+        "bingoapp1a82e3eaCreateAuthChallenge": {
+          "deploymentBucketName": "amplify-bingoapp-dev-165727-deployment",
+          "s3Key": "amplify-builds/bingoapp1a82e3eaCreateAuthChallenge-44477a722f794b625752-build.zip"
+        },
+        "bingoapp1a82e3eaDefineAuthChallenge": {
+          "deploymentBucketName": "amplify-bingoapp-dev-165727-deployment",
+          "s3Key": "amplify-builds/bingoapp1a82e3eaDefineAuthChallenge-67322f57617555784e68-build.zip"
+        }
+      },
+      "auth": {
+        "bingoapp1a82e3ea": {},
+        "bingoappa65a901c": {}
       }
     }
   }
