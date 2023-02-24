@@ -1,6 +1,6 @@
 {
   "auth": {
-    "bingoappa65a901c": {
+    "bingoapp0ccc17a6": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {
@@ -27,52 +27,6 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
-    }
-  },
-  "function": {
-    "bingoapp1a82e3eaCreateAuthChallenge": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "bingoapp1a82e3eaDefineAuthChallenge": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    }
-  },
-  "parameters": {
-    "AMPLIFY_function_bingoapp1a82e3eaCreateAuthChallenge_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "bingoapp1a82e3eaCreateAuthChallenge"
-        }
-      ]
-    },
-    "AMPLIFY_function_bingoapp1a82e3eaCreateAuthChallenge_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "bingoapp1a82e3eaCreateAuthChallenge"
-        }
-      ]
-    },
-    "AMPLIFY_function_bingoapp1a82e3eaDefineAuthChallenge_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "bingoapp1a82e3eaDefineAuthChallenge"
-        }
-      ]
-    },
-    "AMPLIFY_function_bingoapp1a82e3eaDefineAuthChallenge_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "bingoapp1a82e3eaDefineAuthChallenge"
-        }
-      ]
     }
   }
 }

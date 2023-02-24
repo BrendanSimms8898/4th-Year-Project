@@ -1,18 +1,16 @@
-import { Amplify, Auth } from 'aws-amplify';
+import { Amplify } from 'aws-amplify';
 
-import { Authenticator, useAuthenticator, CheckboxField, SelectField } from '@aws-amplify/ui-react';
+import { Authenticator, useAuthenticator, CheckboxField} from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
-
 
 import awsExports from './aws-exports';
 Amplify.configure(awsExports);
-
 
 export default function App() {
   return (
     <Authenticator
       // Default to Sign Up screen
-      initialState="signUp"
+      initialState="signIN"
       // Customize `Authenticator.SignUp.FormFields`
       components={{
         SignUp: {
@@ -21,13 +19,9 @@ export default function App() {
 
             return (
               <>
-                {/* Re-use default `Authenticator.SignUp.FormFields` */}
                 <Authenticator.SignUp.FormFields />
-
-                {/* Append & require Terms & Conditions field to sign up  */}
-
                 <CheckboxField
-                  errorMessage={validationErrors.acknowledgement as string}
+                  errorMessage={validationErrors.acknowledgement}
                   hasError={!!validationErrors.acknowledgement}
                   name="acknowledgement"
                   value="yes"
@@ -48,7 +42,7 @@ export default function App() {
         },
       }}
     >
-      {({ signOut, user }) => (
+      {({ signOut }) => (
         <main>
           <h1>hi</h1>
           <button onClick={signOut}>Sign out</button>
