@@ -1,0 +1,51 @@
+{
+  "version": "1",
+  "cognitoConfig": {
+    "identityPoolName": "bingoapp0ccc17a6_identitypool_0ccc17a6",
+    "allowUnauthenticatedIdentities": false,
+    "resourceNameTruncated": "bingoa0ccc17a6",
+    "userPoolName": "bingoapp0ccc17a6_userpool_0ccc17a6",
+    "autoVerifiedAttributes": [
+      "email"
+    ],
+    "mfaConfiguration": "OFF",
+    "mfaTypes": [
+      "SMS Text Message"
+    ],
+    "smsAuthenticationMessage": "Your authentication code is {####}",
+    "smsVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Your verification code",
+    "emailVerificationMessage": "Your verification code is {####}",
+    "defaultPasswordPolicy": false,
+    "passwordPolicyMinLength": 8,
+    "passwordPolicyCharacters": [],
+    "requiredAttributes": [
+      "birthdate",
+      "email",
+      "name"
+    ],
+    "aliasAttributes": [],
+    "userpoolClientGenerateSecret": false,
+    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientWriteAttributes": [
+      "email"
+    ],
+    "userpoolClientReadAttributes": [
+      "email"
+    ],
+    "userpoolClientLambdaRole": "bingoa0ccc17a6_userpoolclient_lambda_role",
+    "userpoolClientSetAttributes": false,
+    "sharedId": "0ccc17a6",
+    "resourceName": "bingoapp0ccc17a6",
+    "authSelections": "identityPoolAndUserPool",
+    "useDefault": "default",
+    "usernameAttributes": [
+      "email"
+    ],
+    "triggers": {},
+    "userPoolGroupList": [],
+    "serviceName": "Cognito",
+    "usernameCaseSensitive": false,
+    "useEnabledMfas": true
+  }
+}
