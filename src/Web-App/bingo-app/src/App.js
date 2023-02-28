@@ -1,6 +1,21 @@
 import { Amplify, Hub, Auth} from 'aws-amplify';
 import awsExports from './aws-exports';
 import React, {useEffect, useState} from 'react';
+import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import {
+  MDBBtn,
+  MDBContainer,
+  MDBRow,
+  MDBCol,
+  MDBCard,
+  MDBCardBody,
+  MDBInput,
+  MDBIcon,
+  MDBCheckbox
+}
+from 'mdb-react-ui-kit';
+import { maxHeight, maxWidth } from '@mui/system';
 
 Amplify.configure(awsExports);
 
@@ -165,11 +180,20 @@ export default function App () {
 
   const confirmNewPassword = async () => {
     const {username, authCode, password} = formState
+    var PasswordChanged = true
 
+    try {
     await Auth.forgotPasswordSubmit(username, authCode, password)
-
+    }
+    catch (err) {
+      window.alert(err)
+      PasswordChanged = false
+    }
+    if (PasswordChanged === true) {
     updateFormState(() => ({ ...formState, formType: "signIn"}))
+    }
   };
+
   const resendVerificationCode = async () => {
     const {username} = formState;
 
@@ -182,67 +206,93 @@ export default function App () {
     <>
 
     {formType === "signUp" && (
-      <div className='form-box'>
-        <input name="username" onChange={onChange} placeholder='email' />
-        <input name="password" type='password' onChange={onChange} placeholder='password'/>
-        <input name="birthdate" type="birthdate" onChange={onChange} placeholder='Date Of Birth'/>
-        <input name="name" type="name" onChange={onChange} placeholder="name"/>
-        <input name="city" type="city" onChange={onChange} placeholder="city"/>
-
-        <button onClick={signUp}> Sign Up </button>
-
-        <p>Already signed up?</p>
-        
-        <button
-          onClick={() =>
-              updateFormState(() => ({
-                ...formState,
-                formType: "signIn",
-              }))
-            }
-          >
-            Sign In instead
-          </button>
-        </div>
+                <body style={{backgroundColor:"#508bfc"}}>
+                <div id="Authentication-container">
+                  <MDBContainer fluid>
+                    <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+                      <MDBCol col='12'>
+                        <MDBCard className='bg-white my-5 mx-auto' style={{borderRadius: '1rem', maxWidth: '500px'}}>
+                          <MDBCardBody className='p-5 w-100 d-flex flex-column'>
+                            <h2 className="fw-bold mb-2 text-center">Sign Up</h2>
+                            <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="username" label='Email address' id='formControlLg' type='username' size="lg"/>
+                            <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="password" label='Password' id='formControlLg' type='password' size="lg"/>
+                            <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="birthdate" label='Date Of Birth' id='formControlLg' type='birthdate' size="lg"/>
+                            <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="name" label='Full Name' id='formControlLg' type='name' size="lg"/>
+                            <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="city" label='City' id='formControlLg' type='city' size="lg"/>
+                            <MDBBtn className="mb-4" size='lg' onClick={signUp}>Sign Up</MDBBtn>
+                            <div className="text-center">
+                            <p>Already signed up?</p>
+                            </div>
+                            <MDBBtn className="mb-4" size='lg' onClick={() =>
+                                updateFormState(() => ({
+                                  ...formState,
+                                  formType: "signIn",
+                                }))
+                              }>
+                                Sign Up now
+                                </MDBBtn>
+                              </MDBCardBody>
+                            </MDBCard>
+                          </MDBCol>
+                      </MDBRow>
+                  </MDBContainer>
+                </div>
+              </body>
       )}
 
       {formType === "confirmSignUp" && (
-        <div>
-          <input
-            name="authCode"
-            onChange={onChange}
-            placeholder="confirm auth code"
-          />
-          <button onClick={confirmSignUp}>Confirm Sign up</button>
-          <button onClick={resendVerificationCode}>Resend Verification Code?</button>
-        </div>
+          <body style={{backgroundColor:"#508bfc"}}>
+          <div id="Authentication-container">
+            <MDBContainer fluid>
+              <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+                <MDBCol col='12'>
+                  <MDBCard className='bg-white my-5 mx-auto' style={{borderRadius: '1rem', maxWidth: '500px'}}>
+                    <MDBCardBody className='p-5 w-100 d-flex flex-column'>
+                      <h2 className="fw-bold mb-2 text-center">Confirm Sign Up</h2>
+                      <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="authCode" label='Verification Code' id='formControlLg' size="lg"/>
+                      <MDBBtn className="mb-4" size='lg' onClick={confirmSignUp}>Confirm Sign Up</MDBBtn>
+                      <MDBBtn className="mb-4" size='lg' onClick={resendVerificationCode}>Resend Verification Code?</MDBBtn>
+                        </MDBCardBody>
+                      </MDBCard>
+                    </MDBCol>
+                </MDBRow>
+            </MDBContainer>
+          </div>
+        </body>
+
       )}
 
       {formType === "signIn" && (
-        <div>
-          <input name="username" onChange={onChange} placeholder="username" />
-          <input
-            name="password"
-            type="password"
-            onChange={onChange}
-            placeholder="password"
-          />
-          <button onClick={signIn}>Sign In</button>
-          <button onClick={forgotPassword}>Forgot Password</button>
-
-          <p>No account yet?</p>
-
-          <button
-            onClick={() =>
-              updateFormState(() => ({
-                ...formState,
-                formType: "signUp",
-              }))
-            }
-          >
-            Sign Up now
-          </button>
-        </div>
+          <body style={{backgroundColor:"#508bfc"}}>
+            <div id="Authentication-container">
+              <MDBContainer fluid>
+                <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+                  <MDBCol col='12'>
+                    <MDBCard className='bg-white my-5 mx-auto' style={{borderRadius: '1rem', maxWidth: '500px'}}>
+                      <MDBCardBody className='p-5 w-100 d-flex flex-column'>
+                        <h2 className="fw-bold mb-2 text-center">Sign In</h2>
+                        <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="username" label='Email address' id='formControlLg' type='username' size="lg"/>
+                        <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="password" label='Password' id='formControlLg' type='password' size="lg"/>
+                        <MDBBtn className="mb-4" size='lg' onClick={signIn}>Sign in</MDBBtn>
+                        <MDBBtn className="mb-4" size='lg' onClick={forgotPassword}>Forgot Password</MDBBtn>
+                        <div className="text-center">
+                        <p>No account yet?</p>
+                        </div>
+                        <MDBBtn className="mb-4" size='lg' onClick={() =>
+                            updateFormState(() => ({
+                              ...formState,
+                              formType: "signUp",
+                            }))
+                          }>
+                            Sign Up now
+                            </MDBBtn>
+                          </MDBCardBody>
+                        </MDBCard>
+                      </MDBCol>
+                  </MDBRow>
+              </MDBContainer>
+            </div>
+          </body>
       )}
 
       {formType === "signedIn" && (
@@ -261,13 +311,26 @@ export default function App () {
         </div>
       )}
       {formType === "forgotPassword" && (
-        <div>
-          <input name="username" onChange={onChange} placeholder="username" />
-          <input name="password" type="password" onChange={onChange} placeholder="New password" />
-          <input name="authCode" onChange={onChange} placeholder="confirm auth code" />
+          <body style={{backgroundColor:"#508bfc"}}>
+          <div id="Authentication-container">
+            <MDBContainer fluid>
+              <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+                <MDBCol col='12'>
+                  <MDBCard className='bg-white my-5 mx-auto' style={{borderRadius: '1rem', maxWidth: '500px'}}>
+                    <MDBCardBody className='p-5 w-100 d-flex flex-column'>
+                      <h2 className="fw-bold mb-2 text-center">Forgot Password?</h2>
+                      <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="username" label='Email address' id='formControlLg' type='username' size="lg"/>
+                      <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="password" label='New Password' id='formControlLg' type='password' size="lg"/>
+                      <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="authCode" label='Verification Code' id='formControlLg' size="lg"/>
+                      <MDBBtn className="mb-4" size='lg' onClick={confirmNewPassword}>Update Password</MDBBtn>
+                        </MDBCardBody>
+                      </MDBCard>
+                    </MDBCol>
+                </MDBRow>
+            </MDBContainer>
+          </div>
+        </body>
 
-          <button onClick={confirmNewPassword}>Update Password</button>
-        </div>
       )}
       <hr />
     </>
