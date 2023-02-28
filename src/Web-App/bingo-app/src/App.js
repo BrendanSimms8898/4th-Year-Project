@@ -1,6 +1,5 @@
 import { Amplify, Hub, Auth} from 'aws-amplify';
 import awsExports from './aws-exports';
-
 import React, {useEffect, useState} from 'react';
 
 Amplify.configure(awsExports);
@@ -17,7 +16,7 @@ const initialFormState = {
 
 var error_message = ""
 
-export default function App() {
+export default function App () {
   const [formState, updateFormState] = useState(initialFormState)
   
   const [user, updateUser] = useState(null);
@@ -33,7 +32,7 @@ export default function App() {
       updateFormState(() => ({ ...formState, formType: "signedIn"}));
     } 
     catch (err) {
-        console.log("CheckUser Faile", err);
+        console.log("CheckUser Failed", err);
         updateFormState(() => ({ ...formState, formType: "signIn"}));
     }
   };
@@ -52,6 +51,11 @@ export default function App() {
           console.log(data)
 
           break;
+
+        case "signUp":
+          console.log(data)
+
+          break;
         
 
         case "signIn_failure":
@@ -59,12 +63,13 @@ export default function App() {
             error_message = "Password Does not match those on the system for specified email"
           }
 
+          if (data.payload.name === "UserNotFoundException") {
+            error_message = "There is no account with this username"
+          }
+
           console.log(data)
           
           break;
-
-        case "signUp_failure":
-          console.log(data)
       };
     });
   };
@@ -79,20 +84,20 @@ export default function App() {
     updateFormState(() => ({ ...formState, [e.target.name]: e.target.value}));
   };
 
-  const onChangeCustom = (e) => {
-    e.persist();
-    updateFormState(() => ({ ...formState, ['custom:'+ e.target.name]: e.target.value}))
-  }
-
   const {formType} = formState;
 
   const signUp = async () => {
     try {
     const {username, password, birthdate, name, city} = formState
 
+    if (birthdate === "" || name === "" || city === "") {
+      window.alert("Please Fill in birthdate, name and city to complete SignUp")
+    }
+    else {
     await Auth.signUp({username, password, attributes: {birthdate, name, 'custom:city': city}})
 
     updateFormState(() => ({ ...formState, formType:"confirmSignUp"}));
+    }
     }
     catch (err) {
       if (err.name === "InvalidParameterException") {
@@ -104,44 +109,58 @@ export default function App() {
       if (ResetPassword === true) {
         updateFormState(() => ({ ...formState, formType:"forgotPassword"}))
       }
-      if (err.name === "ResourceNotFoundException" || "AuthError") {
-        window.alert("Please Enter an email and password before trying to signIn or reset Password")
-      }
       if (err.name === "AuthError") {
-        window.alert("Please Enter a Password before you submit")
+        window.alert("Please fill the entire before before registering")
       }
     }
   };
   
   const signIn = async () => {
-    try{
     const {username, password} = formState;
+    var LoggedIn = true;
 
+    try {
     await Auth.signIn(username, password);
-
-    updateFormState(() => ({ ...formState, formType: 'signedIn'}));
     }
     catch (err) {
-      if (err.name === "UserNotConfirmedException") {
-      updateFormState(() => ({ ...formState, formType: 'confirmSignUp'}))
-      }
+      window.alert(err)
+      LoggedIn = false
+    }
+    if (LoggedIn === true) {
+    updateFormState(() => ({ ...formState, formType: 'signedIn'}));
     }
   };
   
   const confirmSignUp = async () => {
     const { username, authCode } = formState;
 
+    var ConfirmedSignUp = true
+    try {
     await Auth.confirmSignUp(username, authCode);
-
+    }
+    catch (err) {
+      window.alert("verification code does not match.")
+      ConfirmedSignUp = false
+    }
+    if (ConfirmedSignUp === true) {
     updateFormState(() => ({ ...formState, formType: "signIn" }));
+    }
   };
 
   const forgotPassword = async () => {
     const {username} = formState;
+    var UserNameProvided = true
 
+    try {
     await Auth.forgotPassword(username);
-
+    }
+    catch (err) {
+      window.alert(err)
+      UserNameProvided = false
+    }
+    if (UserNameProvided === true) {
     updateFormState(() => ({ ...formState, formType: "forgotPassword"}));
+    }
   };
 
   const confirmNewPassword = async () => {
