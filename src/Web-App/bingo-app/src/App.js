@@ -3,19 +3,13 @@ import awsExports from './aws-exports';
 import React, {useEffect, useState} from 'react';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import {
-  MDBBtn,
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBCard,
-  MDBCardBody,
-  MDBInput,
-  MDBIcon,
-  MDBCheckbox
-}
-from 'mdb-react-ui-kit';
+import { MDBBtn, MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput, MDBIcon, MDBCheckbox} from 'mdb-react-ui-kit';
+import {ToastContainer, toast} from 'react-toastify';
 import { maxHeight, maxWidth } from '@mui/system';
+import {Link, Routes, Route, useNavigate, BrowserRouter} from 'react-router-dom';
+import 'react-toastify'
+import './components/HostHomePage.js'
+import './components/PlayerHomePage.js'
 
 Amplify.configure(awsExports);
 
@@ -26,7 +20,7 @@ const initialFormState = {
   name: "",
   birthdate: "",
   city: "",
-  formType: "signUp"
+  UserType: "",
 }
 
 var error_message = ""
@@ -41,8 +35,6 @@ export default function App () {
       const user = await Auth.currentAuthenticatedUser();
 
       updateUser(user);
-
-      console.log("got user", user)
 
       updateFormState(() => ({ ...formState, formType: "signedIn"}));
     } 
@@ -74,13 +66,7 @@ export default function App () {
         
 
         case "signIn_failure":
-          if (data.payload.name === "NotAuthorizedException") {
-            error_message = "Password Does not match those on the system for specified email"
-          }
 
-          if (data.payload.name === "UserNotFoundException") {
-            error_message = "There is no account with this username"
-          }
 
           console.log(data)
           
@@ -99,8 +85,29 @@ export default function App () {
     updateFormState(() => ({ ...formState, [e.target.name]: e.target.value}));
   };
 
+  const onClick = (e) => {
+    e.persist();
+    updateFormState(() => ({ ...formState, [e.target.name]:e.target.value}))
+  }
+
   const {formType} = formState;
 
+  const signedIn = async () => {
+    const {UserType} = formState
+    try {
+    await Auth.updateUserAttributes(user, {'custom:UserType':UserType} )
+    }
+    catch (err) {
+      window.alert("Please select a User Type before clicking the Confirm Button")
+    }
+      if (UserType === "Host") {
+        console.log("Host")
+      }
+
+      if (UserType === "Player") {
+        console.log("Player")
+      }
+  }
   const signUp = async () => {
     try {
     const {username, password, birthdate, name, city} = formState
@@ -204,7 +211,6 @@ export default function App () {
 
   return (
     <>
-
     {formType === "signUp" && (
                 <body style={{backgroundColor:"#508bfc"}}>
                 <div id="Authentication-container">
@@ -296,20 +302,27 @@ export default function App () {
       )}
 
       {formType === "signedIn" && (
-        <div>
-          <h2>
-            Welcome the app!
-          </h2>
-
-          <button
-            onClick={() => {
-              Auth.signOut();
-            }}
-          >
-            Sign out
-          </button>
-        </div>
+        <body style={{backgroundColor:"#508bfc"}}>
+          <div id="Authentication-container">
+            <MDBContainer fluid>
+              <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+              <MDBCol col='12'>
+                <MDBCard className='bg-white my-5 mx-auto' style={{borderRadius: '1rem', maxWidth: '500px'}}>
+                  <MDBCardBody className='p-5 w-100 d-flex flex-column'>
+                    <h2 className="fw-bold mb-2 text-center">Which Type of User Would You Like to Be {user.attributes.name}?</h2>
+                    <MDBBtn className="mb-4" size='lg' name="UserType" value="Host" onClick={onClick}>Host</MDBBtn>
+                    <MDBBtn className="mb-4" size='lg' name="UserType" value="Player" onClick={onClick}>Player</MDBBtn>
+                    <MDBBtn className="mb-4" size='lg' onClick={signedIn}> Confirm Player Type?</MDBBtn> 
+                    <MDBBtn className="mb-4" size='lg' onClick={() => {Auth.signOut();}}>Sign Out?</MDBBtn> 
+                      </MDBCardBody>
+                    </MDBCard>
+                  </MDBCol>
+              </MDBRow>
+            </MDBContainer>
+          </div>
+        </body>
       )}
+
       {formType === "forgotPassword" && (
           <body style={{backgroundColor:"#508bfc"}}>
           <div id="Authentication-container">
@@ -330,9 +343,7 @@ export default function App () {
             </MDBContainer>
           </div>
         </body>
-
       )}
-      <hr />
     </>
   );
 }
