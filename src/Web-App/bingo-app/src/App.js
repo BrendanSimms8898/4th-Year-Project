@@ -8,8 +8,8 @@ import {ToastContainer, toast} from 'react-toastify';
 import { maxHeight, maxWidth } from '@mui/system';
 import {Link, Routes, Route, useNavigate, BrowserRouter} from 'react-router-dom';
 import 'react-toastify'
-import './components/HostHomePage.js'
-import './components/PlayerHomePage.js'
+import HostNavBar from './components/HostNavBar.js'
+import PlayerNavBar from './components/PlayerNavBar.js'
 
 Amplify.configure(awsExports);
 
@@ -23,7 +23,7 @@ const initialFormState = {
   UserType: "",
 }
 
-var error_message = ""
+var isLoggedIn = false;
 
 export default function App () {
   const [formState, updateFormState] = useState(initialFormState)
@@ -93,21 +93,31 @@ export default function App () {
   const {formType} = formState;
 
   const signedIn = async () => {
+    var user = await Auth.currentAuthenticatedUser();
+    var UserUpdated = true;
     const {UserType} = formState
+    console.log(user.UserType)
     try {
-    await Auth.updateUserAttributes(user, {'custom:UserType':UserType} )
+    if (user.UserType !== {UserType}) {
+    await Auth.updateUserAttributes(user, {'custom:UserType':UserType})
+    }
+    else {
+      pass;
+    }
     }
     catch (err) {
       window.alert("Please select a User Type before clicking the Confirm Button")
+      UserUpdated = false;
     }
-      if (UserType === "Host") {
-        console.log("Host")
-      }
-
-      if (UserType === "Player") {
-        console.log("Player")
-      }
+    if (UserUpdated === true){
+    user = await Auth.currentAuthenticatedUser();
+    console.log(user)
+    updateUser(user);
+    isLoggedIn = true
+    updateFormState(() => ({ ...formState, formType:"Completed"}))
+    }
   }
+
   const signUp = async () => {
     try {
     const {username, password, birthdate, name, city} = formState
@@ -209,6 +219,7 @@ export default function App () {
     updateFormState(() => ({ ...formState, formType: "confirmSignUp"}))
   };
 
+  if (isLoggedIn === false) {
   return (
     <>
     {formType === "signUp" && (
@@ -346,4 +357,25 @@ export default function App () {
       )}
     </>
   );
+  }
+
+  if (isLoggedIn === true){
+    if (user.attributes['custom:UserType'] === "Host") {
+      return (
+        <>
+        <HostNavBar/>
+        <h2>Welcome {user.attributes['custom:UserType']}</h2>
+        </>
+      )
+    }
+    if (user.attributes['custom:UserType'] === "Player") {
+      return (
+        <>
+        <PlayerNavBar/>
+        <h2>Welcome {user.attributes['custom:UserType']}</h2>
+        </>
+      )
+    }
+  }
+
 }
