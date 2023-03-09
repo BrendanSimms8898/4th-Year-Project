@@ -22,10 +22,11 @@ div#root {
 }
 
 div.app {
-  height: 100%;
+  height: 100%
 }
 
 #Authentication-container {
+  background-color: #508bfc;
   position: fixed;
   padding-top: 125px;
   width: 100%;
@@ -36,3 +37,4 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+

@@ -36,6 +36,8 @@ export default function App () {
 
       updateUser(user);
 
+      console.log(user);
+
       updateFormState(() => ({ ...formState, formType: "signedIn"}));
     } 
     catch (err) {
@@ -96,40 +98,42 @@ export default function App () {
     var user = await Auth.currentAuthenticatedUser();
     var UserUpdated = true;
     const {UserType} = formState
-    console.log(user.UserType)
     try {
-    if (user.UserType !== {UserType}) {
-    await Auth.updateUserAttributes(user, {'custom:UserType':UserType})
-    }
-    else {
-      pass;
-    }
+      if (user.UserType !== {UserType}) {
+        await Auth.updateUserAttributes(user, {'custom:UserType':UserType})
+      }
+      else {
+        pass;
+      }
     }
     catch (err) {
-      window.alert("Please select a User Type before clicking the Confirm Button")
       UserUpdated = false;
     }
-    if (UserUpdated === true){
-    user = await Auth.currentAuthenticatedUser();
-    console.log(user)
-    updateUser(user);
-    isLoggedIn = true
-    updateFormState(() => ({ ...formState, formType:"Completed"}))
+    if (UserType !== "") {
+      if (UserUpdated === true){
+        user = await Auth.currentAuthenticatedUser();
+        updateUser(user);
+        isLoggedIn = true
+        updateFormState(() => ({ ...formState, formType:"Completed"}))
+      }
+    }
+    else {
+      window.alert("Please select a User Type before clicking the Confirm Button")
     }
   }
 
   const signUp = async () => {
     try {
-    const {username, password, birthdate, name, city} = formState
+      const {username, password, birthdate, name, city} = formState
 
-    if (birthdate === "" || name === "" || city === "") {
-      window.alert("Please Fill in birthdate, name and city to complete SignUp")
-    }
-    else {
-    await Auth.signUp({username, password, attributes: {birthdate, name, 'custom:city': city}})
+      if (birthdate === "" || name === "" || city === "") {
+        window.alert("Please Fill in all criteria to complete SignUp")
+      }
+      else {
+        await Auth.signUp({username, password, attributes: {birthdate, name, 'custom:city': city}})
 
-    updateFormState(() => ({ ...formState, formType:"confirmSignUp"}));
-    }
+        updateFormState(() => ({ ...formState, formType:"confirmSignUp"}));
+      }
     }
     catch (err) {
       if (err.name === "InvalidParameterException") {
@@ -152,14 +156,15 @@ export default function App () {
     var LoggedIn = true;
 
     try {
-    await Auth.signIn(username, password);
+      await Auth.signIn(username, password);
     }
     catch (err) {
       window.alert(err)
       LoggedIn = false
     }
     if (LoggedIn === true) {
-    updateFormState(() => ({ ...formState, formType: 'signedIn'}));
+      updateUser(user);
+      updateFormState(() => ({ ...formState, formType: 'signedIn'}));
     }
   };
   
@@ -168,14 +173,14 @@ export default function App () {
 
     var ConfirmedSignUp = true
     try {
-    await Auth.confirmSignUp(username, authCode);
+      await Auth.confirmSignUp(username, authCode);
     }
     catch (err) {
       window.alert("verification code does not match.")
       ConfirmedSignUp = false
     }
     if (ConfirmedSignUp === true) {
-    updateFormState(() => ({ ...formState, formType: "signIn" }));
+      updateFormState(() => ({ ...formState, formType: "signIn" }));
     }
   };
 
@@ -184,14 +189,14 @@ export default function App () {
     var UserNameProvided = true
 
     try {
-    await Auth.forgotPassword(username);
+      await Auth.forgotPassword(username);
     }
     catch (err) {
       window.alert(err)
       UserNameProvided = false
     }
     if (UserNameProvided === true) {
-    updateFormState(() => ({ ...formState, formType: "forgotPassword"}));
+      updateFormState(() => ({ ...formState, formType: "forgotPassword"}));
     }
   };
 
@@ -200,14 +205,14 @@ export default function App () {
     var PasswordChanged = true
 
     try {
-    await Auth.forgotPasswordSubmit(username, authCode, password)
+      await Auth.forgotPasswordSubmit(username, authCode, password)
     }
     catch (err) {
       window.alert(err)
       PasswordChanged = false
     }
     if (PasswordChanged === true) {
-    updateFormState(() => ({ ...formState, formType: "signIn"}))
+      updateFormState(() => ({ ...formState, formType: "signIn"}))
     }
   };
 
@@ -220,45 +225,37 @@ export default function App () {
   };
 
   if (isLoggedIn === false) {
-  return (
-    <>
-    {formType === "signUp" && (
-                <body style={{backgroundColor:"#508bfc"}}>
-                <div id="Authentication-container">
-                  <MDBContainer fluid>
-                    <MDBRow className='d-flex justify-content-center align-items-center h-100'>
-                      <MDBCol col='12'>
-                        <MDBCard className='bg-white my-5 mx-auto' style={{borderRadius: '1rem', maxWidth: '500px'}}>
-                          <MDBCardBody className='p-5 w-100 d-flex flex-column'>
-                            <h2 className="fw-bold mb-2 text-center">Sign Up</h2>
-                            <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="username" label='Email address' id='formControlLg' type='username' size="lg"/>
-                            <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="password" label='Password' id='formControlLg' type='password' size="lg"/>
-                            <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="birthdate" label='Date Of Birth' id='formControlLg' type='birthdate' size="lg"/>
-                            <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="name" label='Full Name' id='formControlLg' type='name' size="lg"/>
-                            <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="city" label='City' id='formControlLg' type='city' size="lg"/>
-                            <MDBBtn className="mb-4" size='lg' onClick={signUp}>Sign Up</MDBBtn>
-                            <div className="text-center">
-                            <p>Already signed up?</p>
-                            </div>
-                            <MDBBtn className="mb-4" size='lg' onClick={() =>
-                                updateFormState(() => ({
-                                  ...formState,
-                                  formType: "signIn",
-                                }))
-                              }>
-                                Sign Up now
-                                </MDBBtn>
-                              </MDBCardBody>
-                            </MDBCard>
-                          </MDBCol>
-                      </MDBRow>
-                  </MDBContainer>
-                </div>
-              </body>
+    return (
+      <>
+      {formType === "signUp" && (
+          <div id="Authentication-container">
+            <MDBContainer fluid>
+              <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+                <MDBCol col='12'>
+                  <MDBCard className='bg-white my-5 mx-auto' style={{borderRadius: '1rem', maxWidth: '500px'}}>
+                    <MDBCardBody className='p-5 w-100 d-flex flex-column'>
+                    <h2 className="fw-bold mb-2 text-center">Sign Up</h2>
+                    <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="username" label='Email address' id='formControlLg' type='username' size="lg"/>
+                    <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="password" label='Password' id='formControlLg' type='password' size="lg"/>
+                    <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="birthdate" label='Date Of Birth' id='formControlLg' type='birthdate' size="lg"/>
+                    <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="name" label='Full Name' id='formControlLg' type='name' size="lg"/>
+                    <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="city" label='City' id='formControlLg' type='city' size="lg"/>
+                    <MDBBtn className="mb-4" size='lg' onClick={signUp}>Sign Up</MDBBtn>
+                    <div className="text-center">
+                      <p>Already signed up?</p>
+                    </div>
+                    <MDBBtn className="mb-4" size='lg' onClick={() => updateFormState(() => ({...formState, formType: "signIn",}))}>
+                      Sign Up now
+                    </MDBBtn>
+                    </MDBCardBody>
+                  </MDBCard>
+                </MDBCol>
+              </MDBRow>
+            </MDBContainer>
+          </div>
       )}
 
       {formType === "confirmSignUp" && (
-          <body style={{backgroundColor:"#508bfc"}}>
           <div id="Authentication-container">
             <MDBContainer fluid>
               <MDBRow className='d-flex justify-content-center align-items-center h-100'>
@@ -275,12 +272,10 @@ export default function App () {
                 </MDBRow>
             </MDBContainer>
           </div>
-        </body>
 
       )}
 
       {formType === "signIn" && (
-          <body style={{backgroundColor:"#508bfc"}}>
             <div id="Authentication-container">
               <MDBContainer fluid>
                 <MDBRow className='d-flex justify-content-center align-items-center h-100'>
@@ -309,11 +304,9 @@ export default function App () {
                   </MDBRow>
               </MDBContainer>
             </div>
-          </body>
       )}
 
       {formType === "signedIn" && (
-        <body style={{backgroundColor:"#508bfc"}}>
           <div id="Authentication-container">
             <MDBContainer fluid>
               <MDBRow className='d-flex justify-content-center align-items-center h-100'>
@@ -331,11 +324,9 @@ export default function App () {
               </MDBRow>
             </MDBContainer>
           </div>
-        </body>
       )}
 
       {formType === "forgotPassword" && (
-          <body style={{backgroundColor:"#508bfc"}}>
           <div id="Authentication-container">
             <MDBContainer fluid>
               <MDBRow className='d-flex justify-content-center align-items-center h-100'>
@@ -343,6 +334,7 @@ export default function App () {
                   <MDBCard className='bg-white my-5 mx-auto' style={{borderRadius: '1rem', maxWidth: '500px'}}>
                     <MDBCardBody className='p-5 w-100 d-flex flex-column'>
                       <h2 className="fw-bold mb-2 text-center">Forgot Password?</h2>
+                      <h6>An Email has been sent to you with a verification code </h6> 
                       <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="username" label='Email address' id='formControlLg' type='username' size="lg"/>
                       <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="password" label='New Password' id='formControlLg' type='password' size="lg"/>
                       <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="authCode" label='Verification Code' id='formControlLg' size="lg"/>
@@ -353,7 +345,6 @@ export default function App () {
                 </MDBRow>
             </MDBContainer>
           </div>
-        </body>
       )}
     </>
   );
