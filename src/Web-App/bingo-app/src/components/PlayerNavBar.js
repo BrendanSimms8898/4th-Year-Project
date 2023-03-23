@@ -12,10 +12,9 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { Amplify, Hub, Auth} from 'aws-amplify';
-import awsExports from '../aws-exports';
+import {Outlet, Link} from 'react-router-dom';
 
-const pages = ['HomePage', 'Pricing', 'Blog'];
+const pages = ['Player Home', 'Join a Game'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function PlayerNavBar() {
@@ -118,6 +117,7 @@ function PlayerNavBar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
+              <Link to={page}>
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
@@ -125,7 +125,9 @@ function PlayerNavBar() {
               >
                 {page}
               </Button>
+              </Link>
             ))}
+            <Outlet />
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
