@@ -33,6 +33,10 @@ div.app {
   height: 100%;
 }
 
+#AccountName {
+  color: white;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

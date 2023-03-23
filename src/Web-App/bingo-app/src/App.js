@@ -12,6 +12,9 @@ import HostGame from './components/HostGame';
 import Reports from './components/Reports';
 import JoinGame from './components/JoinGame';
 import PlayerHome from './components/PlayerHome';
+import BalanceManager from './components/BalanceManager.js';
+import HostProfile from './components/HostProfile.js';
+import PlayerProfile from './components/PlayerProfile.js';
 
 Amplify.configure(awsExports);
 
@@ -23,6 +26,7 @@ const initialFormState = {
   birthdate: "",
   city: "",
   UserType: "",
+  balance: 0
 }
 
 var isLoggedIn = false;
@@ -31,6 +35,12 @@ export default function App () {
   const [formState, updateFormState] = useState(initialFormState)
   
   const [user, updateUser] = useState(null);
+
+  var profile = useState(null);
+
+  if (user != null) {
+    profile = user.attributes.email
+  }
 
   const checkUser = async () => {
     try {
@@ -132,7 +142,7 @@ export default function App () {
         window.alert("Please Fill in all criteria to complete SignUp")
       }
       else {
-        await Auth.signUp({username, password, attributes: {birthdate, name, 'custom:city': city}})
+        const {user} = await Auth.signUp({username, password, attributes: {birthdate, name, 'custom:city': city, 'custom:balance': '0'}})
 
         updateFormState(() => ({ ...formState, formType:"confirmSignUp"}));
       }
@@ -227,6 +237,8 @@ export default function App () {
   };
 
   if (isLoggedIn === false) {
+
+    try {
     return (
       <>
       {formType === "signUp" && (
@@ -247,7 +259,7 @@ export default function App () {
                       <p>Already signed up?</p>
                     </div>
                     <MDBBtn className="mb-4" size='lg' onClick={() => updateFormState(() => ({...formState, formType: "signIn",}))}>
-                      Sign Up now
+                      Sign In Now
                     </MDBBtn>
                     </MDBCardBody>
                   </MDBCard>
@@ -350,6 +362,11 @@ export default function App () {
       )}
     </>
   );
+      }
+      catch (err) {
+        console.log(err);
+        window.location.reload();
+      }
   }
 
   if (isLoggedIn === true){
@@ -358,8 +375,10 @@ export default function App () {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<HostNavBar/>}></Route>
-            <Route path="Host Game" element={<HostGame />}></Route>
+            <Route path="HostGame" element={<HostGame />}></Route>
             <Route path="Reports" element={<Reports />}></Route>
+            <Route path="Profile" element={<HostProfile/>}></Route>
+            <Route path="Balance" element={<BalanceManager/>}></Route>
           </Routes>
         </BrowserRouter>
       )
@@ -369,8 +388,10 @@ export default function App () {
         <BrowserRouter>
         <Routes>
           <Route path="/" element={<PlayerNavBar/>}></Route>
-          <Route path="Player Home" element={<PlayerHome />}></Route>
-          <Route path="Join a Game" element={<JoinGame />}></Route>
+          <Route path="PlayerHome" element={<PlayerHome />}></Route>
+          <Route path="JoinaGame" element={<JoinGame />}></Route>
+          <Route props={user} path="/Profile" element={<PlayerProfile/>}></Route>
+          <Route path="Balance" element={<BalanceManager/>}></Route>
         </Routes>
       </BrowserRouter>
       )

@@ -14,13 +14,36 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import {Outlet, Link} from 'react-router-dom';
 import "./HostGame.js"
+import {Auth} from 'aws-amplify';
 
-const pages = ['Host Game', 'Reports'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = ['HostGame', 'Reports'];
+const settings = ['Profile', 'Balance', 'Logout'];
 
 function HostNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [user, setUser] = React.useState(null);
+  var profile = null;
+
+  if (user != null) {
+  profile = user.attributes.email
+  }
+
+
+  console.log(profile)
+
+  const getUser = async () => {
+    const user = await Auth.currentAuthenticatedUser();
+  
+    setUser(user);
+    
+  }
+  
+  React.useEffect(() => {
+    getUser();
+  }, []);
+
+  console.log(user);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -38,6 +61,14 @@ function HostNavBar() {
     setAnchorElUser(null);
   };
 
+  const SignOut = async () => {
+    await Auth.signOut();
+    setUser(null);
+    console.log(user);
+    window.location.replace("http://localhost:3000/");
+  }
+
+  if (user != null) {
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -135,7 +166,7 @@ function HostNavBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <h5 id="AccountName"> {user.attributes.name} </h5>
               </IconButton>
             </Tooltip>
             <Menu
@@ -144,26 +175,36 @@ function HostNavBar() {
               anchorEl={anchorElUser}
               anchorOrigin={{
                 vertical: 'top',
-                horizontal: 'right',
+                horizontal: 'center',
               }}
               keepMounted
               transformOrigin={{
                 vertical: 'top',
-                horizontal: 'right',
+                horizontal: 'center',
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <div id="SettingsMenu">
+                  <Link to="/Profile">
+                  <Button> Profile</Button>
+                  </Link>
+                  <Link to="Balance">
+                  <Button> Balance: {user.attributes['custom:balance']}</Button>
+                  </Link>
+                  <Button onClick={SignOut}> Logout</Button>
+                  </div>
                 </MenuItem>
-              ))}
             </Menu>
           </Box>
         </Toolbar>
       </Container>
     </AppBar>
   );
+}
+else {
+  getUser();
+}
 }
 export default HostNavBar;
