@@ -13,13 +13,28 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import {Outlet, Link} from 'react-router-dom';
+import {Auth} from 'aws-amplify';
 
-const pages = ['Player Home', 'Join a Game'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = ['HostGame', 'Reports'];
+const settings = ['Profile', 'Balance', 'Logout'];
 
 function PlayerNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [user, setUser] = React.useState(null);
+
+  const getUser = async () => {
+    const user = await Auth.currentAuthenticatedUser();
+  
+    setUser(user);
+    
+  }
+
+  React.useEffect(() => {
+    getUser();
+  }, []);
+
+  console.log(user);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -37,6 +52,14 @@ function PlayerNavBar() {
     setAnchorElUser(null);
   };
 
+  const SignOut = async () => {
+    await Auth.signOut();
+    setUser(null);
+    console.log(user);
+    window.location.replace("http://localhost:3000/");
+  }
+
+  if (user != null) {
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -130,10 +153,11 @@ function PlayerNavBar() {
             <Outlet />
           </Box>
 
+
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <h5 id="AccountName"> {user.attributes.name} </h5>
               </IconButton>
             </Tooltip>
             <Menu
@@ -142,26 +166,36 @@ function PlayerNavBar() {
               anchorEl={anchorElUser}
               anchorOrigin={{
                 vertical: 'top',
-                horizontal: 'right',
+                horizontal: 'center',
               }}
               keepMounted
               transformOrigin={{
                 vertical: 'top',
-                horizontal: 'right',
+                horizontal: 'center',
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <div id="SettingsMenu">
+                  <Link to="/Profile">
+                  <Button> Profile</Button>
+                  </Link>
+                  <Link to="Balance">
+                  <Button> Balance: {user.attributes['custom:balance']}</Button>
+                  </Link>
+                  <Button onClick={SignOut}> Logout</Button>
+                  </div>
                 </MenuItem>
-              ))}
             </Menu>
           </Box>
         </Toolbar>
       </Container>
     </AppBar>
   );
+}
+else {
+  getUser();
+}
 }
 export default PlayerNavBar;
