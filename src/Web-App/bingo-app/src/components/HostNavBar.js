@@ -12,10 +12,10 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { Amplify, Hub, Auth} from 'aws-amplify';
-import awsExports from '../aws-exports';
+import {Outlet, Link} from 'react-router-dom';
+import "./HostGame.js"
 
-const pages = ['HomePage', 'Pricing', 'Blog'];
+const pages = ['Host Game', 'Reports'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function HostNavBar() {
@@ -118,6 +118,7 @@ function HostNavBar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
+              <Link to={page}>
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
@@ -125,8 +126,11 @@ function HostNavBar() {
               >
                 {page}
               </Button>
+              </Link>
             ))}
+            <Outlet />
           </Box>
+
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">

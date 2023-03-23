@@ -3,13 +3,15 @@ import awsExports from './aws-exports';
 import React, {useEffect, useState} from 'react';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { MDBBtn, MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput, MDBIcon, MDBCheckbox} from 'mdb-react-ui-kit';
-import {ToastContainer, toast} from 'react-toastify';
-import { maxHeight, maxWidth } from '@mui/system';
-import {Link, Routes, Route, useNavigate, BrowserRouter} from 'react-router-dom';
+import { MDBBtn, MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput} from 'mdb-react-ui-kit';
+import {Routes, Route,BrowserRouter} from 'react-router-dom';
 import 'react-toastify'
 import HostNavBar from './components/HostNavBar.js'
 import PlayerNavBar from './components/PlayerNavBar.js'
+import HostGame from './components/HostGame';
+import Reports from './components/Reports';
+import JoinGame from './components/JoinGame';
+import PlayerHome from './components/PlayerHome';
 
 Amplify.configure(awsExports);
 
@@ -103,7 +105,7 @@ export default function App () {
         await Auth.updateUserAttributes(user, {'custom:UserType':UserType})
       }
       else {
-        pass;
+        //pass;
       }
     }
     catch (err) {
@@ -353,18 +355,24 @@ export default function App () {
   if (isLoggedIn === true){
     if (user.attributes['custom:UserType'] === "Host") {
       return (
-        <>
-        <HostNavBar/>
-        <h2>Welcome {user.attributes['custom:UserType']}</h2>
-        </>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<HostNavBar/>}></Route>
+            <Route path="Host Game" element={<HostGame />}></Route>
+            <Route path="Reports" element={<Reports />}></Route>
+          </Routes>
+        </BrowserRouter>
       )
     }
     if (user.attributes['custom:UserType'] === "Player") {
       return (
-        <>
-        <PlayerNavBar/>
-        <h2>Welcome {user.attributes['custom:UserType']}</h2>
-        </>
+        <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<PlayerNavBar/>}></Route>
+          <Route path="Player Home" element={<PlayerHome />}></Route>
+          <Route path="Join a Game" element={<JoinGame />}></Route>
+        </Routes>
+      </BrowserRouter>
       )
     }
   }
