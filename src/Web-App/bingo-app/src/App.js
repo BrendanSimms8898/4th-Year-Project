@@ -389,7 +389,7 @@ export default function App () {
         <Routes>
           <Route path="/" element={<PlayerNavBar/>}></Route>
           <Route path="PlayerHome" element={<PlayerHome />}></Route>
-          <Route path="JoinaGame" element={<JoinGame />}></Route>
+          <Route path="JoinGame" element={<JoinGame />}></Route>
           <Route props={user} path="/Profile" element={<PlayerProfile/>}></Route>
           <Route path="Balance" element={<BalanceManager/>}></Route>
         </Routes>
