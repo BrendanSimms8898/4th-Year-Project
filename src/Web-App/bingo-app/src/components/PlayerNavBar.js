@@ -15,7 +15,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import {Outlet, Link} from 'react-router-dom';
 import {Auth} from 'aws-amplify';
 
-const pages = ['HostGame', 'Reports'];
+const pages = ['JoinGame', 'PlayerHome'];
 const settings = ['Profile', 'Balance', 'Logout'];
 
 function PlayerNavBar() {
