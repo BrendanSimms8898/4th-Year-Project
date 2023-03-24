@@ -22,18 +22,13 @@ const settings = ['Profile', 'Balance', 'Logout'];
 function HostNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
   const [user, setUser] = React.useState(null);
-  var profile = null;
-
-  if (user != null) {
-  profile = user.attributes.email
-  }
-
-
-  console.log(profile)
+ 
+  
 
   const getUser = async () => {
-    const user = await Auth.currentAuthenticatedUser();
+    const user = await Auth.currentAuthenticatedUser().catch(console.log("User is not Authenticated"));
   
     setUser(user);
     
@@ -43,7 +38,6 @@ function HostNavBar() {
     getUser();
   }, []);
 
-  console.log(user);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -64,8 +58,9 @@ function HostNavBar() {
   const SignOut = async () => {
     await Auth.signOut();
     setUser(null);
-    console.log(user);
-    window.location.replace("http://localhost:3000/");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.setItem("isLoggedIn", "false");
+    window.location.reload();
   }
 
   if (user != null) {
@@ -89,7 +84,7 @@ function HostNavBar() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            Bingo Bonanza
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>

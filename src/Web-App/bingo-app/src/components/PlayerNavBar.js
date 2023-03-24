@@ -24,7 +24,7 @@ function PlayerNavBar() {
   const [user, setUser] = React.useState(null);
 
   const getUser = async () => {
-    const user = await Auth.currentAuthenticatedUser();
+    const user = await Auth.currentAuthenticatedUser().catch("user is not authenticated");
   
     setUser(user);
     
@@ -80,7 +80,7 @@ function PlayerNavBar() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            Bingo Bonanza
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
