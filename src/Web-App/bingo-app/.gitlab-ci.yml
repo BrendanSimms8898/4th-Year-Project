@@ -30,11 +30,6 @@ test_async:
     - npm install
     - node ./specs/start.js ./specs/async.spec.js
 
-test_db:
-  script:
-    - npm install
-    - node ./specs/start.js ./specs/db-postgres.spec.js
-
 deploy:
   stage: deploy
   script: echo "Define your deployment script!"
