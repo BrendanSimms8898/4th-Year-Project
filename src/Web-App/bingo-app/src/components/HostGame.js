@@ -2,7 +2,9 @@ import React from "react";
 import { MDBBtn, MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput} from 'mdb-react-ui-kit';
 import { Amplify, Hub, Auth} from 'aws-amplify';
 import HostNavBar from "./HostNavBar";
+import awsExports from "../aws-exports.js";
 
+Amplify.configure(awsExports);
 
 const initialGameState = {
     currentGame: 0,
@@ -10,13 +12,14 @@ const initialGameState = {
     CurrentPrizeSL: 0,
     CurrentPrizeDL: 0,
     CurrentPrizeFH: 0,
+    TotalCost: 0,
     games: [],
     configurationStage: "HowManyGames"
 }
 
 function HostGame () {
 
-    const TotalCost = 0;
+    var TotalCost = 0;
 
     const [user, setUser] = React.useState(null);
 
@@ -26,7 +29,7 @@ function HostGame () {
 
     const getUser = async () => {
       const user = await Auth.currentAuthenticatedUser();
-    
+
       setUser(user);
       
     }
@@ -40,18 +43,6 @@ function HostGame () {
         }
 
         return currentGameObject
-    }
-
-
-    function SetPrizeMoney (name, PrizeFL, PrizeDL, PrizeFH) {
-        const PrizeMoneyObject = {
-            gamename: name,
-            PrizeFL: PrizeFL,
-            PrizeDL: PrizeDL,
-            PrizeFH: PrizeFH
-        }
-
-        return PrizeMoneyObject
     }
     
     const ConfigurationSet = async () => {
@@ -79,7 +70,7 @@ function HostGame () {
         console.log(index)
         games[index][target] = e.target.value;
 
-        updateGameState(() => ({ ...gameState, games: games}))
+        updateGameState(() => ({...gameState, games: games}))
     }
     };
 
@@ -108,28 +99,46 @@ function HostGame () {
         console.log(gameState);
     }
 
-    const setPrizeMoney = async () => {
-
-        const {gamename, SLPrize, DLPrize, FHPrize} = PrizeMoneyObject;
-
+    const setPrizeMoney = async () => { 
         const {numberOfGames} = gameState
-        
-        var i = 1;
+        var i = 0;
 
-        if (!isNaN({SLPrize, DLPrize, FHPrize})) {
 
-            while (i < numberOfGames) {
-                i +=1;
-            }
+        while (i < numberOfGames) {
+        var FirstLine = gameState.games[i]["PrizeFL"]
+        FirstLine = parseInt(FirstLine);
+        var SecondLine = gameState.games[i]["PrizeDL"]
+        SecondLine = parseInt(SecondLine)
+        var ThirdLine = gameState.games[i]["PrizeFH"]
+        ThirdLine  = parseInt(ThirdLine)
 
-        updateGameState(() => ({...gameState, games: games}))
+        var PageCost = FirstLine + SecondLine + ThirdLine;
+
+        TotalCost += PageCost
+
+        i+=1;
+
+        }
+
+        if (user.attributes['custom:balance'] < TotalCost) {
+            window.alert("You don't have enough balance to host this game ensure the total prize money is not greater than your balance")
         }
 
         else {
-            window.alert("Please enter only Numerical Values");
+            var NewBalanceNum = parseInt(user.attributes["custom:balance"]) - TotalCost
 
+            updateGameState(() => ({...gameState, TotalCost: TotalCost}))
+
+            var NewBalanceString = "" + NewBalanceNum
+
+            console.log(NewBalanceString);
+
+           await Auth.updateUserAttributes(user, {'custom:balance':NewBalanceString});
+
+            updateGameState(() => ({...gameState, configurationStage: "SetPricing"}));
         }
     }
+    
 
     const {configurationStage} = gameState;
     const {games} = gameState
@@ -165,6 +174,19 @@ function HostGame () {
     {configurationStage === "WhatPrizeMoney" && (
         <>
             <HostNavBar/>
+            <div id="PrizeMoneyConfiguration">
+            <MDBContainer fluid>
+            <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+                <MDBCol col='12'>
+                    <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
+                    <MDBCardBody className='p-5 w-100 d-flex flex-column'>     
+                        <h2 className="fw-bold mb-2 text-center">Please Set your Prize Money for Each individual game</h2>
+                    </MDBCardBody>
+                    </MDBCard>
+                </MDBCol>
+            </MDBRow>
+            </MDBContainer>
+            </div>
             {games.map((game, index) => {
                 return (
     <div key={index} id="PrizeMoneyConfiguration">
@@ -173,7 +195,7 @@ function HostGame () {
            <MDBCol col='12'>
                <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
                    <MDBCardBody className='p-5 w-100 d-flex flex-column'>
-                    <h2 key={games.gamename} className="fw-bold mb-2 text-center">What would you like to be your prize money for {game.gamename}</h2>
+                    <h2 key={games.gamename} className="fw-bold mb-2 text-center">{game.gamename}</h2>
                    <MDBInput  wrapperClass='mb-4 w-100' onChange={onPrizeMoneyChange} name="PrizeFL" label='Single Line Prize Money?' id='formControlLg' index={index} size="lg" />
                    <MDBInput  wrapperClass='mb-4 w-100' onChange={onPrizeMoneyChange} name="PrizeDL" label='Double Line Prize Money?' id='formControlLg' index={index} size="lg" />
                    <MDBInput  wrapperClass='mb-4 w-100' onChange={onPrizeMoneyChange} name="PrizeFH" label='Full House Prize Money?' id='formControlLg' index={index} size="lg" />
@@ -185,6 +207,7 @@ function HostGame () {
     </div>
         );
                 })}
+    <div id="PrizeMoneyConfiguration">
         <MDBContainer fluid>
             <MDBRow className='d-flex justify-content-center align-items-center h-100'>
                 <MDBCol col='12'>
@@ -196,6 +219,12 @@ function HostGame () {
                 </MDBCol>
             </MDBRow>
         </MDBContainer>
+    </div>
+    </>
+    )}
+    {configurationStage == "SetPricing" && (
+        <>
+        <h2> You are at the Pricing Stage </h2>
         </>
     )}
     </>
