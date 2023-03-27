@@ -55,8 +55,9 @@ function PlayerNavBar() {
   const SignOut = async () => {
     await Auth.signOut();
     setUser(null);
-    console.log(user);
-    window.location.replace("http://localhost:3000/");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.setItem("isLoggedIn", "false");
+    window.location.reload();
   }
 
   if (user != null) {
