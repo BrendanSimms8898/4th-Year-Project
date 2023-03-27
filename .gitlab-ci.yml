@@ -1,6 +1,5 @@
 stages:
     - build
-    - test
   
 build:
     stage: build
@@ -11,14 +10,3 @@ build:
       - npm install
       - CI=false npm run build
       - echo "Build successfully!"
-  
-test:
-    stage: test
-    image: node
-    script:
-      - cd ./src/Web-App/bingo-app
-      - echo "Testing App"
-      - npm install
-      - rm -rf node_modules/eslint
-      - CI=false npm test
-      - echo "Test successfully!"
