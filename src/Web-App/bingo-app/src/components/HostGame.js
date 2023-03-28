@@ -3,6 +3,9 @@ import { MDBBtn, MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput} f
 import { Amplify, Hub, Auth} from 'aws-amplify';
 import HostNavBar from "./HostNavBar";
 import awsExports from "../aws-exports.js";
+import HorizontalScroll from 'react-horizontal-scrolling'
+import HostLobby from "./HostLobby";
+import {Outlet, Link} from 'react-router-dom';
 
 Amplify.configure(awsExports);
 
@@ -14,7 +17,11 @@ const initialGameState = {
     CurrentPrizeFH: 0,
     TotalCost: 0,
     games: [],
-    configurationStage: "HowManyGames"
+    configurationStage: "HowManyGames",
+    Package1: 0,
+    Package2: 0,
+    Package3: 0,
+    Package4: 0
 }
 
 function HostGame () {
@@ -63,11 +70,9 @@ function HostGame () {
 
     const onPrizeMoneyChange = (e) => {
         e.persist();
-        console.log(e);
         if (!isNaN(e.target.value)) {
         const target = e.target.name;
         const index = e.target.attributes.getNamedItem('index').value;
-        console.log(index)
         games[index][target] = e.target.value;
 
         updateGameState(() => ({...gameState, games: games}))
@@ -96,7 +101,6 @@ function HostGame () {
             window.alert("Must be a valid number and must be less than 20.")
         }
         
-        console.log(gameState);
     }
 
     const setPrizeMoney = async () => { 
@@ -131,22 +135,32 @@ function HostGame () {
 
             var NewBalanceString = "" + NewBalanceNum
 
-            console.log(NewBalanceString);
-
            await Auth.updateUserAttributes(user, {'custom:balance':NewBalanceString});
 
             updateGameState(() => ({...gameState, configurationStage: "SetPricing"}));
         }
+    }
+
+    const SetPackages = async() => {
+        updateGameState(() => ({...gameState, configurationStage: "GameStart"}));
     }
     
 
     const {configurationStage} = gameState;
     const {games} = gameState
 
-    console.log(games);
+    console.log(gameState)
 
     if (isConfigured == "true") {
-    return <h1> Configured </h1>
+    return (
+    <>
+    {configurationStage === "GameStart" && (
+        <>
+        <h1> Waiting for Game to Begin </h1>
+        </>
+    )}
+    </>
+    )
     }
     return (
     <>  
@@ -187,6 +201,7 @@ function HostGame () {
             </MDBRow>
             </MDBContainer>
             </div>
+            <HorizontalScroll>
             {games.map((game, index) => {
                 return (
     <div key={index} id="PrizeMoneyConfiguration">
@@ -207,6 +222,7 @@ function HostGame () {
     </div>
         );
                 })}
+    </HorizontalScroll>
     <div id="PrizeMoneyConfiguration">
         <MDBContainer fluid>
             <MDBRow className='d-flex justify-content-center align-items-center h-100'>
@@ -224,11 +240,25 @@ function HostGame () {
     )}
     {configurationStage == "SetPricing" && (
         <>
-        <h2> You are at the Pricing Stage </h2>
+        <HostNavBar/>
+        <MDBContainer fluid>
+            <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+                <MDBCol col='12'>
+                    <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
+                    <MDBCardBody className='p-5 w-100 d-flex flex-column'>     
+                    <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package1" label='How Much would you like Package 1 to cost, Package 1 is 3 Bingo Books' id='formControlLg' size="lg" />
+                    <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package2" label='How Much would you like Package 1 to cost, Package 2 is 6 Bingo Books' id='formControlLg' size="lg" />
+                    <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package3" label='How Much would you like Package 1 to cost, Package 3 is 9 Bingo Books' id='formControlLg' size="lg" />
+                    <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package4" label='How Much would you like Package 1 to cost, Package 4 is 12 Bingo Books' id='formControlLg' size="lg" />
+                    <Link to='/HostLobby'><MDBBtn className="mb-4" size='lg' onClick={SetPackages}>Confirm Prize Money</MDBBtn></Link>
+                    </MDBCardBody>
+                    </MDBCard>
+                </MDBCol>
+            </MDBRow>
+        </MDBContainer>
         </>
     )}
     </>
-
     )
 };
 
