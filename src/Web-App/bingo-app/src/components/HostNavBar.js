@@ -143,17 +143,22 @@ function HostNavBar() {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Link to={page}>
+              <Link to={"/HostGame"}>
               <Button
-                key={page}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                HostGame
               </Button>
               </Link>
-            ))}
+              <Link to={"/Reports"}>
+              <Button
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                Reports
+              </Button>
+              </Link>
             <Outlet />
           </Box>
 
@@ -181,7 +186,7 @@ function HostNavBar() {
               onClose={handleCloseUserMenu}
             >
                 <MenuItem onClick={handleCloseUserMenu}>
-                  <div id="SettingsMenu">
+                  <div id="/SettingsMenu">
                   <Link to="/Profile">
                   <Button> Profile</Button>
                   </Link>

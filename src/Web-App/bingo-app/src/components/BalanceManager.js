@@ -1,7 +1,14 @@
 import React from "react";
+import HostNavBar from "./HostNavBar";
 
 const BalanceManager = () => {
-    return <h1>This is the Balance Manager!</h1>
+
+    return (
+    <>
+    <HostNavBar/>
+    <h1>This is the Balance Manager!</h1>
+    </>
+    )
 };
 
 export default BalanceManager;
