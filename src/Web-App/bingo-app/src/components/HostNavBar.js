@@ -185,7 +185,7 @@ function HostNavBar() {
                   <Link to="/Profile">
                   <Button> Profile</Button>
                   </Link>
-                  <Link to="Balance">
+                  <Link to="/Balance">
                   <Button> Balance: {user.attributes['custom:balance']}</Button>
                   </Link>
                   <Button onClick={SignOut}> Logout</Button>

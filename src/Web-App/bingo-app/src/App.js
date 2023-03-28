@@ -16,6 +16,7 @@ import BalanceManager from './components/BalanceManager.js';
 import HostProfile from './components/HostProfile.js';
 import PlayerProfile from './components/PlayerProfile.js';
 import Authentication from './components/Authentication';
+import HostLobby from "./components/HostLobby";
 
 export default function App () { 
 
@@ -44,6 +45,7 @@ export default function App () {
             <Route path="Reports" element={<Reports />}></Route>
             <Route path="Profile" element={<HostProfile/>}></Route>
             <Route path="Balance" element={<BalanceManager/>}></Route>
+            <Route path= "HostLobby" element= { <HostLobby/>}></Route>
           </Routes>
         </BrowserRouter>
       )
