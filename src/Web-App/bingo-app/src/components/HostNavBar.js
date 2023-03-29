@@ -22,7 +22,6 @@ const settings = ['Profile', 'Balance', 'Logout'];
 function HostNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-
   const [user, setUser] = React.useState(null);
  
   
@@ -60,7 +59,7 @@ function HostNavBar() {
     setUser(null);
     localStorage.removeItem("isLoggedIn");
     localStorage.setItem("isLoggedIn", "false");
-    window.location.reload();
+    window.location.replace("http://localhost:3000/")
   }
 
   if (user != null) {

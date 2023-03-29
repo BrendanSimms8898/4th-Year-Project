@@ -106,7 +106,7 @@ function HostGame () {
     const setPrizeMoney = async () => { 
         const {numberOfGames} = gameState
         var i = 0;
-
+        var AllFilledIn = false;
 
         while (i < numberOfGames) {
         var FirstLine = gameState.games[i]["PrizeFL"]
@@ -118,10 +118,10 @@ function HostGame () {
 
         var PageCost = FirstLine + SecondLine + ThirdLine;
 
+
         TotalCost += PageCost
 
         i+=1;
-
         }
 
         if (user.attributes['custom:balance'] < TotalCost) {
@@ -188,7 +188,7 @@ function HostGame () {
     {configurationStage === "WhatPrizeMoney" && (
         <>
             <HostNavBar/>
-            <div id="PrizeMoneyConfiguration">
+            <div id="PrizeMoneyConfigurationTitle">
             <MDBContainer fluid>
             <MDBRow className='d-flex justify-content-center align-items-center h-100'>
                 <MDBCol col='12'>
@@ -201,10 +201,10 @@ function HostGame () {
             </MDBRow>
             </MDBContainer>
             </div>
+            <div id="PrizeMoneyConfiguration">
             <HorizontalScroll>
             {games.map((game, index) => {
                 return (
-    <div key={index} id="PrizeMoneyConfiguration">
     <MDBContainer fluid>
         <MDBRow className='d-flex justify-content-center align-items-center h-100'>
            <MDBCol col='12'>
@@ -219,11 +219,11 @@ function HostGame () {
             </MDBCol>
        </MDBRow>
     </MDBContainer>
-    </div>
         );
                 })}
     </HorizontalScroll>
-    <div id="PrizeMoneyConfiguration">
+    </div>
+    <div id="PrizeMoneyConfigurationSubmit">
         <MDBContainer fluid>
             <MDBRow className='d-flex justify-content-center align-items-center h-100'>
                 <MDBCol col='12'>
@@ -241,21 +241,23 @@ function HostGame () {
     {configurationStage == "SetPricing" && (
         <>
         <HostNavBar/>
+        <div id="ConfigurationContainer">
         <MDBContainer fluid>
             <MDBRow className='d-flex justify-content-center align-items-center h-100'>
                 <MDBCol col='12'>
                     <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
                     <MDBCardBody className='p-5 w-100 d-flex flex-column'>     
-                    <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package1" label='How Much would you like Package 1 to cost, Package 1 is 3 Bingo Books' id='formControlLg' size="lg" />
-                    <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package2" label='How Much would you like Package 1 to cost, Package 2 is 6 Bingo Books' id='formControlLg' size="lg" />
-                    <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package3" label='How Much would you like Package 1 to cost, Package 3 is 9 Bingo Books' id='formControlLg' size="lg" />
-                    <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package4" label='How Much would you like Package 1 to cost, Package 4 is 12 Bingo Books' id='formControlLg' size="lg" />
+                    <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package1" label='How Much would you like Package 1 to cost?' id='formControlLg' size="lg" />
+                    <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package2" label='How Much would you like Package 2 to cost?' id='formControlLg' size="lg" />
+                    <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package3" label='How Much would you like Package 3 to cost?' id='formControlLg' size="lg" />
+                    <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package4" label='How Much would you like Package 4 to cost?' id='formControlLg' size="lg" />
                     <Link to='/HostLobby'><MDBBtn className="mb-4" size='lg' onClick={SetPackages}>Confirm Prize Money</MDBBtn></Link>
                     </MDBCardBody>
                     </MDBCard>
                 </MDBCol>
             </MDBRow>
         </MDBContainer>
+        </div>
         </>
     )}
     </>
