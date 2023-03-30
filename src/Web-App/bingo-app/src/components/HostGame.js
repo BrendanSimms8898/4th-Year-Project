@@ -4,8 +4,8 @@ import { Amplify, Hub, Auth} from 'aws-amplify';
 import HostNavBar from "./HostNavBar";
 import awsExports from "../aws-exports.js";
 import HorizontalScroll from 'react-horizontal-scrolling'
-import HostLobby from "./HostLobby";
-import {Outlet, Link} from 'react-router-dom';
+import WebSocket from 'ws';
+
 
 Amplify.configure(awsExports);
 
@@ -34,6 +34,8 @@ function HostGame () {
 
     const [isConfigured, updateIsConfigured] = React.useState(localStorage.getItem("isConfigured"))
 
+    const [isWebSocket, updateIsWebsocket] = React.useState("false");
+
     const getUser = async () => {
       const user = await Auth.currentAuthenticatedUser();
 
@@ -56,6 +58,18 @@ function HostGame () {
         updateIsConfigured(localStorage.getItem("isConfigured"));
 
         console.log(isConfigured);
+    }
+
+    if (gameState.configurationStage == "GameStart" && isWebSocket == "false") {
+        const { io } = require("socket.io-client");
+
+        const socket = io("ws://ec2-52-211-225-16.eu-west-1.compute.amazonaws.com:1025/", {
+            extraHeaders: {
+                "user": user.attributes.email
+              }
+        });
+
+        updateIsWebsocket("true");
     }
 
     React.useEffect(() => {
@@ -82,16 +96,21 @@ function HostGame () {
     const setNumberOfGames = async () => {
         const {numberOfGames} = gameState
 
-        if (!isNaN(numberOfGames) && numberOfGames < 20 && numberOfGames != "") {
+        if (!isNaN(numberOfGames) && numberOfGames < 20 && numberOfGames != "" && numberOfGames != 0) {
 
                 var i = 1
+
+                if (games.length != 0) {
+                    games.length = 0;
+                }
+
                 while (i <= numberOfGames) {
-                    
                     var gameObject = SetGameObject("Game" + i);
 
                     games.push(gameObject);
 
                     i = i + 1;
+                    
                 }
 
                 updateGameState(() => ({ ...gameState, games: games}))
@@ -149,19 +168,7 @@ function HostGame () {
     const {configurationStage} = gameState;
     const {games} = gameState
 
-    console.log(gameState)
-
-    if (isConfigured == "true") {
-    return (
-    <>
-    {configurationStage === "GameStart" && (
-        <>
-        <h1> Waiting for Game to Begin </h1>
-        </>
-    )}
-    </>
-    )
-    }
+    console.log(user);
     return (
     <>  
     {configurationStage === "HowManyGames" && (
@@ -251,7 +258,7 @@ function HostGame () {
                     <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package2" label='How Much would you like Package 2 to cost?' id='formControlLg' size="lg" />
                     <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package3" label='How Much would you like Package 3 to cost?' id='formControlLg' size="lg" />
                     <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package4" label='How Much would you like Package 4 to cost?' id='formControlLg' size="lg" />
-                    <Link to='/HostLobby'><MDBBtn className="mb-4" size='lg' onClick={SetPackages}>Confirm Prize Money</MDBBtn></Link>
+                    <MDBBtn className="mb-4" size='lg' onClick={SetPackages}>Confirm Prize Money</MDBBtn>
                     </MDBCardBody>
                     </MDBCard>
                 </MDBCol>
@@ -260,8 +267,14 @@ function HostGame () {
         </div>
         </>
     )}
+    {configurationStage === "GameStart" && (
+        <>
+        <HostNavBar/>
+        <h1> Waiting for Game to Begin </h1>
+        </>
+    )}
     </>
-    )
+    );
 };
 
 export default HostGame;

@@ -44,7 +44,7 @@
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-bingoapp-dev-161235-deployment/amplify-cfn-templates/auth/bingoapp0ccc17a6-cloudformation-template.json",
         "logicalId": "authbingoapp0ccc17a6"
       },
-      "lastPushTimeStamp": "2023-02-27T13:53:12.008Z",
+      "lastPushTimeStamp": "2023-03-29T11:59:33.343Z",
       "output": {
         "UserPoolId": "eu-west-1_FYm9eQUYe",
         "AppClientIDWeb": "2je2rg3b2qrtsqi9v1umvmqd6e",
@@ -54,7 +54,25 @@
         "IdentityPoolName": "bingoapp0ccc17a6_identitypool_0ccc17a6__dev",
         "UserPoolName": "bingoapp0ccc17a6_userpool_0ccc17a6"
       },
-      "lastPushDirHash": "mgjBf1V3fCv+K5yG5t1c41SGNlE="
+      "lastPushDirHash": "ntuskEe72gH8QzXG+PgOKUkgAuU="
+    }
+  },
+  "hosting": {
+    "S3AndCloudFront": {
+      "service": "S3AndCloudFront",
+      "providerPlugin": "awscloudformation",
+      "output": {
+        "S3BucketSecureURL": "https://bingoapp-20230329125729-hostingbucket-dev.s3.amazonaws.com",
+        "WebsiteURL": "http://bingoapp-20230329125729-hostingbucket-dev.s3-website-eu-west-1.amazonaws.com",
+        "Region": "eu-west-1",
+        "HostingBucketName": "bingoapp-20230329125729-hostingbucket-dev"
+      },
+      "lastPushTimeStamp": "2023-03-29T11:59:33.343Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bingoapp-dev-161235-deployment/amplify-cfn-templates/hosting/template.json",
+        "logicalId": "hostingS3AndCloudFront"
+      },
+      "lastPushDirHash": "aeS7TxcQAOXaXx9IrNedEXhsrA4="
     }
   }
 }

@@ -14,7 +14,10 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import {Outlet, Link} from 'react-router-dom';
 import "./HostGame.js"
-import {Auth} from 'aws-amplify';
+import {Auth, Amplify} from 'aws-amplify';
+import awsExports from '../aws-exports.js';
+
+Amplify.configure(awsExports);
 
 const pages = ['HostGame', 'Reports'];
 const settings = ['Profile', 'Balance', 'Logout'];
@@ -142,7 +145,7 @@ function HostNavBar() {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              <Link to={"/HostGame"}>
+              <Link to={user.attributes.email}>
               <Button
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}

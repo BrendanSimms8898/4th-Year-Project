@@ -3,7 +3,6 @@ import awsExports from './aws-exports';
 import React, {useEffect, useState} from 'react';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { MDBBtn, MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput} from 'mdb-react-ui-kit';
 import {Routes, Route,BrowserRouter} from 'react-router-dom';
 import 'react-toastify'
 import HostHome from './components/HostHome.js';
@@ -18,15 +17,23 @@ import PlayerProfile from './components/PlayerProfile.js';
 import Authentication from './components/Authentication';
 import HostLobby from "./components/HostLobby";
 
+
+Amplify.configure(awsExports);
+
 export default function App () { 
 
   const [user, updateUser] = useState(null);
+
 
   const getUser = async () => {
     const user = await Auth.currentAuthenticatedUser().catch(console.log("user is not valid"));
   
     updateUser(user);
     
+  }
+
+  if (user != null) {
+  const id = user.attributes.email
   }
   
   React.useEffect(() => {
@@ -41,11 +48,11 @@ export default function App () {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<HostHome/>}></Route>
-            <Route path="HostGame" element={<HostGame />}></Route>
+            <Route path=":id" element={<HostGame />}></Route>
             <Route path="Reports" element={<Reports />}></Route>
             <Route path="Profile" element={<HostProfile/>}></Route>
             <Route path="Balance" element={<BalanceManager/>}></Route>
-            <Route path= "HostLobby" element= { <HostLobby/>}></Route>
+            <Route path="HostLobby" element= { <HostLobby/>}></Route>
           </Routes>
         </BrowserRouter>
       )

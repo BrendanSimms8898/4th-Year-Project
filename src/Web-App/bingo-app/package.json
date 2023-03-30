@@ -24,6 +24,8 @@
     "react-router-dom": "^6.8.2",
     "react-scripts": "^5.0.1",
     "react-toastify": "^9.1.1",
+    "socket.io": "^4.6.1",
+    "socket.io-client": "^4.6.1",
     "styled-components": "^5.3.6",
     "toastify-js": "^1.12.0",
     "uuidv4": "^6.2.13",
@@ -33,11 +35,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "websocket": "node test.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -60,8 +62,11 @@
     "@testing-library/react": "^14.0.0",
     "assert": "^2.0.0",
     "buffer": "^6.0.3",
+    "concurrently": "^8.0.1",
     "crypto-browserify": "^3.12.0",
     "https-browserify": "^1.0.0",
+    "node-polyfill-webpack-plugin": "^2.0.1",
+    "npm-run-all": "^4.1.5",
     "os-browserify": "^0.3.0",
     "process": "^0.11.10",
     "react-app-rewired": "^2.2.1",
