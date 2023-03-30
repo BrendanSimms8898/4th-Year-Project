@@ -27,7 +27,10 @@ const awsmobile = {
     },
     "aws_cognito_verification_mechanisms": [
         "EMAIL"
-    ]
+    ],
+    "aws_content_delivery_bucket": "bingoapp-20230329125729-hostingbucket-dev",
+    "aws_content_delivery_bucket_region": "eu-west-1",
+    "aws_content_delivery_url": "http://bingoapp-20230329125729-hostingbucket-dev.s3-website-eu-west-1.amazonaws.com"
 };
 
 
