@@ -6,6 +6,7 @@ import awsExports from "../aws-exports.js";
 import HorizontalScroll from 'react-horizontal-scrolling'
 import WebSocket from 'ws';
 
+var socket = null;
 
 Amplify.configure(awsExports);
 
@@ -25,7 +26,6 @@ const initialGameState = {
 }
 
 function HostGame () {
-
     var TotalCost = 0;
 
     const [user, setUser] = React.useState(null);
@@ -42,6 +42,8 @@ function HostGame () {
       setUser(user);
       
     }
+
+    console.log(user)
 
     function SetGameObject (name) {
         const currentGameObject = {
@@ -63,13 +65,30 @@ function HostGame () {
     if (gameState.configurationStage == "GameStart" && isWebSocket == "false") {
         const { io } = require("socket.io-client");
 
-        const socket = io("ws://ec2-52-211-225-16.eu-west-1.compute.amazonaws.com:1025/", {
+        socket = io("ws://ec2-52-211-225-16.eu-west-1.compute.amazonaws.com:1025/", {
             extraHeaders: {
-                "user": user.attributes.email
+                "useridtoken": user.signInUserSession.idToken.jwtToken,
+                "usertype": user.attributes['custom:UserType'],
+                "username": user.attributes.email,
+                "package1": gameState.Package1,
+                "package2": gameState.Package2,
+                "package3": gameState.Package3,
+                "package4": gameState.Package4,
               }
         });
 
-        updateIsWebsocket("true");
+        console.log(socket);
+
+        updateIsWebsocket(true);
+    }
+
+    if (socket != null) {
+        socket.on("Packages", (arg1, arg2, arg3, arg4) => {
+            console.log(arg1)
+            console.log(arg2)
+            console.log(arg3)
+            console.log(arg4)
+        });
     }
 
     React.useEffect(() => {
@@ -120,6 +139,10 @@ function HostGame () {
             window.alert("Must be a valid number and must be less than 20.")
         }
         
+    }
+
+    const StartGame = async () => {
+        updateGameState(() => ({ ...gameState, configurationStage: "Completed"})) 
     }
 
     const setPrizeMoney = async () => { 
@@ -258,7 +281,7 @@ function HostGame () {
                     <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package2" label='How Much would you like Package 2 to cost?' id='formControlLg' size="lg" />
                     <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package3" label='How Much would you like Package 3 to cost?' id='formControlLg' size="lg" />
                     <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package4" label='How Much would you like Package 4 to cost?' id='formControlLg' size="lg" />
-                    <MDBBtn className="mb-4" size='lg' onClick={SetPackages}>Confirm Prize Money</MDBBtn>
+                    <MDBBtn className="mb-4" size='lg' onClick={SetPackages}>Confirm Package Costs</MDBBtn>
                     </MDBCardBody>
                     </MDBCard>
                 </MDBCol>
@@ -270,7 +293,19 @@ function HostGame () {
     {configurationStage === "GameStart" && (
         <>
         <HostNavBar/>
-        <h1> Waiting for Game to Begin </h1>
+        <div id="ConfigurationContainer">
+        <MDBContainer fluid>
+            <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+                <MDBCol col='12'>
+                    <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
+                    <MDBCardBody className='p-5 w-100 d-flex flex-column'>     
+                        <MDBBtn className="mb-4" size='lg' onClick={StartGame}>Start the Game</MDBBtn>
+                    </MDBCardBody>
+                    </MDBCard>
+                </MDBCol>
+            </MDBRow>
+        </MDBContainer>
+        </div>
         </>
     )}
     </>
