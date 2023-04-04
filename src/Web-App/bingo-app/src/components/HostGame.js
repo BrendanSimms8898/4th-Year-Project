@@ -208,8 +208,6 @@ function HostGame () {
 
         await Auth.updateUserAttributes(user, {'custom:balance': NewBalanceString})
 
-        user.attributes["custom:balance"]
-
         window.location.reload();
  
 
