@@ -72,3 +72,29 @@ code {
   background-color: #bebebe;
 }
 
+.Paypalcenter {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 25vw;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.Paypalcontainer {
+  height: 10vh;
+  position: relative;
+}
+
+#navcontainer{
+  background-color: #bebebe;
+  height: 100%;
+  width: 100%;
+}
+#PaypalPage{
+  background-color: #bebebe;
+  height: 100%;
+  width: 100%;
+  padding-top: 7.5%;
+}
