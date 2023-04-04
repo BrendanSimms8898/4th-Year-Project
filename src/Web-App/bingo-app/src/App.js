@@ -16,6 +16,7 @@ import HostProfile from './components/HostProfile.js';
 import PlayerProfile from './components/PlayerProfile.js';
 import Authentication from './components/Authentication';
 import HostLobby from "./components/HostLobby";
+import AddBalance from './components/AddBalance';
 
 
 Amplify.configure(awsExports);
@@ -52,7 +53,7 @@ export default function App () {
             <Route path="Reports" element={<Reports />}></Route>
             <Route path="Profile" element={<HostProfile/>}></Route>
             <Route path="Balance" element={<BalanceManager/>}></Route>
-            <Route path="HostLobby" element= { <HostLobby/>}></Route>
+            <Route path="AddBalance" element={<AddBalance/>}></Route>
           </Routes>
         </BrowserRouter>
       )
@@ -66,6 +67,7 @@ export default function App () {
           <Route path="JoinGame" element={<JoinGame />}></Route>
           <Route props={user} path="/Profile" element={<PlayerProfile/>}></Route>
           <Route path="Balance" element={<BalanceManager/>}></Route>
+          <Route path="AddBalance" element={<AddBalance/>}></Route>
         </Routes>
       </BrowserRouter>
       )
