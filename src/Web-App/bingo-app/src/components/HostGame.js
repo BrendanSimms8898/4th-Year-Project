@@ -210,8 +210,6 @@ function HostGame () {
 
         user.attributes["custom:balance"]
 
-        updateGameState(() => ({...gameState, gameState: ResetGameState()}))
-
         window.location.reload();
  
 
