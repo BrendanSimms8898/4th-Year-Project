@@ -62,7 +62,7 @@ function HostNavBar() {
     setUser(null);
     localStorage.removeItem("isLoggedIn");
     localStorage.setItem("isLoggedIn", "false");
-    window.location.replace("http://localhost:3000/")
+    window.location.reload()
   }
 
   if (user != null) {
@@ -75,7 +75,7 @@ function HostNavBar() {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            href=""
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -118,11 +118,27 @@ function HostNavBar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+              
+                <MenuItem onClick={handleCloseNavMenu}>
+              <Link to={"/Reports"}>
+              <Button
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'black', display: 'block' }}
+              >
+                Reports
+              </Button>
+              </Link>
                 </MenuItem>
-              ))}
+                <MenuItem onClick={handleCloseNavMenu}>
+                <Link to={`/${user.attributes.email}`}>
+              <Button
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'black', display: 'block' }}
+              >
+                HostGame
+              </Button>
+              </Link>
+                </MenuItem>
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -142,7 +158,7 @@ function HostNavBar() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            Bingo Bonanza
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               <Link to={`/${user.attributes.email}`}>

@@ -59,6 +59,16 @@ div.app {
   background-color: #bebebe;
 }
 
+#GameStartContainer {
+  padding-top: 20px;
+  background-color: #bebebe;
+}
+
+#ResetConfigButton {
+  padding-top: 200px;
+  background-color: #bebebe;
+}
+
 #AccountName {
   color: white;
 }

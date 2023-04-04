@@ -7,7 +7,6 @@ var isValidUser = true;
 var username = null;
 var usertype = null;
 var AccessToken = null;
-var GameToJoin = null;
 
 const Rooms = []
 
@@ -18,7 +17,8 @@ const templateRoomObject = {
   Package1: 0,
   Package2: 0,
   Package3: 0,
-  Package4: 0
+  Package4: 0,
+  Numbers: []
 }
 
 function RoomObjectInstance (arg1, arg2, arg3, arg4, arg5, arg6) {
@@ -30,10 +30,21 @@ function RoomObjectInstance (arg1, arg2, arg3, arg4, arg5, arg6) {
     Package1: arg3,
     Package2: arg4,
     Package3: arg5,
-    Package4: arg6
+    Package4: arg6,
+    Numbers: []
   }
 
   return RoomObject
+}
+
+function PlayerObjectInstance (arg1, arg2) {
+const PlayerObject = {
+  username: arg1,
+  socketID: arg2,
+  Books: [],
+}
+
+return PlayerObject
 }
 
 async function Verify () {
@@ -62,15 +73,13 @@ catch (err) {
 
 
 const httpServer = createServer();
-const io = new Server(httpServer, {   cors: {
+const io = new Server(httpServer, {   
+  cors: {
   origin: "*",
 } });
 
 
 io.on("connection", (socket) => {
-
-  socket.emit("Hello", "World");
-
   Package1 = socket.handshake.headers.package1
 
   Package2 = socket.handshake.headers.package2
@@ -86,6 +95,8 @@ io.on("connection", (socket) => {
   AccessToken = socket.handshake.headers.useridtoken;
 
   RoomToJoin = socket.handshake.headers.roomtojoin
+
+  var SocketID = socket.id
  
   Verify();
 
@@ -93,40 +104,91 @@ io.on("connection", (socket) => {
 
     console.log(`connection succesful ${socket}`);
 
-    if (usertype == "Host") {
+    if (usertype == "Host") {      
+      var result = Rooms.filter(room => {
+        return room.roomName === username
+      });
+
+      console.log(result)
+
+      if (result.length < 1) {
       socket.join(username)
-    
+
       RoomObject = RoomObjectInstance(username, socket.id, Package1, Package2, Package3, Package4);
 
       Rooms.push(RoomObject);
+      }
 
+      else {
+        socket.join(username)
 
-      console.log(Package1)
+        var result = Rooms.filter(room => {
+          if (room.roomName === username) {
+            room.roomHostSocketID = socket.id
+          }
+        });
 
-      console.log(RoomObject);
+        console.log("Host Has rejoined the room")
+      }
 
+      console.log(result);
       console.log(Rooms);
-
-      socket.emit("Packages", Package1, Package2, Package3, Package4);
     }
 
     if (usertype == "Player") {
       socket.join(roomtojoin)
 
       var result = Rooms.filter(room => {
-        return room.roomName === roomtojoin
+        if (room.roomName === roomtojoin){
+          room.players.filter(player => {
+            if (player.username === username) {
+              player.socketID = SocketID
+            }
+            else {
+              room.players.append(PlayerObjectInstance(username, SocketID))
+            }
+          })
+        }
       })
 
-      result.Players.append(PlayerObjectInstance(username, socket.id))
+
+      socket.emit("Packages", Package1, Package2, Package3, Package4);
+    }
+  }
+  else {
+    console.log("Not a valid user connection was closed")
+    socket.close()
+  }
+
+  socket.on("disconnect", (socket) => {
+    console.log("User Has Disconnected")
+  
+    if (usertype === "Player") {
+  
+      Rooms.filter(room => {
+        if(room.roomName === roomtojoin) {
+        result.players.filter(player => {
+        if (player.username === username) {
+          player.socketID = ""
+        }
+      })
+    }})
+    }
+  
+    if (usertype == "Host") {
+      var result = Rooms.filter(room => {
+        if (room.roomName === username) {
+          if(room.roomHostSocketID === SocketID) {
+            room.roomHostSocketID = ""
+
+            io.to(room.roomName).emit("Host Has Disconnected Please wait while he reconnects")
+          }
+        }
+      });
     }
 
-  }
-
-
-  else {
-    socket.disconnect()
-    console.log("Not a valid user connection was closed")
-  }
+    console.log(Rooms)
+  });
 });
 
 io.of("/").adapter.on("create-room", (room) => {
@@ -137,23 +199,11 @@ io.of("/").adapter.on("join-room", (room, id) => {
   console.log(`socket ${id} has joined room ${room}`);
 });
 
-io.on("disconnect", (socket) => {
-  console.log("User Has Disconnected")
-});
-
-io.on("reconnect", (socket) => {
-  console.log("User has rejoined")
-})
-
-io.on("get next number", (socket) => {
+io.on("getNextNumber", (socket) => {
   //
 });
 
-io.on("generate books", (socket) => {
-  //
-});
-
-io.on("validate check", (socket) => {
+io.on("generateBooks", (socket) => {
   //
 });
 
@@ -161,8 +211,20 @@ io.on("check", (socket) => {
   //
 });
 
-io.on("get packages", (socket, room) => {
+io.on("getPackages", (socket, room) => {
+  //  
+})
 
+io.on("SelectedPackage", (socket) => {
+  //
+})
+
+io.on("EndGame", (socket) => {
+  //
+})
+
+io.on("EndSession", (socket) => {
+  //
 })
 
 console.log("hi");

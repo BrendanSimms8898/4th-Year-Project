@@ -43,7 +43,9 @@ function HostGame () {
       
     }
 
-    console.log(user)
+    if (isConfigured === true) {
+        updateGameState(() => ({...gameState, configurationStage: "GameStart"}))
+    }
 
     function SetGameObject (name) {
         const currentGameObject = {
@@ -60,12 +62,16 @@ function HostGame () {
         updateIsConfigured(localStorage.getItem("isConfigured"));
 
         console.log(isConfigured);
+
+        if (localStorage.getItem("isConfigured") == "true") {
+            updateGameState(() => ({...gameState, configurationStage: "HowManyGames"}))
+        }
     }
 
     if (gameState.configurationStage == "GameStart" && isWebSocket == "false") {
         const { io } = require("socket.io-client");
 
-        socket = io("ws://ec2-52-211-225-16.eu-west-1.compute.amazonaws.com:1025/", {
+        socket = io("ws://localhost:1025/", {
             extraHeaders: {
                 "useridtoken": user.signInUserSession.idToken.jwtToken,
                 "usertype": user.attributes['custom:UserType'],
@@ -83,12 +89,7 @@ function HostGame () {
     }
 
     if (socket != null) {
-        socket.on("Packages", (arg1, arg2, arg3, arg4) => {
-            console.log(arg1)
-            console.log(arg2)
-            console.log(arg3)
-            console.log(arg4)
-        });
+        socket.on("getNextNumber")
     }
 
     React.useEffect(() => {
@@ -163,6 +164,9 @@ function HostGame () {
 
         TotalCost += PageCost
 
+        localStorage.setItem("TotalCost", TotalCost)
+
+
         i+=1;
         }
 
@@ -185,6 +189,32 @@ function HostGame () {
 
     const SetPackages = async() => {
         updateGameState(() => ({...gameState, configurationStage: "GameStart"}));
+        localStorage.setItem("isConfigured", "true")
+    }
+
+    const ResetConfiguration = async() => {
+        localStorage.setItem("isConfigured", "false");
+
+        var MoneyToAddToBalance = localStorage.getItem("TotalCost")
+        var NewBalanceNum = 0;
+
+        console.log(user.attributes["custom:balance"])
+
+        NewBalanceNum = (parseInt(user.attributes["custom:balance"]) - parseInt(localStorage.getItem("TotalCost"))) + parseInt(MoneyToAddToBalance)
+
+        console.log(NewBalanceNum);
+
+        var NewBalanceString = "" + NewBalanceNum
+
+        await Auth.updateUserAttributes(user, {'custom:balance': NewBalanceString})
+
+        user.attributes["custom:balance"]
+
+        updateGameState(() => ({...gameState, gameState: ResetGameState()}))
+
+        window.location.reload();
+ 
+
     }
     
 
@@ -293,13 +323,27 @@ function HostGame () {
     {configurationStage === "GameStart" && (
         <>
         <HostNavBar/>
-        <div id="ConfigurationContainer">
+        <div id="GameStartContainer">
         <MDBContainer fluid>
             <MDBRow className='d-flex justify-content-center align-items-center h-100'>
                 <MDBCol col='12'>
                     <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
                     <MDBCardBody className='p-5 w-100 d-flex flex-column'>     
                         <MDBBtn className="mb-4" size='lg' onClick={StartGame}>Start the Game</MDBBtn>
+                    </MDBCardBody>
+                    </MDBCard>
+                </MDBCol>
+            </MDBRow>
+        </MDBContainer>
+        </div>
+
+        <div id="ResetConfigButton">
+        <MDBContainer fluid>
+            <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+                <MDBCol col='12'>
+                    <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
+                    <MDBCardBody className='p-5 w-100 d-flex flex-column'>     
+                        <MDBBtn className="mb-4" size='lg' onClick={ResetConfiguration}>Reset the Configuration?</MDBBtn>
                     </MDBCardBody>
                     </MDBCard>
                 </MDBCol>
