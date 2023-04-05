@@ -15,7 +15,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import {Outlet, Link} from 'react-router-dom';
 import {Auth} from 'aws-amplify';
 
-const pages = ['JoinGame', 'PlayerHome'];
+const pages = ['JoinGame', 'Reports'];
 const settings = ['Profile', 'Balance', 'Logout'];
 
 function PlayerNavBar() {
@@ -141,7 +141,7 @@ function PlayerNavBar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Link to={page}>
+              <Link to={`/${page}`}>
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}

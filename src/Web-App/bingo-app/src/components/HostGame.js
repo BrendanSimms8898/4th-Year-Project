@@ -5,6 +5,8 @@ import HostNavBar from "./HostNavBar";
 import awsExports from "../aws-exports.js";
 import HorizontalScroll from 'react-horizontal-scrolling'
 import WebSocket from 'ws';
+import { Button } from "@mui/material";
+import axios from 'axios'
 
 var socket = null;
 
@@ -24,6 +26,8 @@ const initialGameState = {
     Package3: 0,
     Package4: 0
 }
+
+const numbers = []
 
 function HostGame () {
     var TotalCost = 0;
@@ -212,7 +216,50 @@ function HostGame () {
  
 
     }
+
+    async function GetNumber () {
+        const Response = await axios.get('https://ek2cght22ssiuo7t4wewmu2iba0fhtlh.lambda-url.us-east-1.on.aws/') 
+        
+        return Response.data
+}
+
+    function NumberAlreadyCalled(number) {
+        var i = 0
+        var number_already_called = false
+
+        while (i < numbers.length) {
+            if (number == numbers[i]) {
+                number_already_called = true
+            }
+
+            i+=1
+        }
+
+        return number_already_called
+    }
     
+    async function getNextNumber() {
+        var NextNumber = await GetNumber();
+
+        while (true) {
+            console.log(NextNumber)
+        if (NumberAlreadyCalled(NextNumber) != false) {
+            NextNumber = await GetNumber();
+        }
+
+        else {
+            break
+        }
+
+        }
+        console.log(numbers);
+
+        
+        numbers.push(NextNumber)
+    }
+
+    console.log(numbers)
+          
 
     const {configurationStage} = gameState;
     const {games} = gameState
@@ -346,6 +393,8 @@ function HostGame () {
             </MDBRow>
         </MDBContainer>
         </div>
+
+        <Button onClick={getNextNumber}>Test</Button>
         </>
     )}
     </>

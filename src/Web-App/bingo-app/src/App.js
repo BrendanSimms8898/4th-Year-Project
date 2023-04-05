@@ -62,7 +62,7 @@ export default function App () {
       return (
         <BrowserRouter>
         <Routes>
-          <Route path="/" element={<PlayerNavBar/>}></Route>
+          <Route path="/" element={<PlayerHome/>}></Route>
           <Route path="PlayerHome" element={<PlayerHome />}></Route>
           <Route path="JoinGame" element={<JoinGame />}></Route>
           <Route props={user} path="/Profile" element={<PlayerProfile/>}></Route>

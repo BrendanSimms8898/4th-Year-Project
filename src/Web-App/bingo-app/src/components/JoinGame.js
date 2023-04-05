@@ -1,7 +1,13 @@
 import React from "react";
+import PlayerNavBar from "./PlayerNavBar"
 
 const JoinGame = () => {
-    return <h1>We are in join game</h1>
+    return ( 
+        <>
+        <PlayerNavBar/>
+        <h1>We are in Join Game</h1>
+        </>
+        )
 };
 
 export default JoinGame;
