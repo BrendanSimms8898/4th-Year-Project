@@ -5,8 +5,6 @@ import WebSocket from 'ws';
 import { Amplify, Hub, Auth} from 'aws-amplify';
 import awsExports from "../aws-exports.js";
 
-var socket = null;
-
 const initialState = {
     gametojoin: "",
     books: [],
@@ -15,6 +13,7 @@ const initialState = {
     Package2: "",
     Package3: "",
     Package4: "",
+    SelectedPackage: "",
 }
 
 const intialBookobject = {
@@ -34,6 +33,8 @@ const JoinGame = () => {
 
     const [gameState, updateGameState] = React.useState(initialState)
 
+    const [socket, setSocket] = React.useState(null);
+
     const getUser = async () => {
         const user = await Auth.currentAuthenticatedUser();
   
@@ -51,12 +52,29 @@ const JoinGame = () => {
         updateGameState(() => ({...gameState, gametojoin: event.target.value }))   
     };
 
+    const UpdatePackageSelect = (e) => {
+        e.persist();
+
+        updateGameState(() => ({...gameState, SelectedPackage: e.target.value}))
+    }
+
+    const PackageSubmit = async () => {
+        socket.emit("GenerateTheBooks", gameState.SelectedPackage)
+    }
+
+    if (socket != null) {
+    socket.once("SendBooks", (arg1, arg2) => {
+        gameState.books.push(arg1)
+        console.log(gameState)
+    })
+    }
+
     const JoinAGame = async() => {
         var isError = false;
         try {
             const { io } = require("socket.io-client");
 
-            socket = io("ws://localhost:1025/", {
+            var socket = io("ws://localhost:1025/", {
             
             extraHeaders: {
                 "useridtoken": user.signInUserSession.idToken.jwtToken,
@@ -65,10 +83,12 @@ const JoinGame = () => {
                 "roomtojoin": gameState.gametojoin
             }
         });
+
+            setSocket(socket)
         }
 
         catch (err) {
-            window.alert(`A game does not currently exist under username: ${gameState.gametojoin}`)
+            window.alert(err)
             isError = true;
         }
 
@@ -77,8 +97,6 @@ const JoinGame = () => {
             arg2 = "" + arg2
             arg3 = "" + arg3
             arg4 = "" + arg4
-            console.log(arg1)
-            console.log(typeof arg1)
             updateGameState(() => ({...gameState, Package1: arg1, Package2: arg2, Package3: arg3, Package4: arg4, formState: "PurchasePackage"}))
         })
     }
@@ -115,7 +133,8 @@ const JoinGame = () => {
         <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
         <h2 className="fw-bold mb-2 text-center">Package1</h2>
             <MDBCardBody className='p-5 w-100 d-flex flex-column'>
-            <MDBBtn className="mb-4" size='lg' >Submit</MDBBtn>
+            <h4 className="PackagePrice">{gameState.Package1}</h4>
+            <MDBBtn className="mb-4" size='lg' value="Package1" onClick={UpdatePackageSelect}>Select</MDBBtn>
             </MDBCardBody>
             </MDBCard>
             </div>
@@ -123,7 +142,8 @@ const JoinGame = () => {
         <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
         <h2 className="fw-bold mb-2 text-center">Package2</h2>
             <MDBCardBody className='p-5 w-100 d-flex flex-column'>
-            <MDBBtn className="mb-4" size='lg' >Submit</MDBBtn>
+            <h4 className="PackagePrice">{gameState.Package2}</h4>
+            <MDBBtn className="mb-4" size='lg' value="Package2" onClick={UpdatePackageSelect}>Select</MDBBtn>
             </MDBCardBody>
             </MDBCard>
             </div>
@@ -131,18 +151,27 @@ const JoinGame = () => {
         <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
         <h2 className="fw-bold mb-2 text-center">Package3</h2>
             <MDBCardBody className='p-5 w-100 d-flex flex-column'>
-            <MDBBtn className="mb-4" size='lg' >Submit</MDBBtn>
+            <h4 className="PackagePrice">{gameState.Package3}</h4>
+            <MDBBtn className="mb-4" size='lg' value="Package3" onClick={UpdatePackageSelect}>Select</MDBBtn>
             </MDBCardBody>
             </MDBCard>
             </div>
             <div id="Card4">
         <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
-        <h2 className="fw-bold mb-2 text-center">Package4</h2>
+            <h2 className="fw-bold mb-2 text-center">Package4</h2>
             <MDBCardBody className='p-5 w-100 d-flex flex-column'>
-            <MDBBtn className="mb-4" size='lg' >Submit</MDBBtn>
+            <h4 className="PackagePrice">{gameState.Package4}</h4>
+            <MDBBtn className="mb-4" size='lg' value="Package4" onClick={UpdatePackageSelect}>Select</MDBBtn>
             </MDBCardBody>
             </MDBCard>
             </div>
+        <div id="PackageSubmit">
+        <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
+            <MDBCardBody className='p-5 w-100 d-flex flex-column'>
+            <MDBBtn className="mb-4" size='lg' onClick={PackageSubmit}>Submit</MDBBtn>
+            </MDBCardBody>
+            </MDBCard>
+        </div>
         </>
         )}
         </>
