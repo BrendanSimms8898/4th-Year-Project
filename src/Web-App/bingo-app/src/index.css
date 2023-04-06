@@ -108,3 +108,25 @@ code {
   width: 100%;
   padding-top: 7.5%;
 }
+
+ div#Card1 { 
+  height: 50vh;
+  float: left;
+  width: 100vh;
+ }
+ div#Card2 { 
+  height: 50vh;
+  float: left;
+  width: 100vh;
+ }
+ div#Card3 { 
+  height: 50vh;
+  clear: left;
+  float: left;
+  width: 100vh;
+ }
+ div#Card4 { 
+  height: 50vh;
+  float: left;
+  width: 100vh;
+ }

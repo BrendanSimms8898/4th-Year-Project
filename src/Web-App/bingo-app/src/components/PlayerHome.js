@@ -5,7 +5,7 @@ const PlayerHome = () => {
     return ( 
     <>
     <PlayerNavBar/>
-    <h1>We are in your Host Home Page</h1>
+    <h1>We are in your Player Home Page</h1>
     </>
     )
 

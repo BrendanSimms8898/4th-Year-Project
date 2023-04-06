@@ -12,8 +12,6 @@ Amplify.configure(awsExports);
 export default function AddBalance() {
     const [user, setUser] = React.useState(null);
 
-    console.log(user);
-
     var amount = ""
 
     const onChange = (event) => {

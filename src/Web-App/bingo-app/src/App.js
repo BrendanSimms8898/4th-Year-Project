@@ -1,12 +1,11 @@
-import { Amplify, Hub, Auth} from 'aws-amplify';
+import { Amplify, Auth} from 'aws-amplify';
 import awsExports from './aws-exports';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import {Routes, Route,BrowserRouter} from 'react-router-dom';
 import 'react-toastify'
 import HostHome from './components/HostHome.js';
-import PlayerNavBar from './components/PlayerNavBar.js'
 import HostGame from './components/HostGame';
 import Reports from './components/Reports';
 import JoinGame from './components/JoinGame';
@@ -15,8 +14,8 @@ import BalanceManager from './components/BalanceManager.js';
 import HostProfile from './components/HostProfile.js';
 import PlayerProfile from './components/PlayerProfile.js';
 import Authentication from './components/Authentication';
-import HostLobby from "./components/HostLobby";
 import AddBalance from './components/AddBalance';
+import WithdrawBalance from './components/WithdrawBalance'
 
 
 Amplify.configure(awsExports);
@@ -49,11 +48,12 @@ export default function App () {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<HostHome/>}></Route>
-            <Route path=":id" element={<HostGame />}></Route>
+            <Route path="/:id" element={<HostGame />}></Route>
             <Route path="Reports" element={<Reports />}></Route>
             <Route path="Profile" element={<HostProfile/>}></Route>
             <Route path="Balance" element={<BalanceManager/>}></Route>
             <Route path="AddBalance" element={<AddBalance/>}></Route>
+            <Route path="WithdrawBalance" element={<WithdrawBalance/>}></Route>
           </Routes>
         </BrowserRouter>
       )
@@ -65,9 +65,11 @@ export default function App () {
           <Route path="/" element={<PlayerHome/>}></Route>
           <Route path="PlayerHome" element={<PlayerHome />}></Route>
           <Route path="JoinGame" element={<JoinGame />}></Route>
+          <Route path="Reports" element={<Reports />}></Route>
           <Route props={user} path="/Profile" element={<PlayerProfile/>}></Route>
           <Route path="Balance" element={<BalanceManager/>}></Route>
           <Route path="AddBalance" element={<AddBalance/>}></Route>
+          <Route path="WithdrawBalance" element={<WithdrawBalance/>}></Route>
         </Routes>
       </BrowserRouter>
       )
