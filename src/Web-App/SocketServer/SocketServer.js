@@ -39,6 +39,7 @@ function PlayerObjectInstance (arg1, arg2) {
 const PlayerObject = {
   username: arg1,
   socketID: arg2,
+  Books: []
 }
 
 return PlayerObject
@@ -204,7 +205,6 @@ io.on("connection", (socket) => {
         if (room.roomName === username) {
           if(room.roomHostSocketID === SocketID) {
             room.roomHostSocketID = ""
-
             io.to(room.roomName).emit("Host Has Disconnected Please wait while he reconnects")
           }
         }
@@ -213,6 +213,44 @@ io.on("connection", (socket) => {
 
     console.log(Rooms)
   });
+
+    socket.on("GenerateTheBooks", (arg1) => {
+      if (usertype == "Player") {
+        var HostSocket = Rooms.filter(room => {
+          if (room.roomName === RoomToJoin) {
+              var HostSocket = room.roomHostSocketID
+              var PlayerSocket = SocketID
+              console.log(arg1)
+              socket.to(HostSocket).emit("GenerateBooks", arg1, PlayerSocket)
+          }
+        })
+      }
+
+      console.log(Rooms);
+    })
+
+    socket.on("SendBooks", (arg1, arg2) => {
+      if (usertype === "Player") {
+        console.log(arg1)
+        var result = Rooms.filter(room => {
+          if (room.roomName === RoomToJoin) {
+            room.Players.filter(player => {
+              if (player.username === username) {
+                player.Books.push(arg1)
+
+                console.log(player)
+
+                console.log(player.Books)
+              }
+            })
+          }
+        })
+      }
+
+      if (usertype === "Host") {
+        socket.to(arg2).emit("SendBooks", arg1)
+      }
+    })
 });
 
 io.of("/").adapter.on("create-room", (room) => {
