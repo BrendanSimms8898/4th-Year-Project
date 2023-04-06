@@ -102,7 +102,8 @@ function HostGame () {
 
     if (isWebSocket != null) {
     isWebSocket.once("GenerateBooks", (arg1, arg2) => {
-        var Books = GenerateBooks(arg1)
+        var Books = []
+        Books = GenerateBooks(arg1)
 
         isWebSocket.emit("SendBooks", Books, arg2)
     });
