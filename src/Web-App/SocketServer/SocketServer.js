@@ -18,7 +18,6 @@ const templateRoomObject = {
   Package2: 0,
   Package3: 0,
   Package4: 0,
-  Numbers: []
 }
 
 function RoomObjectInstance (arg1, arg2, arg3, arg4, arg5, arg6) {
@@ -31,7 +30,6 @@ function RoomObjectInstance (arg1, arg2, arg3, arg4, arg5, arg6) {
     Package2: arg4,
     Package3: arg5,
     Package4: arg6,
-    Numbers: []
   }
 
   return RoomObject
@@ -41,7 +39,6 @@ function PlayerObjectInstance (arg1, arg2) {
 const PlayerObject = {
   username: arg1,
   socketID: arg2,
-  Books: [],
 }
 
 return PlayerObject
@@ -136,28 +133,55 @@ io.on("connection", (socket) => {
     }
 
     if (usertype == "Player") {
-      socket.join(roomtojoin)
+      var room_exists = false
 
       var result = Rooms.filter(room => {
-        if (room.roomName === roomtojoin){
-          room.players.filter(player => {
-            if (player.username === username) {
-              player.socketID = SocketID
-            }
-            else {
-              room.players.append(PlayerObjectInstance(username, SocketID))
-            }
-          })
+        if (room.roomName === RoomToJoin) {
+          room_exists = true
         }
       })
 
+      if (room_exists === false) {
+        socket.disconnect(true)
+      }
 
-      socket.emit("Packages", Package1, Package2, Package3, Package4);
+      else {
+        socket.join(RoomToJoin)
+      }
+
+      var result = Rooms.filter(room => {
+        if (room.roomName === RoomToJoin){
+          if (room.Players.length != 0) {
+            room.Players.filter(player => {
+              if (player.username === username) {
+                player.socketID = SocketID
+                console.log(room.Players[0])
+              }
+              else {
+                room.Players.push(PlayerObjectInstance(username, SocketID))
+              }
+            })
+          }
+          else {
+            room.Players.push(PlayerObjectInstance(username, SocketID))
+            console.log(room.Players[0])
+          }
+        }
+      })
+
+      console.log(Rooms)
+
+      var Package1 = Rooms.filter(room => {
+        if (room.roomName === RoomToJoin) {
+          socket.emit("Packages", room.Package1, room.Package2, room.Package3, room.Package4);
+        }
+      })
     }
   }
+  
   else {
     console.log("Not a valid user connection was closed")
-    socket.close()
+    socket.disconnect()
   }
 
   socket.on("disconnect", (socket) => {
@@ -166,8 +190,8 @@ io.on("connection", (socket) => {
     if (usertype === "Player") {
   
       Rooms.filter(room => {
-        if(room.roomName === roomtojoin) {
-        result.players.filter(player => {
+        if(room.roomName === RoomToJoin) {
+        room.Players.filter(player => {
         if (player.username === username) {
           player.socketID = ""
         }
