@@ -6,7 +6,6 @@ import awsExports from "../aws-exports.js";
 import HorizontalScroll from 'react-horizontal-scrolling'
 import WebSocket from 'ws';
 import { Button } from "@mui/material";
-import axios from 'axios'
 
 Amplify.configure(awsExports);
 
