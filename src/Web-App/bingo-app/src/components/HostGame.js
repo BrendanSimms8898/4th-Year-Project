@@ -8,8 +8,6 @@ import WebSocket from 'ws';
 import { Button } from "@mui/material";
 import axios from 'axios'
 
-var socket = null;
-
 Amplify.configure(awsExports);
 
 const initialGameState = {
@@ -24,7 +22,8 @@ const initialGameState = {
     Package1: 0,
     Package2: 0,
     Package3: 0,
-    Package4: 0
+    Package4: 0,
+    TotalSpend: 0,
 }
 
 const numbers = []
@@ -38,7 +37,7 @@ function HostGame () {
 
     const [isConfigured, updateIsConfigured] = React.useState(localStorage.getItem("isConfigured"))
 
-    const [isWebSocket, updateIsWebsocket] = React.useState("false");
+    const [isWebSocket, updateIsWebsocket] = React.useState(null);
 
     const getUser = async () => {
       const user = await Auth.currentAuthenticatedUser();
@@ -72,10 +71,10 @@ function HostGame () {
         }
     }
 
-    if (gameState.configurationStage == "GameStart" && isWebSocket == "false") {
+    if (gameState.configurationStage == "GameStart" && isWebSocket == null) {
         const { io } = require("socket.io-client");
 
-        socket = io("ws://localhost:1025/", {
+        const socket = io("ws://localhost:1025/", {
             extraHeaders: {
                 "useridtoken": user.signInUserSession.idToken.jwtToken,
                 "usertype": user.attributes['custom:UserType'],
@@ -89,17 +88,25 @@ function HostGame () {
 
         console.log(socket);
 
-        updateIsWebsocket(true);
+        updateIsWebsocket(socket);
     }
 
-    if (socket != null) {
-        socket.on("getNextNumber")
+    if (isWebSocket != null) {
+        isWebSocket.on("getNextNumber")
     }
 
     React.useEffect(() => {
       getUser();
       ConfigurationSet();
     }, []);
+
+    if (isWebSocket != null) {
+    isWebSocket.once("GenerateBooks", (arg1, arg2) => {
+        var Books = GenerateBooks(arg1)
+
+        isWebSocket.emit("SendBooks", Books, arg2)
+    });
+}
 
     const onChange = (e) => {
         e.persist();
@@ -116,6 +123,56 @@ function HostGame () {
         updateGameState(() => ({...gameState, games: games}))
     }
     };
+
+    async function GenerateBooks (arg1) {
+        var HowMany = 0
+        var HowManyGames = gameState.numberOfGames
+
+        if (arg1 === "Package1") {
+            HowMany = 3
+        }
+        if (arg1 === "Package2") {
+            HowMany = 6
+        }
+        if (arg1 === "Package3") {
+            HowMany = 9
+        }
+        if (arg1 === "Package4") {
+            HowMany = 12
+        }
+
+        console.log(HowMany)
+
+        var x = 0
+        var i = 0
+
+        var BookContainer = []
+
+        while (x < HowManyGames) {
+            var Book = {
+                gameName: "Game" + (x + 1),
+                Books: []
+            }
+
+            i = 0
+
+            while (i < HowMany) {
+                var tmp = await axios.get('https://2jrse7zc2ggh7fwtvuvq5ikjj40gtnfj.lambda-url.us-east-1.on.aws/') 
+
+                Book.Books.push(tmp.data);
+        
+                i += 1;
+            }
+
+            BookContainer.push(Book)
+
+            x += 1
+        }
+
+        console.log(BookContainer);
+        
+        return BookContainer
+    }
 
     const setNumberOfGames = async () => {
         const {numberOfGames} = gameState
