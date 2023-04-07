@@ -62,13 +62,6 @@ const JoinGame = () => {
         socket.emit("GenerateTheBooks", gameState.SelectedPackage)
     }
 
-    if (socket != null) {
-    socket.once("SendBooks", (arg1, arg2) => {
-        gameState.books.push(arg1)
-        console.log(gameState)
-    })
-    }
-
     const JoinAGame = async() => {
         var isError = false;
         try {

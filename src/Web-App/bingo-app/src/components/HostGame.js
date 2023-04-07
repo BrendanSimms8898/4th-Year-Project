@@ -86,8 +86,6 @@ function HostGame () {
               }
         });
 
-        console.log(socket);
-
         updateIsWebsocket(socket);
     }
 
@@ -101,10 +99,15 @@ function HostGame () {
     }, []);
 
     if (isWebSocket != null) {
+        const Books = []
     isWebSocket.once("GenerateBooks", (arg1, arg2) => {
-        var Books = GenerateBooks(arg1)
+        GenerateBooks(arg1).then(value => {
+            Books.push(value)
+        })
 
-        isWebSocket.emit("SendBooks", Books, arg2)
+        console.log(Books)
+        
+        isWebSocket.emit("SendBooks", Books)
     });
 }
 
@@ -149,28 +152,21 @@ function HostGame () {
         var BookContainer = []
 
         while (x < HowManyGames) {
-            var Book = {
-                gameName: "Game" + (x + 1),
-                Books: []
-            }
-
             i = 0
 
             while (i < HowMany) {
                 var tmp = await axios.get('https://2jrse7zc2ggh7fwtvuvq5ikjj40gtnfj.lambda-url.us-east-1.on.aws/') 
 
-                Book.Books.push(tmp.data);
+                BookContainer.push(tmp.data);
         
                 i += 1;
             }
 
-            BookContainer.push(Book)
-
             x += 1
         }
-
-        console.log(BookContainer);
         
+        console.log(BookContainer)
+
         return BookContainer
     }
 
