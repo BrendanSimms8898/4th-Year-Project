@@ -59,7 +59,44 @@ const JoinGame = () => {
     }
 
     const PackageSubmit = async () => {
+        var HasBalance = false;
+
+        var UserBalance = user.attributes['custom:balance']
+
+        var cost = 0
+
+        if (gameState.SelectedPackage === "Package1") {
+            cost = gameState.Package1
+        }
+
+        if (gameState.SelectedPackage === "Package2") {
+            cost = gameState.Package2
+        }
+
+        if (gameState.SelectedPackage === "Package3") {
+            cost = gameState.Package4
+        }
+        
+        if (gameState.SelectedPackage === "Package4") {
+            cost = gameState.Package4
+        }
+
+        cost = parseInt(cost)
+
+        if (UserBalance - cost > 0) {
+            HasBalance = true
+        }
+        
+        if (HasBalance === true) {
         socket.emit("GenerateTheBooks", gameState.SelectedPackage)
+        var NewBalanceNum = UserBalance - cost 
+        var NewBalanceString = "" + NewBalanceNum
+        Auth.updateUserAttributes(user, {'custom:balance':NewBalanceString})
+        }
+
+        else {
+        window.alert("You have insufficent funds")
+        }
     }
 
     const JoinAGame = async() => {
@@ -92,6 +129,54 @@ const JoinGame = () => {
             arg4 = "" + arg4
             updateGameState(() => ({...gameState, Package1: arg1, Package2: arg2, Package3: arg3, Package4: arg4, formState: "PurchasePackage"}))
         })
+
+        socket.once("SendBooks", (ArrayString, HowMany) => {
+            var NumberOfBooks = 0
+
+            if (HowMany === "Package1") {
+                NumberOfBooks = 3
+            }
+            if (HowMany === "Package2") {
+                NumberOfBooks = 6
+            }
+            if (HowMany === "Package3") {
+                NumberOfBooks = 9
+            }
+            if (HowMany === "Package4") {
+                NumberOfBooks = 12
+            }
+            
+            const temp = ArrayString.split(' ')
+            var CurrentLine = []
+            var CurrentTicket = []
+            var CurrentBook = []
+            var AllBooks = []
+            var x = 1
+
+            while (x < temp.length) {
+              if (x != 0) {
+                CurrentLine.push(temp[x])
+              }
+              if (x % 5 === 0) {
+                CurrentTicket.push(CurrentLine)
+                CurrentLine = []
+                }  
+    
+              if (x % 15 === 0) {
+                CurrentBook.push(CurrentTicket)
+                CurrentTicket = []
+              }
+    
+              if (x % 90 === 0) {
+                AllBooks.push(CurrentBook)
+                CurrentBook = []
+              }
+    
+              x += 1
+            }
+            
+            updateGameState(() => ({...gameState, books: AllBooks, formState: "WaitingForHostToStartGame"}))
+      })
     }
 
     console.log(gameState);

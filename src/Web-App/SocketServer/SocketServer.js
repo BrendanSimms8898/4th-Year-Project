@@ -4,9 +4,6 @@ const { CognitoJwtVerifier} = require("aws-jwt-verify")
 const { decomposeUnverifiedJwt } = require("aws-jwt-verify/jwt");
 
 var isValidUser = true;
-var username = null;
-var usertype = null;
-var AccessToken = null;
 
 const Rooms = []
 
@@ -71,7 +68,8 @@ catch (err) {
 
 
 const httpServer = createServer();
-const io = new Server(httpServer, {   
+const io = new Server(httpServer, { 
+  maxHttpBufferSize: 1e8,  
   cors: {
   origin: "*",
 } });
@@ -94,7 +92,7 @@ io.on("connection", (socket) => {
 
   RoomToJoin = socket.handshake.headers.roomtojoin
 
-  var SocketID = socket.id
+  SocketID = socket.id
  
   Verify();
 
@@ -106,8 +104,6 @@ io.on("connection", (socket) => {
       var result = Rooms.filter(room => {
         return room.roomName === username
       });
-
-      console.log(result)
 
       if (result.length < 1) {
       socket.join(username)
@@ -129,8 +125,6 @@ io.on("connection", (socket) => {
         console.log("Host Has rejoined the room")
       }
 
-      console.log(result);
-      console.log(Rooms);
     }
 
     if (usertype == "Player") {
@@ -156,7 +150,6 @@ io.on("connection", (socket) => {
             room.Players.filter(player => {
               if (player.username === username) {
                 player.socketID = SocketID
-                console.log(room.Players[0])
               }
               else {
                 room.Players.push(PlayerObjectInstance(username, SocketID))
@@ -165,19 +158,23 @@ io.on("connection", (socket) => {
           }
           else {
             room.Players.push(PlayerObjectInstance(username, SocketID))
-            console.log(room.Players[0])
           }
         }
-      })
 
-      console.log(Rooms)
+        console.log(room.Players[0])
+        if (room.Players.length >= 1) {
+          console.log(room.Players[1]);
+        }
+      })
 
       var Package1 = Rooms.filter(room => {
         if (room.roomName === RoomToJoin) {
           socket.emit("Packages", room.Package1, room.Package2, room.Package3, room.Package4);
         }
       })
+
     }
+    console.log(Rooms)
   }
   
   else {
@@ -185,25 +182,30 @@ io.on("connection", (socket) => {
     socket.disconnect()
   }
 
-  socket.on("disconnect", (socket) => {
+    socket.on("disconnect", () => {
     console.log("User Has Disconnected")
   
-    if (usertype === "Player") {
+    if (socket.handshake.headers.usertype === "Player") {
   
       Rooms.filter(room => {
-        if(room.roomName === RoomToJoin) {
+        if(room.roomName === socket.handshake.headers.roomtojoin) {
         room.Players.filter(player => {
-        if (player.username === username) {
+        if (player.username === socket.handshake.headers.username) {
           player.socketID = ""
         }
-      })
-    }})
+      })   
+    }
+    console.log(room.Players[0])
+      if (room.Players.length >= 1) {
+      console.log(room.Players[1])
+    }
+  })
     }
   
-    if (usertype == "Host") {
+    if (socket.handshake.headers.usertype == "Host") {
       var result = Rooms.filter(room => {
-        if (room.roomName === username) {
-          if(room.roomHostSocketID === SocketID) {
+        if (room.roomName === socket.handshake.headers.username) {
+          if(room.roomHostSocketID === socket.id) {
             room.roomHostSocketID = ""
             io.to(room.roomName).emit("Host Has Disconnected Please wait while he reconnects")
           }
@@ -217,41 +219,22 @@ io.on("connection", (socket) => {
     socket.on("GenerateTheBooks", (arg1) => {
       if (usertype == "Player") {
         var HostSocket = Rooms.filter(room => {
-          if (room.roomName === RoomToJoin) {
+          if (room.roomName === socket.handshake.headers.roomtojoin) {
               var HostSocket = room.roomHostSocketID
-              var PlayerSocket = SocketID
+              var PlayerSocket = socket.id
               console.log(arg1)
               socket.to(HostSocket).emit("GenerateBooks", arg1, PlayerSocket)
           }
         })
       }
-
-      console.log(Rooms);
     })
 
-    socket.on("SendBooks", (arg1, arg2) => {
-      if (usertype === "Player") {
-        console.log(arg1)
-        var result = Rooms.filter(room => {
-          if (room.roomName === RoomToJoin) {
-            room.Players.filter(player => {
-              if (player.username === username) {
-                player.Books.push(arg1)
-
-                console.log(player)
-
-                console.log(player.Books)
-              }
-            })
-          }
-        })
+    socket.on("SendBooks", (ArrayString, PlayerSocket, HowMany) => {
+      if (socket.handshake.headers.usertype === "Host") {
+        socket.to(PlayerSocket).emit("SendBooks", ArrayString, HowMany)
       }
-
-      if (usertype === "Host") {
-        socket.to(arg2).emit("SendBooks", arg1)
-      }
-    })
-});
+    });
+  })
 
 io.of("/").adapter.on("create-room", (room) => {
   console.log(`room ${room} was created`);
@@ -292,3 +275,4 @@ io.on("EndSession", (socket) => {
 console.log("hi");
 
 httpServer.listen(1025);
+
