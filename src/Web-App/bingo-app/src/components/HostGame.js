@@ -7,6 +7,7 @@ import HorizontalScroll from 'react-horizontal-scrolling'
 import WebSocket from 'ws';
 import { Button } from "@mui/material";
 import axios from 'axios'
+import zIndex from "@mui/material/styles/zIndex";
 
 Amplify.configure(awsExports);
 
@@ -28,6 +29,7 @@ const initialGameState = {
 
 const numbers = []
 
+
 function HostGame () {
     var TotalCost = 0;
 
@@ -38,6 +40,8 @@ function HostGame () {
     const [isConfigured, updateIsConfigured] = React.useState(localStorage.getItem("isConfigured"))
 
     const [isWebSocket, updateIsWebsocket] = React.useState(null);
+
+    const Books = []
 
     const getUser = async () => {
       const user = await Auth.currentAuthenticatedUser();
@@ -93,21 +97,67 @@ function HostGame () {
         isWebSocket.on("getNextNumber")
     }
 
+    function ArrayToString(arg1, Books) {
+        var HowMany = 0;
+
+        var i = 0
+
+        if (arg1 === "Package1") {
+            HowMany = 3
+        }
+        if (arg1 === "Package2") {
+            HowMany = 6
+        }
+        if (arg1 === "Package3") {
+            HowMany = 9
+        }
+        if (arg1 === "Package4") {
+            HowMany = 12
+        }
+        
+        console.log(Books)
+
+        var ArrayString = ""
+
+        while (i < HowMany) {
+            var x = 0
+            while (x < 6) {
+                var z = 0;
+                while (z < 3) {
+                    var a = 0
+                    while (a < 5) {
+                        ArrayString = ArrayString + " " + Books[0][i][x][z][a]
+                        a += 1
+                    }
+                    z += 1
+                }
+                x +=1  
+            }
+            i += 1
+        }
+
+        return ArrayString
+    }
+
     React.useEffect(() => {
       getUser();
       ConfigurationSet();
     }, []);
 
     if (isWebSocket != null) {
-        const Books = []
-    isWebSocket.once("GenerateBooks", (arg1, arg2) => {
-        GenerateBooks(arg1).then(value => {
+    isWebSocket.once("GenerateBooks", (Package, PlayerSocket) => {
+        GenerateBooks(Package).then(value => {
             Books.push(value)
-        })
+            console.log(Books)
 
-        console.log(Books)
-        
-        isWebSocket.emit("SendBooks", Books)
+            if (Books[0] != null) {
+                var ArrayString = ArrayToString(Package, Books);
+            }
+            
+            if (ArrayString != null) {
+                isWebSocket.emit("SendBooks", ArrayString, PlayerSocket, Package)
+            }
+        })
     });
 }
 
