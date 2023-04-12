@@ -60,13 +60,20 @@ div.app {
 }
 
 #GameStartContainer {
-  padding-top: 20px;
   background-color: #bebebe;
+  display: inline-block;
+  vertical-align: middle;
+
+  width: 50%;
+}
+#StartConf {
+  background-color: #bebebe;
+  padding-left: 15%;
 }
 
-#ResetConfigButton {
-  padding-top: 200px;
+#RestConf {
   background-color: #bebebe;
+  padding-right: 15%;
 }
 
 #AccountName {
@@ -143,3 +150,59 @@ code {
   float: center;
 
  }
+ #Gamestart {
+  background-color: #bebebe;
+  height: 100%;
+}
+
+ #PlayerList {
+  padding-left: 15%;
+  padding-right: 15%;
+  text-align: center;
+}
+
+#NumberContainer {
+  float: right
+}
+
+#WaitingForGame {
+  background-color: #bebebe;
+  height: 100%
+}
+
+.text-center {
+  padding-top: 1%;
+}
+
+.table-secondary {
+  height: 5vh;
+  width: 5vw;
+  text-align: center;
+}
+
+.numtable{
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #4f4f4f;
+    vertical-align: top;
+    border-color: #e0e0e0;
+}
+
+.rows{
+    --mdb-gutter-x: 1.5rem; 
+    --mdb-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(-1 * var(--mdb-gutter-y));
+    margin-right: calc(0 * var(--mdb-gutter-x));
+    margin-left: calc(-0.5 * var(--mdb-gutter-x));
+}
+
+.rows>* {
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
+  padding-right: calc(var(--mdb-gutter-x) * 0);
+  padding-left: calc(var(--mdb-gutter-x) * 0.5);
+  margin-top: var(--mdb-gutter-y);
+}
