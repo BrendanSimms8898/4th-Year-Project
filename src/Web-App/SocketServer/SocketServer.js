@@ -36,7 +36,7 @@ function PlayerObjectInstance (arg1, arg2) {
 const PlayerObject = {
   username: arg1,
   socketID: arg2,
-  Books: []
+  Books: false
 }
 
 return PlayerObject
@@ -227,14 +227,73 @@ io.on("connection", (socket) => {
           }
         })
       }
-    })
+    });
 
     socket.on("SendBooks", (ArrayString, PlayerSocket, HowMany) => {
       if (socket.handshake.headers.usertype === "Host") {
         socket.to(PlayerSocket).emit("SendBooks", ArrayString, HowMany)
       }
     });
-  })
+
+    socket.on("PlayerHasBooks", () => {
+      if (socket.handshake.headers.usertype === "Player") {
+        var result = Rooms.filter(room => {
+          if (room.roomName === socket.handshake.headers.roomtojoin) {
+            var HostSocket = room.roomHostSocketID
+          }
+          var player = room.Players.filter(player => {
+            if (player.username === socket.handshake.headers.username) {
+              player.Books = true
+              var playerBooks = player.Books
+              var playerusername = player.username
+              console.log("Sending Player Message")
+              socket.to(HostSocket).emit("AddPlayer", playerBooks, playerusername)
+            }
+          })
+        })
+      }
+    });
+
+
+    socket.on("GameStart", () => {
+    if (socket.handshake.headers.usertype === "Host") {
+      var result = Rooms.filter(room => {
+        if (socket.handshake.headers.username === room.roomName) {
+        var Room = room.roomName
+        
+        console.log("Game Starting")
+        io.to(Room).emit("StartGame")
+      }
+    })
+    }
+  });
+
+
+    socket.on("NextNumber", (Number) => {
+      if (socket.handshake.headers.usertype === "Host") {
+      var result = Rooms.filter(room => {
+        if (room.roomName === socket.handshake.headers.username) {
+          var room = room.roomName
+          console.log("Sending Number")
+          console.log(Number)
+          io.to(room).emit("PlayerNextNumber", Number)
+        }
+    })
+    }
+  });
+})
+  // Socket.on("Check"), () => {
+  //  
+  //}
+
+  // Socket.on("EndGame"), () => {
+  //
+  //}
+
+  // Socket.on("EndSession"), () => {
+  //
+  //}
+
 
 io.of("/").adapter.on("create-room", (room) => {
   console.log(`room ${room} was created`);
@@ -243,34 +302,6 @@ io.of("/").adapter.on("create-room", (room) => {
 io.of("/").adapter.on("join-room", (room, id) => {
   console.log(`socket ${id} has joined room ${room}`);
 });
-
-io.on("getNextNumber", (socket) => {
-  //
-});
-
-io.on("generateBooks", (socket) => {
-  //
-});
-
-io.on("check", (socket) => {
-  //
-});
-
-io.on("getPackages", (socket, room) => {
-  //  
-})
-
-io.on("SelectedPackage", (socket) => {
-  //
-})
-
-io.on("EndGame", (socket) => {
-  //
-})
-
-io.on("EndSession", (socket) => {
-  //
-})
 
 console.log("hi");
 

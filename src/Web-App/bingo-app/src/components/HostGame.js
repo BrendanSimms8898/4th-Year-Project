@@ -29,6 +29,8 @@ const initialGameState = {
 
 const numbers = []
 
+const Players = []
+
 
 function HostGame () {
     var TotalCost = 0;
@@ -43,11 +45,14 @@ function HostGame () {
 
     const Books = []
 
+    const [PlayersInSession, updatePlayersInSession] = React.useState([])
+
+    const [Numbers, updateNumbers] = React.useState([])
+
     const getUser = async () => {
       const user = await Auth.currentAuthenticatedUser();
 
       setUser(user);
-      
     }
 
     if (isConfigured === true) {
@@ -71,7 +76,6 @@ function HostGame () {
         console.log(isConfigured);
 
         if (localStorage.getItem("isConfigured") == "true") {
-            updateGameState(() => ({...gameState, configurationStage: "HowManyGames"}))
         }
     }
 
@@ -93,10 +97,6 @@ function HostGame () {
         updateIsWebsocket(socket);
     }
 
-    if (isWebSocket != null) {
-        isWebSocket.on("getNextNumber")
-    }
-
     function ArrayToString(arg1, Books) {
         var HowMany = 0;
 
@@ -104,21 +104,25 @@ function HostGame () {
 
         if (arg1 === "Package1") {
             HowMany = 3
+            HowMany = HowMany * gameState.games.length
         }
         if (arg1 === "Package2") {
             HowMany = 6
+            HowMany = HowMany * gameState.games.length
         }
         if (arg1 === "Package3") {
             HowMany = 9
+            HowMany = HowMany * gameState.games.length
         }
         if (arg1 === "Package4") {
             HowMany = 12
+            HowMany = HowMany * gameState.games.length
         }
         
         console.log(Books)
 
         var ArrayString = ""
-
+        
         while (i < HowMany) {
             var x = 0
             while (x < 6) {
@@ -142,10 +146,9 @@ function HostGame () {
     React.useEffect(() => {
       getUser();
       ConfigurationSet();
-    }, []);
-
-    if (isWebSocket != null) {
-    isWebSocket.once("GenerateBooks", (Package, PlayerSocket) => {
+      if (isWebSocket != null) {
+        isWebSocket.on("GenerateBooks", (Package, PlayerSocket) => {
+        console.log("Recieved Books Message")
         GenerateBooks(Package).then(value => {
             Books.push(value)
             console.log(Books)
@@ -157,9 +160,27 @@ function HostGame () {
             if (ArrayString != null) {
                 isWebSocket.emit("SendBooks", ArrayString, PlayerSocket, Package)
             }
+
+            Books.splice(0, Books.length)
+
+            console.log(Books)
         })
     });
-}
+
+        isWebSocket.on("AddPlayer", (playerBook, playerUsername) => {
+            console.log("Player Has Books and has joined")
+            if (playerBook === true) {
+                Players.push(playerUsername)
+                const newList = Players.slice(0, Players.length)               
+                updatePlayersInSession(newList)
+
+                console.log(Players)
+                console.log(PlayersInSession)
+            }
+        })
+    }
+    }, [isWebSocket], [PlayersInSession], [Numbers]);
+
 
     const onChange = (e) => {
         e.persist();
@@ -250,7 +271,12 @@ function HostGame () {
     }
 
     const StartGame = async () => {
-        updateGameState(() => ({ ...gameState, configurationStage: "Completed"})) 
+        updateGameState(() => ({ ...gameState, configurationStage: "Completed", currentGame: 1, CurrentPrizeSL: gameState.games[0]["PrizeFL"], CurrentPrizeDL: gameState.games[0]["PrizeDL"], CurrentPrizeFH: gameState.games[0]["PrizeFH"]})) 
+        if (isWebSocket != null) {
+        isWebSocket.emit("GameStart")
+        }
+
+        console.log(gameState)
     }
 
     const setPrizeMoney = async () => { 
@@ -359,6 +385,13 @@ function HostGame () {
 
         
         numbers.push(NextNumber)
+        const NewList = numbers.slice(0, numbers.length)
+
+        updateNumbers(NewList)
+
+        if (isWebSocket !== null) {
+        isWebSocket.emit("NextNumber", NextNumber)
+        }
     }
 
     console.log(numbers)
@@ -366,8 +399,11 @@ function HostGame () {
 
     const {configurationStage} = gameState;
     const {games} = gameState
+    const {currentGame} = gameState
 
     console.log(user);
+    console.log(gameState);
+    
     return (
     <>  
     {configurationStage === "HowManyGames" && (
@@ -469,35 +505,240 @@ function HostGame () {
     {configurationStage === "GameStart" && (
         <>
         <HostNavBar/>
+        <div id="Gamestart">
+        
+        <div id="PlayerList">
+        <MDBContainer fluid>
+            <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
+                <MDBCol col='12'>
+                    <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '50vw'}}>
+                    <MDBCardBody className='p-5 vw-30 d-flex flex-column'>    
+                        <table class="table">
+                        <thead>
+                            <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Username</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {PlayersInSession.map((player, index) => {
+                            return (
+                                <tr>
+                                <th scope="row">{index + 1}</th>
+                                <td>{player}</td>
+                                </tr>
+                                )
+                            })}
+                        </tbody>
+                        </table>
+                    </MDBCardBody>
+                    </MDBCard>
+                </MDBCol>
+            </MDBRow>
+        </MDBContainer>
+        </div>
+    <div>
         <div id="GameStartContainer">
-        <MDBContainer fluid>
-            <MDBRow className='d-flex justify-content-center align-items-center h-100'>
-                <MDBCol col='12'>
-                    <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
-                    <MDBCardBody className='p-5 w-100 d-flex flex-column'>     
-                        <MDBBtn className="mb-4" size='lg' onClick={StartGame}>Start the Game</MDBBtn>
-                    </MDBCardBody>
-                    </MDBCard>
-                </MDBCol>
-            </MDBRow>
-        </MDBContainer>
+            <div id="StartConf">
+                <MDBContainer fluid>
+                    <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
+                        <MDBCol col='12'>
+                            <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
+                            <MDBCardBody className='p-5 vw-30 d-flex flex-column'>     
+                                <MDBBtn className="mb-4" size='lg' onClick={StartGame}>Start the Game</MDBBtn>
+                            </MDBCardBody>
+                            </MDBCard>
+                        </MDBCol>
+                    </MDBRow>
+                </MDBContainer>
+            </div>
         </div>
 
-        <div id="ResetConfigButton">
-        <MDBContainer fluid>
-            <MDBRow className='d-flex justify-content-center align-items-center h-100'>
-                <MDBCol col='12'>
-                    <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
-                    <MDBCardBody className='p-5 w-100 d-flex flex-column'>     
-                        <MDBBtn className="mb-4" size='lg' onClick={ResetConfiguration}>Reset the Configuration?</MDBBtn>
-                    </MDBCardBody>
-                    </MDBCard>
-                </MDBCol>
-            </MDBRow>
-        </MDBContainer>
+        <div id="GameStartContainer">
+            <div id="RestConf">
+            <MDBContainer fluid>
+                <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
+                    <MDBCol col='12'>
+                        <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
+                        <MDBCardBody className='p-5 vw-30 d-flex flex-column'>     
+                            <MDBBtn className="mb-4" size='lg' onClick={ResetConfiguration}>Reset the Configuration?</MDBBtn>
+                        </MDBCardBody>
+                        </MDBCard>
+                    </MDBCol>
+                </MDBRow>
+            </MDBContainer>
+            </div>
+            </div>
+            </div>
         </div>
+        </>
+    )}
 
-        <Button onClick={getNextNumber}>Test</Button>
+    {configurationStage === "Completed" && (
+        <>
+        <HostNavBar/>
+        <section class="text-center">
+
+          <div class="rows">
+            <div class="col-lg-4 col-md-12 mb-4">
+              <div class="card">
+                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                </div>
+                <div class="card-body">
+                  <p class="card-text">
+                    Some quick example text to build on the card title and make up the bulk of the
+                    card's content.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="card">
+                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                </div>
+                <div class="card-body">
+                  <MDBBtn className="mb-4" size='lg' onClick={getNextNumber}>Next Number</MDBBtn>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="card">
+                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                </div>
+                <div class="card-body">
+                    <h5 id="Number">{Numbers[Numbers.length - 1]}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+		<table className="numtable">
+			<thead>
+				<tr>
+				</tr>
+			</thead>
+            <tbody>
+				<tr className="table-secondary">
+					<td id="box1">1</td>
+					<td id="box2">2</td>
+					<td id="box3">3</td>
+					<td id="box4">4</td>
+					<td id="box5">5</td>
+					<td id="box6">6</td>
+					<td id="box7">7</td>
+					<td id="box9">8</td>
+					<td id="box9">9</td>
+					<td id="box10">10</td>
+				</tr>
+			
+				<tr className="table-secondary">
+                    <td id="box11">11</td>
+                    <td id="box12">12</td>
+                    <td id="box13">13</td>
+                    <td id="box14">14</td>
+                    <td id="box15">15</td>
+					<td id="box16">16</td>
+					<td id="box17">17</td>
+					<td id="box18">18</td>
+					<td id="box19">19</td>
+					<td id="box20">20</td>
+				</tr>
+			
+				<tr className="table-secondary">
+                        <td id="box21">21</td>
+                        <td id="box22">22</td>
+                        <td id="box23">23</td>
+                        <td id="box24">24</td>
+                        <td id="box25">25</td>
+                        <td id="box26">26</td>
+                        <td id="box27">27</td>
+                        <td id="box28">28</td>
+                        <td id="box29">29</td>
+                        <td id="box30">30</td>
+
+				</tr>
+			
+				<tr className="table-secondary">
+                        <td id="box31">31</td>
+						<td id="box32">32</td>
+						<td id="box33">33</td>
+						<td id="box34">34</td>
+						<td id="box35">35</td>
+						<td id="box36">36</td>
+						<td id="box37">37</td>
+						<td id="box38">38</td>
+						<td id="box39">39</td>
+                        <td id="box40">40</td>
+
+				</tr>
+			
+				<tr className="table-secondary">
+                        <td id="box41">41</td>
+                        <td id="box42">42</td>
+                        <td id="box43">43</td>
+                        <td id="box44">44</td>
+                        <td id="box45">45</td>
+                        <td id="box46">46</td>
+						<td id="box47">47</td>
+						<td id="box48">48</td>
+						<td id="box49">49</td>
+						<td id="box50">50</td>
+                </tr>
+                <tr className="table-secondary">
+                        <td id="box51">51</td>
+						<td id="box52">52</td>
+						<td id="box53">53</td>
+						<td id="box54">54</td>
+                        <td id="box55">55</td>
+                        <td id="box56">56</td>
+                        <td id="box57">57</td>
+                        <td id="box58">58</td>
+                        <td id="box59">59</td>
+                        <td id="box60">60</td>
+                </tr>
+                <tr className="table-secondary">
+                        <td id="box61">61</td>
+						<td id="box62">62</td>
+						<td id="box63">63</td>
+						<td id="box64">64</td>
+						<td id="box65">65</td>
+						<td id="box66">66</td>
+						<td id="box67">67</td>
+						<td id="box68">68</td>
+						<td id="box69">69</td>
+                        <td id="box70">70</td>
+				</tr>
+			
+				<tr className="table-secondary">
+                        <td id="box71">71</td>
+                        <td id="box72">72</td>
+                        <td id="box73">73</td>
+                        <td id="box74">74</td>
+                        <td id="box75">75</td>
+                        <td id="box76">76</td>
+						<td id="box77">77</td>
+						<td id="box78">78</td>
+						<td id="box79">79</td>
+						<td id="box80">80</td>
+                </tr>
+                <tr className="table-secondary">
+						<td id="box81">81</td>
+                        <td id="box82">82</td>
+                        <td id="box83">83</td>
+                        <td id="box84">84</td>
+						<td id="box85">85</td>
+						<td id="box86">86</td>
+						<td id="box87">87</td>
+                        <td id="box88">88</td>
+                        <td id="box89">89</td>
+                        <td id="box90">90</td>
+				</tr>
+                </tbody>
+			</table>
         </>
     )}
     </>

@@ -14,6 +14,8 @@ const initialState = {
     Package3: "",
     Package4: "",
     SelectedPackage: "",
+    CurrentGame: 0,
+    BooksForCurrentGame: [],
 }
 
 const intialBookobject = {
@@ -35,16 +37,138 @@ const JoinGame = () => {
 
     const [socket, setSocket] = React.useState(null);
 
+    const [Number, updateNumber] = React.useState(null);
+
     const getUser = async () => {
         const user = await Auth.currentAuthenticatedUser();
   
         setUser(user);
         
     }
+
+    console.log(socket)
+    console.log(Number)
     
     React.useEffect(() => {
         getUser();
-      }, []);
+
+        if (gameState.CurrentGame !== 0) {
+            var CurrentGame = gameState.CurrentGame
+            var Index = 0
+            if (gameState.SelectedPackage === "Package1") {
+                Index = 4
+                if (CurrentGame != 1) {
+                    Index = 4 + (CurrentGame * 13)
+                }
+            }
+            if (gameState.SelectedPackage === "Package2") {
+                Index = 7
+                if (CurrentGame != 1) {
+                    Index = 4 + (CurrentGame * 13)
+                }
+            }
+            if (gameState.SelectedPackage === "Package3") {
+                Index = 10
+                if (CurrentGame != 1) {
+                    Index = 4 + (CurrentGame * 13)
+                }
+            }
+            if (gameState.SelectedPackage === "Package4") {
+                Index = 13
+                if (CurrentGame != 1) {
+                    Index = 4 + (CurrentGame * 13)
+                }
+            }
+            const BooksForGame = gameState.books.slice(0, Index)
+    
+            updateGameState(() => ({...gameState, BooksForCurrentGame: BooksForGame}))
+        }
+
+        if (socket !== null) {
+        socket.on("PlayerNextNumber", (LatestNumber) => {
+            var NewNumber = LatestNumber
+            console.log("Recieved a number")
+            updateNumber(NewNumber)
+        })
+
+        socket.once("Packages", (arg1, arg2, arg3, arg4) => {
+            arg1 = "" + arg1
+            arg2 = "" + arg2
+            arg3 = "" + arg3
+            arg4 = "" + arg4
+            updateGameState(() => ({...gameState, Package1: arg1, Package2: arg2, Package3: arg3, Package4: arg4, formState: "PurchasePackage"}))
+        })
+
+        socket.once("SendBooks", (ArrayString, HowMany) => {
+            var NumberOfBooks = 0
+
+            if (HowMany === "Package1") {
+                NumberOfBooks = 3
+            }
+            if (HowMany === "Package2") {
+                NumberOfBooks = 6
+            }
+            if (HowMany === "Package3") {
+                NumberOfBooks = 9
+            }
+            if (HowMany === "Package4") {
+                NumberOfBooks = 12
+            }
+            
+            const temp = ArrayString.split(' ')
+            var CurrentLine = []
+            var CurrentTicket = []
+            var CurrentBook = []
+            var AllBooks = []
+            var x = 1
+
+            while (x < temp.length) {
+              if (x != 0) {
+                CurrentLine.push(temp[x])
+              }
+              if (x % 5 === 0) {
+                CurrentTicket.push(CurrentLine)
+                CurrentLine = []
+                }  
+    
+              if (x % 15 === 0) {
+                CurrentBook.push(CurrentTicket)
+                CurrentTicket = []
+              }
+    
+              if (x % 90 === 0) {
+                AllBooks.push(CurrentBook)
+                CurrentBook = []
+              }
+              x += 1
+            }
+            
+            updateGameState((previous) => ({...previous, books: AllBooks, formState: "WaitingForHostToStartGame"}));
+
+            socket.emit("PlayerHasBooks");
+      })
+
+        socket.once("StartGame", () => {
+            console.log("Recieved Game Start Message")
+            var NumberOfBooksPerGame = gameState.SelectedPackage
+
+            if (NumberOfBooksPerGame === "Package1") {
+                NumberOfBooksPerGame = "3"
+            }
+            if (NumberOfBooksPerGame === "Package2") {
+                NumberOfBooksPerGame = "6"
+            }
+            if (NumberOfBooksPerGame === "Package3") {
+                NumberOfBooksPerGame = "9"
+            }
+            if (NumberOfBooksPerGame === "Package4") {
+                NumberOfBooksPerGame = "12"
+            }
+            updateGameState((previous) => ({...previous, formState: "InGame", CurrentGame: 1}))
+        })
+    }
+
+      }, [socket], [Number]);
 
     const onChange = (event) => {
         event.persist();
@@ -121,62 +245,6 @@ const JoinGame = () => {
             window.alert(err)
             isError = true;
         }
-
-        socket.once("Packages", (arg1, arg2, arg3, arg4) => {
-            arg1 = "" + arg1
-            arg2 = "" + arg2
-            arg3 = "" + arg3
-            arg4 = "" + arg4
-            updateGameState(() => ({...gameState, Package1: arg1, Package2: arg2, Package3: arg3, Package4: arg4, formState: "PurchasePackage"}))
-        })
-
-        socket.once("SendBooks", (ArrayString, HowMany) => {
-            var NumberOfBooks = 0
-
-            if (HowMany === "Package1") {
-                NumberOfBooks = 3
-            }
-            if (HowMany === "Package2") {
-                NumberOfBooks = 6
-            }
-            if (HowMany === "Package3") {
-                NumberOfBooks = 9
-            }
-            if (HowMany === "Package4") {
-                NumberOfBooks = 12
-            }
-            
-            const temp = ArrayString.split(' ')
-            var CurrentLine = []
-            var CurrentTicket = []
-            var CurrentBook = []
-            var AllBooks = []
-            var x = 1
-
-            while (x < temp.length) {
-              if (x != 0) {
-                CurrentLine.push(temp[x])
-              }
-              if (x % 5 === 0) {
-                CurrentTicket.push(CurrentLine)
-                CurrentLine = []
-                }  
-    
-              if (x % 15 === 0) {
-                CurrentBook.push(CurrentTicket)
-                CurrentTicket = []
-              }
-    
-              if (x % 90 === 0) {
-                AllBooks.push(CurrentBook)
-                CurrentBook = []
-              }
-    
-              x += 1
-            }
-            
-            updateGameState(() => ({...gameState, books: AllBooks, formState: "WaitingForHostToStartGame"}))
-      })
     }
 
     console.log(gameState);
@@ -251,6 +319,30 @@ const JoinGame = () => {
             </MDBCard>
         </div>
         </>
+        )}
+        {formState === "WaitingForHostToStartGame" &&(
+            <div id="WaitingForGame">
+            <>
+            <PlayerNavBar/>
+            <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
+            <MDBCardBody className='p-5 vw-30 d-flex flex-column'>     
+                <h5>Waiting For Host to start the game</h5>
+            </MDBCardBody>
+            </MDBCard>
+            </>
+            </div>
+        )}
+        {formState === "InGame" && (
+            <>
+            <PlayerNavBar/>
+            <div id="NumberContainer">
+            <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
+            <MDBCardBody className='p-5 vw-30 d-flex flex-column'>     
+                <h5 id="Number">{Number}</h5>
+            </MDBCardBody>
+            </MDBCard>
+            </div>
+            </>
         )}
         </>
     )
