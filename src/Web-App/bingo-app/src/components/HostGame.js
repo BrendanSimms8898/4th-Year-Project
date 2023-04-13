@@ -618,8 +618,7 @@ function HostGame () {
             </div>
           </div>
         </section>
-
-		<table className="numtable">
+		<table className="numtable table-bordered">
 			<thead>
 				<tr>
 				</tr>

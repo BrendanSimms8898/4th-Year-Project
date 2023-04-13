@@ -119,25 +119,23 @@ code {
  div#Card1 { 
   height: 50vh;
   float: left;
-  width: 100vh;
+  width: 50%;
  }
  div#Card2 { 
   height: 50vh;
   float: left;
-  width: 100vh;
+  width: 50%;
  }
  div#Card3 {
-  margin-top: -100vh;
   height: 50vh;
   clear: left;
   float: right;
-  width: 100vh;
+  width: 50%;
  }
  div#Card4 { 
-  margin-top: -50vh;
   height: 50vh;
   float: right;
-  width: 100vh;
+  width: 50%;
  }
 
  .PackagePrice {
@@ -146,13 +144,21 @@ code {
  }
 
  #PackageSubmit {
-  margin-top: 85vh;
+  margin-top: 1vh;
   float: center;
 
  }
+
+ @media only screen and (min-width: 1024px) {
+
+  #Gamestart {
+    background-color: #bebebe;
+    height: 100%;
+  }
+
+}
  #Gamestart {
   background-color: #bebebe;
-  height: 100%;
 }
 
  #PlayerList {
@@ -247,4 +253,29 @@ code {
 .tableFixHead {
   overflow-y: auto; /* make the table scrollable if height is more than 200 px  */
   height: 45vh;/* gives an initial height of 200px to the table */
+}
+
+#Pack {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+}
+
+
+@media only screen and (max-width: 1024px) {
+
+  #Pack{
+    flex-direction: column;
+  }
+
+}
+
+
+@media only screen and (min-width: 1024px) {
+
+  #Player-table{
+    padding-top: 15vh;
+  }
+
 }
