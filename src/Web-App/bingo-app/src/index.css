@@ -1,6 +1,6 @@
 body {
-  height: 100;
-  width: 100;
+  height: 100%;
+  width: 100%;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -28,7 +28,7 @@ div.app {
 #Authentication-container {
   background-color: #508bfc;
   position: fixed;
-  padding-top: 15px;
+  padding-top: 4%;
   width: 100%;
   height: 100%;
 }
@@ -36,26 +36,26 @@ div.app {
 #ConfigurationContainer {
     background-color: #bebebe;
     position: fixed;
-    padding-top: 125px;
+    padding-top: 10%;
     width: 100%;
     height: 100%;
 }
 
 #PrizeMoneyConfiguration {
-  padding-top: 125px;
+  padding-top: 6%;
   background-color: #bebebe;
   width: 100%;
   height: 25%;
 } 
 
 #PrizeMoneyConfigurationTitle {
-  padding-top: 50px;
-  height: 25%;
+  padding-top: 1%;
+  height: 20%;
   background-color: #bebebe;
 }
 
 #PrizeMoneyConfigurationSubmit {
-  padding-top: 400px;
+  padding-top: 20%;
   background-color: #bebebe;
 }
 
@@ -161,8 +161,9 @@ code {
   text-align: center;
 }
 
-#NumberContainer {
-  float: right
+#Number {
+  vertical-align: auto;
+  margin-top: 5%;
 }
 
 #WaitingForGame {
@@ -205,4 +206,45 @@ code {
   padding-right: calc(var(--mdb-gutter-x) * 0);
   padding-left: calc(var(--mdb-gutter-x) * 0.5);
   margin-top: var(--mdb-gutter-y);
+}
+
+.game-card-body {
+  flex: 1 1 auto;
+  padding: 1.5rem 1.5rem;
+  height: 15vh;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+.game-start-rows{
+  display: flex;
+  flex-wrap: wrap;
+  padding-right: 2%;
+
+}
+.game-start-rows>* {
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
+  padding-right: 5%;
+  padding-left: 5%;
+  margin-top: var(--mdb-gutter-y);
+}
+.game-start-card-body {
+  flex: 1 1 auto;
+  padding: 1.5rem 1.5rem;
+  height: 15vh;
+}
+
+
+.tableFixHead thead th {
+  position: sticky; /* make the table heads sticky */
+  top: 0px; /* table head will be placed from the top of the table and sticks to it */
+}
+
+.tableFixHead {
+  overflow-y: auto; /* make the table scrollable if height is more than 200 px  */
+  height: 45vh;/* gives an initial height of 200px to the table */
 }

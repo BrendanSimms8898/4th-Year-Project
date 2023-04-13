@@ -32,6 +32,7 @@ const numbers = []
 const Players = []
 
 
+
 function HostGame () {
     var TotalCost = 0;
 
@@ -411,12 +412,12 @@ function HostGame () {
                     <HostNavBar />
                         <div id="ConfigurationContainer">
                         <MDBContainer fluid>
-                            <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+                            <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
                                 <MDBCol col='12'>
                                     <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px' }}>
-                                        <MDBCardBody className='p-5 w-100 d-flex flex-column'>
+                                        <MDBCardBody className='p-5 vw-30 d-flex flex-column'>
                                             <h2 className="fw-bold mb-2 text-center">How Many Games?</h2>
-                                            <MDBInput wrapperClass='mb-4 w-100' onChange={onChange} name="numberOfGames" label='How Many games would you like' id='formControlLg' type='numberOfGames' size="lg" />
+                                            <MDBInput wrapperClass='mb-4 vw-30' onChange={onChange} name="numberOfGames" label='How Many games would you like' id='formControlLg' type='numberOfGames' size="lg" />
                                             <MDBBtn className="mb-4" size='lg' onClick={setNumberOfGames}>Confirm Number of Games</MDBBtn>
                                         </MDBCardBody>
                                     </MDBCard>
@@ -432,10 +433,10 @@ function HostGame () {
             <HostNavBar/>
             <div id="PrizeMoneyConfigurationTitle">
             <MDBContainer fluid>
-            <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+            <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
                 <MDBCol col='12'>
                     <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
-                    <MDBCardBody className='p-5 w-100 d-flex flex-column'>     
+                    <MDBCardBody className='p-5 vw-30 d-flex flex-column'>     
                         <h2 className="fw-bold mb-2 text-center">Please Set your Prize Money for Each individual game</h2>
                     </MDBCardBody>
                     </MDBCard>
@@ -448,14 +449,14 @@ function HostGame () {
             {games.map((game, index) => {
                 return (
     <MDBContainer fluid>
-        <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+        <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
            <MDBCol col='12'>
                <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
-                   <MDBCardBody className='p-5 w-100 d-flex flex-column'>
+                   <MDBCardBody className='p-5 vw-30 d-flex flex-column'>
                     <h2 key={games.gamename} className="fw-bold mb-2 text-center">{game.gamename}</h2>
-                   <MDBInput  wrapperClass='mb-4 w-100' onChange={onPrizeMoneyChange} name="PrizeFL" label='Single Line Prize Money?' id='formControlLg' index={index} size="lg" />
-                   <MDBInput  wrapperClass='mb-4 w-100' onChange={onPrizeMoneyChange} name="PrizeDL" label='Double Line Prize Money?' id='formControlLg' index={index} size="lg" />
-                   <MDBInput  wrapperClass='mb-4 w-100' onChange={onPrizeMoneyChange} name="PrizeFH" label='Full House Prize Money?' id='formControlLg' index={index} size="lg" />
+                   <MDBInput  wrapperClass='mb-4 vw-30' onChange={onPrizeMoneyChange} name="PrizeFL" label='Single Line Prize Money?' id='formControlLg' index={index} size="lg" />
+                   <MDBInput  wrapperClass='mb-4 vw-30' onChange={onPrizeMoneyChange} name="PrizeDL" label='Double Line Prize Money?' id='formControlLg' index={index} size="lg" />
+                   <MDBInput  wrapperClass='mb-4 vw-30' onChange={onPrizeMoneyChange} name="PrizeFH" label='Full House Prize Money?' id='formControlLg' index={index} size="lg" />
                    </MDBCardBody>
                 </MDBCard>
             </MDBCol>
@@ -467,10 +468,10 @@ function HostGame () {
     </div>
     <div id="PrizeMoneyConfigurationSubmit">
         <MDBContainer fluid>
-            <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+            <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
                 <MDBCol col='12'>
                     <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
-                    <MDBCardBody className='p-5 w-100 d-flex flex-column'>     
+                    <MDBCardBody className='p-5 vw-30 d-flex flex-column'>     
                         <MDBBtn className="mb-4" size='lg' onClick={setPrizeMoney}>Confirm Prize Money</MDBBtn>
                     </MDBCardBody>
                     </MDBCard>
@@ -485,14 +486,14 @@ function HostGame () {
         <HostNavBar/>
         <div id="ConfigurationContainer">
         <MDBContainer fluid>
-            <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+            <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
                 <MDBCol col='12'>
                     <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
-                    <MDBCardBody className='p-5 w-100 d-flex flex-column'>     
-                    <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package1" label='How Much would you like Package 1 to cost?' id='formControlLg' size="lg" />
-                    <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package2" label='How Much would you like Package 2 to cost?' id='formControlLg' size="lg" />
-                    <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package3" label='How Much would you like Package 3 to cost?' id='formControlLg' size="lg" />
-                    <MDBInput  wrapperClass='mb-4 w-100' onChange={onChange} name="Package4" label='How Much would you like Package 4 to cost?' id='formControlLg' size="lg" />
+                    <MDBCardBody className='p-5 vw-30 d-flex flex-column'>     
+                    <MDBInput  wrapperClass='mb-4 vw-30' onChange={onChange} name="Package1" label='How Much would you like Package 1 to cost?' id='formControlLg' size="lg" />
+                    <MDBInput  wrapperClass='mb-4 vw-30' onChange={onChange} name="Package2" label='How Much would you like Package 2 to cost?' id='formControlLg' size="lg" />
+                    <MDBInput  wrapperClass='mb-4 vw-30' onChange={onChange} name="Package3" label='How Much would you like Package 3 to cost?' id='formControlLg' size="lg" />
+                    <MDBInput  wrapperClass='mb-4 vw-30' onChange={onChange} name="Package4" label='How Much would you like Package 4 to cost?' id='formControlLg' size="lg" />
                     <MDBBtn className="mb-4" size='lg' onClick={SetPackages}>Confirm Package Costs</MDBBtn>
                     </MDBCardBody>
                     </MDBCard>
@@ -511,66 +512,68 @@ function HostGame () {
         <MDBContainer fluid>
             <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
                 <MDBCol col='12'>
-                    <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '50vw'}}>
-                    <MDBCardBody className='p-5 vw-30 d-flex flex-column'>    
-                        <table class="table">
+                    <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '200vw'}}>
+                    <MDBCardBody className='vw-50 d-flex flex-column'>
+                    <div className="tableFixHead">    
+                        <table className="table">
                         <thead>
-                            <tr>
+                        
+                            <tr class="table-light">
                             <th scope="col">#</th>
                             <th scope="col">Username</th>
                             </tr>
                         </thead>
                         <tbody>
+                        
                         {PlayersInSession.map((player, index) => {
                             return (
-                                <tr>
+                                <tr class="table-light">
                                 <th scope="row">{index + 1}</th>
                                 <td>{player}</td>
                                 </tr>
                                 )
                             })}
+                            
                         </tbody>
                         </table>
+                        </div>
                     </MDBCardBody>
                     </MDBCard>
                 </MDBCol>
             </MDBRow>
         </MDBContainer>
         </div>
-    <div>
-        <div id="GameStartContainer">
-            <div id="StartConf">
-                <MDBContainer fluid>
-                    <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
-                        <MDBCol col='12'>
-                            <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
-                            <MDBCardBody className='p-5 vw-30 d-flex flex-column'>     
-                                <MDBBtn className="mb-4" size='lg' onClick={StartGame}>Start the Game</MDBBtn>
-                            </MDBCardBody>
-                            </MDBCard>
-                        </MDBCol>
-                    </MDBRow>
-                </MDBContainer>
-            </div>
-        </div>
 
-        <div id="GameStartContainer">
-            <div id="RestConf">
-            <MDBContainer fluid>
-                <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
-                    <MDBCol col='12'>
-                        <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
-                        <MDBCardBody className='p-5 vw-30 d-flex flex-column'>     
-                            <MDBBtn className="mb-4" size='lg' onClick={ResetConfiguration}>Reset the Configuration?</MDBBtn>
-                        </MDBCardBody>
-                        </MDBCard>
-                    </MDBCol>
-                </MDBRow>
-            </MDBContainer>
+            <section class="text-center">
+                <div class="game-start-rows">
+                    <div class="col-lg-4 col-md-12 mb-4">
+                        <div class="card">
+                        <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                        </div>
+                        <div class="game-start-card-body">
+                            <MDBBtn className="mb-4" size='lg' onClick={StartGame}>Start Game</MDBBtn>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card">
+                        <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+              <div class="card">
+                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                </div>
+                <div class="game-start-card-body">
+                    <MDBBtn className="mb-4" size='lg' onClick={ResetConfiguration}>Reset Configuration</MDBBtn>
+                </div>
+              </div>
             </div>
             </div>
+            </section>
             </div>
-        </div>
         </>
     )}
 
@@ -584,7 +587,7 @@ function HostGame () {
               <div class="card">
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
                 </div>
-                <div class="card-body">
+                <div class="game-card-body">
                   <p class="card-text">
                     Some quick example text to build on the card title and make up the bulk of the
                     card's content.
@@ -597,7 +600,7 @@ function HostGame () {
               <div class="card">
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
                 </div>
-                <div class="card-body">
+                <div class="game-card-body">
                   <MDBBtn className="mb-4" size='lg' onClick={getNextNumber}>Next Number</MDBBtn>
 
                 </div>
@@ -608,7 +611,7 @@ function HostGame () {
               <div class="card">
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
                 </div>
-                <div class="card-body">
+                <div class="game-card-body">
                     <h5 id="Number">{Numbers[Numbers.length - 1]}</h5>
                 </div>
               </div>

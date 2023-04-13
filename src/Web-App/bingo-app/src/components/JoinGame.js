@@ -257,12 +257,12 @@ const JoinGame = () => {
         <PlayerNavBar/>
         <div id="ConfigurationContainer">
             <MDBContainer fluid>
-            <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+            <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
                <MDBCol col='12'>
                    <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
                    <h2 className="fw-bold mb-2 text-center">Enter the users name you wish to join</h2>
-                       <MDBCardBody className='p-5 w-100 d-flex flex-column'>
-                       <MDBInput onChange={onChange} wrapperClass='mb-4 w-100' name="amount" label='Username' size="lg" />
+                       <MDBCardBody className='p-5 vw-30 d-flex flex-column'>
+                       <MDBInput onChange={onChange} wrapperClass='mb-4 vw-30' name="amount" label='Username' size="lg" />
                        <MDBBtn className="mb-4" size='lg' onClick={JoinAGame} >Submit</MDBBtn>
                        </MDBCardBody>
                     </MDBCard>
@@ -278,7 +278,7 @@ const JoinGame = () => {
         <div id="Card1">
         <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
         <h2 className="fw-bold mb-2 text-center">Package1</h2>
-            <MDBCardBody className='p-5 w-100 d-flex flex-column'>
+            <MDBCardBody className='p-5 vw-30 d-flex flex-column'>
             <h4 className="PackagePrice">{gameState.Package1}</h4>
             <MDBBtn className="mb-4" size='lg' value="Package1" onClick={UpdatePackageSelect}>Select</MDBBtn>
             </MDBCardBody>
@@ -287,7 +287,7 @@ const JoinGame = () => {
             <div id="Card2">
         <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
         <h2 className="fw-bold mb-2 text-center">Package2</h2>
-            <MDBCardBody className='p-5 w-100 d-flex flex-column'>
+            <MDBCardBody className='p-5 vw-30 d-flex flex-column'>
             <h4 className="PackagePrice">{gameState.Package2}</h4>
             <MDBBtn className="mb-4" size='lg' value="Package2" onClick={UpdatePackageSelect}>Select</MDBBtn>
             </MDBCardBody>
@@ -296,7 +296,7 @@ const JoinGame = () => {
             <div id="Card3">
         <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
         <h2 className="fw-bold mb-2 text-center">Package3</h2>
-            <MDBCardBody className='p-5 w-100 d-flex flex-column'>
+            <MDBCardBody className='p-5 vw-30 d-flex flex-column'>
             <h4 className="PackagePrice">{gameState.Package3}</h4>
             <MDBBtn className="mb-4" size='lg' value="Package3" onClick={UpdatePackageSelect}>Select</MDBBtn>
             </MDBCardBody>
@@ -305,7 +305,7 @@ const JoinGame = () => {
             <div id="Card4">
         <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
             <h2 className="fw-bold mb-2 text-center">Package4</h2>
-            <MDBCardBody className='p-5 w-100 d-flex flex-column'>
+            <MDBCardBody className='p-5 vw-30 d-flex flex-column'>
             <h4 className="PackagePrice">{gameState.Package4}</h4>
             <MDBBtn className="mb-4" size='lg' value="Package4" onClick={UpdatePackageSelect}>Select</MDBBtn>
             </MDBCardBody>
@@ -313,7 +313,7 @@ const JoinGame = () => {
             </div>
         <div id="PackageSubmit">
         <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
-            <MDBCardBody className='p-5 w-100 d-flex flex-column'>
+            <MDBCardBody className='p-5 vw-30 d-flex flex-column'>
             <MDBBtn className="mb-4" size='lg' onClick={PackageSubmit}>Submit</MDBBtn>
             </MDBCardBody>
             </MDBCard>

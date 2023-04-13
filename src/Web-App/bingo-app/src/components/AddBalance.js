@@ -41,12 +41,12 @@ export default function AddBalance() {
         <HostNavBar/>
         <div id="PaypalPage">
         <MDBContainer fluid>
-        <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+        <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
            <MDBCol col='12'>
                <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
                <h2 className="fw-bold mb-2 text-center">How much would you like to add?</h2>
-                   <MDBCardBody className='p-5 w-100 d-flex flex-column'>
-                   <MDBInput onChange={onChange} wrapperClass='mb-4 w-100' name="amount" label='€' size="lg" />
+                   <MDBCardBody className='p-5 vw-30 d-flex flex-column'>
+                   <MDBInput onChange={onChange} wrapperClass='mb-4 vw-30' name="amount" label='€' size="lg" />
                    </MDBCardBody>
                 </MDBCard>
             </MDBCol>
@@ -97,12 +97,12 @@ export default function AddBalance() {
             <PlayerNavBar/>
             <div id="PaypalPage">
             <MDBContainer fluid>
-            <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+            <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
                <MDBCol col='12'>
                    <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
                    <h2 className="fw-bold mb-2 text-center">How much would you like to add?</h2>
-                       <MDBCardBody className='p-5 w-100 d-flex flex-column'>
-                       <MDBInput onChange={onChange} wrapperClass='mb-4 w-100' name="amount" label='€' size="lg" />
+                       <MDBCardBody className='p-5 vw-30 d-flex flex-column'>
+                       <MDBInput onChange={onChange} wrapperClass='mb-4 vw-30' name="amount" label='€' size="lg" />
                        </MDBCardBody>
                     </MDBCard>
                 </MDBCol>
