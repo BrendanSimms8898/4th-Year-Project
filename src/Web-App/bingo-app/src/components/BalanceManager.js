@@ -33,13 +33,13 @@ export default function BalanceManager() {
     <HostNavBar/>
     <div id="AddBalanceContainer">
     <MDBContainer fluid>
-        <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+        <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
             <MDBCol col='12'>
                 <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px' }}>
-                    <MDBCardBody className='p-5 w-100 d-flex flex-column'>
+                    <MDBCardBody className='p-5 vw-30 d-flex flex-column'>
                         <h2 className="fw-bold mb-2 text-center">Add Funds</h2>
                         <Link to="/AddBalance">
-                            <MDBBtn className="mb-4 text-center w-100" size='lg' >Deposit</MDBBtn>
+                            <MDBBtn className="mb-4 text-center vw-30" size='lg' >Deposit</MDBBtn>
                         </Link>
                     </MDBCardBody>
                 </MDBCard>
@@ -49,13 +49,13 @@ export default function BalanceManager() {
     </div>
     <div id="WithdrawContainer">
         <MDBContainer fluid>
-            <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+            <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
                 <MDBCol col='12'>
                     <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px' }}>
-                        <MDBCardBody className='p-5 w-100 d-flex flex-column'>
+                        <MDBCardBody className='p-5 vw-30 d-flex flex-column'>
                             <h2 className="fw-bold mb-2 text-center">Withdraw Funds</h2>
                             <Link to="/WithdrawBalance">
-                                <MDBBtn className="mb-4 text-center w-100" size='lg' >Withdraw</MDBBtn>
+                                <MDBBtn className="mb-4 text-center vw-30" size='lg' >Withdraw</MDBBtn>
                             </Link>
                             </MDBCardBody>
                         </MDBCard>
@@ -76,13 +76,13 @@ export default function BalanceManager() {
             <PlayerNavBar/>
             <div id="AddBalanceContainer">
             <MDBContainer fluid>
-                <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+                <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
                     <MDBCol col='12'>
                         <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px' }}>
-                            <MDBCardBody className='p-5 w-100 d-flex flex-column'>
+                            <MDBCardBody className='p-5 vw-30 d-flex flex-column'>
                                 <h2 className="fw-bold mb-2 text-center">Add Funds</h2>
                                 <Link to="/AddBalance">
-                                    <MDBBtn className="mb-4 text-center w-100" size='lg'>Deposit</MDBBtn>
+                                    <MDBBtn className="mb-4 text-center vw-30" size='lg'>Deposit</MDBBtn>
                                 </Link>
                             </MDBCardBody>
                         </MDBCard>
@@ -92,13 +92,13 @@ export default function BalanceManager() {
             </div>
             <div id="WithdrawContainer">
                 <MDBContainer fluid>
-                    <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+                    <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
                         <MDBCol col='12'>
                             <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px' }}>
-                                <MDBCardBody className='p-5 w-100 d-flex flex-column'>
+                                <MDBCardBody className='p-5 vw-30 d-flex flex-column'>
                                     <h2 className="fw-bold mb-2 text-center">Withdraw Funds</h2>
                                     <Link to="/WithdrawBalance">
-                                    <MDBBtn className="mb-4 text-center w-100" size='lg' >Withdraw</MDBBtn>
+                                        <MDBBtn className="mb-4 text-center vw-30" size='lg' >Withdraw</MDBBtn>
                                     </Link>
                                     </MDBCardBody>
                                 </MDBCard>

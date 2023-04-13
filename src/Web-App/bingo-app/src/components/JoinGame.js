@@ -257,12 +257,12 @@ const JoinGame = () => {
         <PlayerNavBar/>
         <div id="ConfigurationContainer">
             <MDBContainer fluid>
-            <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+            <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
                <MDBCol col='12'>
                    <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
                    <h2 className="fw-bold mb-2 text-center">Enter the users name you wish to join</h2>
-                       <MDBCardBody className='p-5 w-100 d-flex flex-column'>
-                       <MDBInput onChange={onChange} wrapperClass='mb-4 w-100' name="amount" label='Username' size="lg" />
+                       <MDBCardBody className='p-5 vw-30 d-flex flex-column'>
+                       <MDBInput onChange={onChange} wrapperClass='mb-4 vw-30' name="amount" label='Username' size="lg" />
                        <MDBBtn className="mb-4" size='lg' onClick={JoinAGame} >Submit</MDBBtn>
                        </MDBCardBody>
                     </MDBCard>
@@ -275,45 +275,47 @@ const JoinGame = () => {
         {formState === "PurchasePackage" && (
         <>
         <PlayerNavBar/>
-        <div id="Card1">
-        <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
-        <h2 className="fw-bold mb-2 text-center">Package1</h2>
-            <MDBCardBody className='p-5 w-100 d-flex flex-column'>
-            <h4 className="PackagePrice">{gameState.Package1}</h4>
-            <MDBBtn className="mb-4" size='lg' value="Package1" onClick={UpdatePackageSelect}>Select</MDBBtn>
-            </MDBCardBody>
-            </MDBCard>
-            </div>
-            <div id="Card2">
-        <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
-        <h2 className="fw-bold mb-2 text-center">Package2</h2>
-            <MDBCardBody className='p-5 w-100 d-flex flex-column'>
-            <h4 className="PackagePrice">{gameState.Package2}</h4>
-            <MDBBtn className="mb-4" size='lg' value="Package2" onClick={UpdatePackageSelect}>Select</MDBBtn>
-            </MDBCardBody>
-            </MDBCard>
-            </div>
-            <div id="Card3">
-        <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
-        <h2 className="fw-bold mb-2 text-center">Package3</h2>
-            <MDBCardBody className='p-5 w-100 d-flex flex-column'>
-            <h4 className="PackagePrice">{gameState.Package3}</h4>
-            <MDBBtn className="mb-4" size='lg' value="Package3" onClick={UpdatePackageSelect}>Select</MDBBtn>
-            </MDBCardBody>
-            </MDBCard>
-            </div>
-            <div id="Card4">
-        <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
-            <h2 className="fw-bold mb-2 text-center">Package4</h2>
-            <MDBCardBody className='p-5 w-100 d-flex flex-column'>
-            <h4 className="PackagePrice">{gameState.Package4}</h4>
-            <MDBBtn className="mb-4" size='lg' value="Package4" onClick={UpdatePackageSelect}>Select</MDBBtn>
-            </MDBCardBody>
-            </MDBCard>
-            </div>
+        <div id="Pack">
+            <div id="Card1">
+            <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
+            <h2 className="fw-bold mb-2 text-center">Package1</h2>
+                <MDBCardBody className=' vw-30 d-flex flex-column'>
+                <h4 className="PackagePrice">{gameState.Package1}</h4>
+                <MDBBtn className="mb-4" size='lg' value="Package1" onClick={UpdatePackageSelect}>Select</MDBBtn>
+                </MDBCardBody>
+                </MDBCard>
+                </div>
+                <div id="Card2">
+            <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
+            <h2 className="fw-bold mb-2 text-center">Package2</h2>
+                <MDBCardBody className=' vw-30 d-flex flex-column'>
+                <h4 className="PackagePrice">{gameState.Package2}</h4>
+                <MDBBtn className="mb-4" size='lg' value="Package2" onClick={UpdatePackageSelect}>Select</MDBBtn>
+                </MDBCardBody>
+                </MDBCard>
+                </div>
+                <div id="Card3">
+            <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
+            <h2 className="fw-bold mb-2 text-center">Package3</h2>
+                <MDBCardBody className='vw-30 d-flex flex-column'>
+                <h4 className="PackagePrice">{gameState.Package3}</h4>
+                <MDBBtn className="mb-4" size='lg' value="Package3" onClick={UpdatePackageSelect}>Select</MDBBtn>
+                </MDBCardBody>
+                </MDBCard>
+                </div>
+                <div id="Card4">
+            <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
+                <h2 className="fw-bold mb-2 text-center">Package4</h2>
+                <MDBCardBody className=' vw-30 d-flex flex-column'>
+                <h4 className="PackagePrice">{gameState.Package4}</h4>
+                <MDBBtn className="mb-4" size='lg' value="Package4" onClick={UpdatePackageSelect}>Select</MDBBtn>
+                </MDBCardBody>
+                </MDBCard>
+                </div>
+                </div>
         <div id="PackageSubmit">
         <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
-            <MDBCardBody className='p-5 w-100 d-flex flex-column'>
+            <MDBCardBody className='p-5 vw-30 d-flex flex-column'>
             <MDBBtn className="mb-4" size='lg' onClick={PackageSubmit}>Submit</MDBBtn>
             </MDBCardBody>
             </MDBCard>
@@ -335,12 +337,93 @@ const JoinGame = () => {
         {formState === "InGame" && (
             <>
             <PlayerNavBar/>
-            <div id="NumberContainer">
-            <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
-            <MDBCardBody className='p-5 vw-30 d-flex flex-column'>     
-                <h5 id="Number">{Number}</h5>
-            </MDBCardBody>
-            </MDBCard>
+            <section class="text-center">
+
+          <div class="rows">
+            <div class="col-lg-4 col-md-12 mb-4">
+              <div class="card">
+                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                </div>
+                <div class="game-card-body">
+                  <p class="card-text">
+                    Some quick example text to build on the card title and make up the bulk of the
+                    card's content.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="card">
+                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                </div>
+                <div class="game-card-body">
+                    <h5 id="Number">{Number}</h5>
+                  
+
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="card">
+                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                </div>
+                <div class="game-card-body">
+                    <MDBBtn className="mb-4" size='lg'>Check Number </MDBBtn>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <div id="Player-table">
+            <table className="numtable table-bordered">
+                <thead>
+                    <tr>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr className="table-secondary">
+                        <td id="box1">1</td>
+                        <td id="box2">2</td>
+                        <td id="box3">3</td>
+                        <td id="box4">4</td>
+                        <td id="box5">5</td>
+                        <td id="box6">6</td>
+                        <td id="box7">7</td>
+                        <td id="box9">8</td>
+                        <td id="box9">9</td>
+                        <td id="box10">10</td>
+                    </tr>
+                
+                    <tr className="table-secondary">
+                        <td id="box11">11</td>
+                        <td id="box12">12</td>
+                        <td id="box13">13</td>
+                        <td id="box14">14</td>
+                        <td id="box15">15</td>
+                        <td id="box16">16</td>
+                        <td id="box17">17</td>
+                        <td id="box18">18</td>
+                        <td id="box19">19</td>
+                        <td id="box20">20</td>
+                    </tr>
+                
+                    <tr className="table-secondary">
+                            <td id="box21">21</td>
+                            <td id="box22">22</td>
+                            <td id="box23">23</td>
+                            <td id="box24">24</td>
+                            <td id="box25">25</td>
+                            <td id="box26">26</td>
+                            <td id="box27">27</td>
+                            <td id="box28">28</td>
+                            <td id="box29">29</td>
+                            <td id="box30">30</td>
+
+                    </tr>
+                    </tbody>
+                </table>
             </div>
             </>
         )}
