@@ -46,6 +46,8 @@ function HostGame () {
 
     const Books = []
 
+    const PermBooks = []
+
     const [PlayersInSession, updatePlayersInSession] = React.useState([])
 
     const [Numbers, updateNumbers] = React.useState([])
@@ -144,6 +146,19 @@ function HostGame () {
         return ArrayString
     }
 
+    function WhatNumberWhatChanges (Number) {
+        var i = 1
+
+        while (i <= 90) {
+            var IDstring = "box" + i
+            if (Number === i) {
+                document.getElementById(IDstring).style.backgroundColor = 'green'
+            }
+        i += 1
+    }
+
+    }
+
     React.useEffect(() => {
       getUser();
       ConfigurationSet();
@@ -161,6 +176,8 @@ function HostGame () {
             if (ArrayString != null) {
                 isWebSocket.emit("SendBooks", ArrayString, PlayerSocket, Package)
             }
+
+            PermBooks.push(Books)
 
             Books.splice(0, Books.length)
 
@@ -389,6 +406,7 @@ function HostGame () {
         const NewList = numbers.slice(0, numbers.length)
 
         updateNumbers(NewList)
+        WhatNumberWhatChanges(NextNumber)
 
         if (isWebSocket !== null) {
         isWebSocket.emit("NextNumber", NextNumber)
