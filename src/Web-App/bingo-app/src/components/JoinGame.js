@@ -16,16 +16,7 @@ const initialState = {
     SelectedPackage: "",
     CurrentGame: 0,
     BooksForCurrentGame: [],
-}
-
-const intialBookobject = {
-    booknum: 0,
-    ticket_1: [],
-    ticket_2: [],
-    ticket_3: [],
-    ticket_4: [],
-    ticket_5: [],
-    ticket_6: []
+    CurrentStage: ""
 }
 
 Amplify.configure(awsExports);
@@ -39,6 +30,16 @@ const JoinGame = () => {
 
     const [Number, updateNumber] = React.useState(null);
 
+    const [bestTicket, updateBestTicket] = React.useState(null);
+
+    const [Numbers, updateNumbers] = React.useState([]);
+
+    const Books = []
+
+    var TempNumbers = []
+
+    var BooksForGame = []
+
     const getUser = async () => {
         const user = await Auth.currentAuthenticatedUser();
   
@@ -46,48 +47,57 @@ const JoinGame = () => {
         
     }
 
-    console.log(socket)
-    console.log(Number)
+    // Only works for First Game Right Now
+    function BooksForCurrentGame (CurrentGame) {
+         var Index = 0
+         var StartPoint =  0
+            if (gameState.SelectedPackage === "Package1") {
+                Index = 3
+                 if (CurrentGame != 1) {
+                    Index = 3 + (CurrentGame * 12)
+                    StartPoint = 3 * (CurrentGame - 1)
+                }
+            }
+            if (gameState.SelectedPackage === "Package2") {
+                Index = 6
+                if (CurrentGame != 1) {
+                    Index = 6 + (CurrentGame * 12)
+                    StartPoint = 6 * (CurrentGame - 1)
+                 }
+            }
+            if (gameState.SelectedPackage === "Package3") {
+                Index = 9
+                if (CurrentGame != 1) {
+                    Index = 9 + (CurrentGame * 12)
+                    StartPoint = 9 * (CurrentGame - 1)
+                }
+             }
+             if (gameState.SelectedPackage === "Package4") {
+                 Index = 12
+                 if (CurrentGame != 1) {
+                     Index = 12 + (CurrentGame * 12)
+                     StartPoint = 12 * (CurrentGame - 1)
+                 }
+             }
+
+             BooksForGame = gameState.books.slice(0, Index)
+
+             console.log(gameState.books)
+             console.log(BooksForGame)
+
+             return BooksForGame
+     }
     
     React.useEffect(() => {
         getUser();
 
-        if (gameState.CurrentGame !== 0) {
-            var CurrentGame = gameState.CurrentGame
-            var Index = 0
-            if (gameState.SelectedPackage === "Package1") {
-                Index = 4
-                if (CurrentGame != 1) {
-                    Index = 4 + (CurrentGame * 13)
-                }
-            }
-            if (gameState.SelectedPackage === "Package2") {
-                Index = 7
-                if (CurrentGame != 1) {
-                    Index = 4 + (CurrentGame * 13)
-                }
-            }
-            if (gameState.SelectedPackage === "Package3") {
-                Index = 10
-                if (CurrentGame != 1) {
-                    Index = 4 + (CurrentGame * 13)
-                }
-            }
-            if (gameState.SelectedPackage === "Package4") {
-                Index = 13
-                if (CurrentGame != 1) {
-                    Index = 4 + (CurrentGame * 13)
-                }
-            }
-            const BooksForGame = gameState.books.slice(0, Index)
-    
-            updateGameState(() => ({...gameState, BooksForCurrentGame: BooksForGame}))
-        }
-
         if (socket !== null) {
         socket.on("PlayerNextNumber", (LatestNumber) => {
             var NewNumber = LatestNumber
-            console.log("Recieved a number")
+            TempNumbers.push(NewNumber)
+            var NewNumberList = TempNumbers
+            NewNumberList = NewNumberList.slice(0, NewNumberList.length)
+            updateNumbers(NewNumberList)
             updateNumber(NewNumber)
         })
 
@@ -143,6 +153,8 @@ const JoinGame = () => {
               x += 1
             }
             
+            Books.push(AllBooks)
+
             updateGameState((previous) => ({...previous, books: AllBooks, formState: "WaitingForHostToStartGame"}));
 
             socket.emit("PlayerHasBooks");
@@ -150,25 +162,389 @@ const JoinGame = () => {
 
         socket.once("StartGame", () => {
             console.log("Recieved Game Start Message")
-            var NumberOfBooksPerGame = gameState.SelectedPackage
 
-            if (NumberOfBooksPerGame === "Package1") {
-                NumberOfBooksPerGame = "3"
-            }
-            if (NumberOfBooksPerGame === "Package2") {
-                NumberOfBooksPerGame = "6"
-            }
-            if (NumberOfBooksPerGame === "Package3") {
-                NumberOfBooksPerGame = "9"
-            }
-            if (NumberOfBooksPerGame === "Package4") {
-                NumberOfBooksPerGame = "12"
-            }
-            updateGameState((previous) => ({...previous, formState: "InGame", CurrentGame: 1}))
+            updateGameState((previous) => ({...previous, formState: "InGame", CurrentGame: 1, CurrentStage: "FirstLine"}))
         })
     }
 
-      }, [socket], [Number]);
+      }, [socket]);
+     
+    React.useEffect(() => {
+        
+        if (bestTicket !== null) {
+            ClearTicketUI();
+            updateTicketUI();
+        }
+
+    }, [bestTicket])
+
+     React.useEffect(() => {
+        if (gameState.books !== null & gameState.CurrentGame !== 0) {
+            var GameBooks = BooksForCurrentGame(gameState.CurrentGame)
+
+            updateGameState((previous) => ({...previous, BooksForCurrentGame: GameBooks}))
+
+            console.log(gameState)
+        }
+
+    }, [gameState.CurrentGame]) 
+
+    React.useEffect(() => {
+        if (gameState.BooksForCurrentGame !== null & gameState.CurrentStage !== ""){
+
+            var NewBestTicket = DetermineBestTicket(gameState.CurrentStage)
+            
+            updateBestTicket(NewBestTicket)
+        }
+    }, [Numbers], [gameState.BooksForCurrentGame])
+
+    function ClearTicketUI () {
+        var i = 1
+        while (i <= 27) {
+        if (document.getElementById("box" + i).innerText !== "") {
+            document.getElementById("box" + i).innerText = ""
+            document.getElementById("box" + i).style.backgroundColor = '#ecedf0'
+        }
+
+            i += 1
+        }
+    }
+    function updateTicketUI () {
+        var x = 0
+        
+        while (x < 3) {
+            var y = 0
+            var ElementID = ""
+            while (y < 5) {
+                var ArrayNumber = bestTicket[x][y]
+
+                if (parseInt(ArrayNumber) <= 10) {
+                    if (x === 0) {
+                        ElementID = "box1"
+                    }
+                    if (x === 1) {
+                        ElementID = "box10"
+                    }
+                    if (x === 2){
+                        ElementID = "box19"
+                    }
+                }
+                else if (parseInt(ArrayNumber) <= 20) {
+                    if (x === 0) {
+                        ElementID = "box2"
+                    }
+                    if (x === 1) {
+                        ElementID = "box11"
+                    }
+                    if (x === 2){
+                        ElementID = "box20"
+                    }
+                }
+                else if (parseInt(ArrayNumber) <= 30) {
+                    if (x === 0) {
+                        ElementID = "box3"
+                    }
+                    if (x === 1) {
+                        ElementID = "box12"
+                    }
+                    if (x === 2){
+                        ElementID = "box21"
+                    }
+                }
+                else if (parseInt(ArrayNumber) <= 40) {
+                    if (x === 0) {
+                        ElementID = "box4"
+                    }
+                    if (x === 1) {
+                        ElementID = "box13"
+                    }
+                    if (x === 2){
+                        ElementID = "box22"
+                    }
+                }
+                else if (parseInt(ArrayNumber) <= 50) {
+                    if (x === 0) {
+                        ElementID = "box5"
+                    }
+                    if (x === 1) {
+                        ElementID = "box14"
+                    }
+                    if (x === 2){
+                        ElementID = "box23"
+                    }
+                }
+                else if (parseInt(ArrayNumber) <= 60) {
+                    if (x === 0) {
+                        ElementID = "box6"
+                    }
+                    if (x === 1) {
+                        ElementID = "box15"
+                    }
+                    if (x === 2){
+                        ElementID = "box24"
+                    }
+                }
+                else if (parseInt(ArrayNumber) <= 70) {
+                    if (x === 0) {
+                        ElementID = "box7"
+                    }
+                    if (x === 1) {
+                        ElementID = "box16"
+                    }
+                    if (x === 2){
+                        ElementID = "box25"
+                    }
+                }
+                else if (parseInt(ArrayNumber) <= 80) {
+                    if (x === 0) {
+                        ElementID = "box8"
+                    }
+                    if (x === 1) {
+                        ElementID = "box17"
+                    }
+                    if (x === 2){
+                        ElementID = "box26"
+                    }
+                }
+                else if (parseInt(ArrayNumber) <= 90) {
+                    if (x === 0) {
+                        ElementID = "box9"
+                    }
+                    if (x === 1) {
+                        ElementID = "box18"
+                    }
+                    if (x === 2){
+                        ElementID = "box27"
+                    }
+                }
+
+                console.log(ArrayNumber)
+
+                var i = 1
+
+                document.getElementById(ElementID).innerText = ArrayNumber
+                
+
+                if (Numbers.includes((parseInt(ArrayNumber)))) {
+                    document.getElementById(ElementID).style.backgroundColor = 'green'
+                }
+                y += 1
+                console.log(y)
+            }
+            x += 1
+            console.log(x)
+        }
+    }
+
+    // Only works for Package 1 Currently 
+    function DetermineBestTicket (Stage) {
+        var ScoreArray = []
+
+        console.log(Numbers)
+
+        if (Stage === "FirstLine") {
+         var BestTicket = gameState.BooksForCurrentGame.filter(books => {
+             books.filter(tickets => {
+                 var Score = 0
+                 tickets.filter(lines => {
+                     var i = 0
+                     Score = 0
+                     while (i < 5) {
+                         if (Numbers.includes(parseInt(lines[i]))) {
+                            Score += 1
+                       }
+                    i += 1
+                    }
+                    ScoreArray.push(Score)
+                })
+            })
+        })
+        }
+
+        if (Stage === "DoubleLine") {
+            var BestTicket = gameState.BooksForCurrentGame.filter(books => {
+                books.filter(tickets => {
+                    var FirstScore = 0
+                    var SecondScore = 0
+                    var ThirdScore = 0
+                    var x = 0
+    
+                    while (x < 3) {
+                        var i = 0
+                        while (i < 5) {
+                            if (Numbers.includes(parseInt(tickets[x][i]))) {
+                                if (x === 0) {
+                                    FirstScore += 1
+                                }
+                                if (x === 1) {
+                                    SecondScore += 1
+                                }
+                                if (x === 2) {
+                                    ThirdScore += 1
+                                }
+                            }
+                          i += 1
+                        }
+                        x += 1
+                    }
+
+                    var OneAndTwo = FirstScore + SecondScore
+                    var OneAndThree = FirstScore + ThirdScore
+                    var TwoAndThree = SecondScore + ThirdScore
+                    
+                    var Score = Math.max(OneAndTwo, OneAndThree, TwoAndThree)
+                    
+                    ScoreArray.push(Score)
+                })
+            })
+        }
+        
+
+        if (Stage === "FullHouse") {
+        var BestTicket = gameState.BooksForCurrentGame.filter(books => {
+            books.filter(tickets => {
+                var Score = 0
+                var i = 0
+                var x = 0
+
+                while (x < 3) {
+                    var i = 0
+                    while (i < 5) {
+                        if (Numbers.includes(parseInt(tickets[x][i]))) {
+                            console.log("Found A Match")
+                            Score += 1
+                        }
+                      i += 1
+                    }
+                    x += 1
+                }
+                ScoreArray.push(Score)
+                })
+            })
+        }
+
+        var i = ScoreArray.indexOf(Math.max(...ScoreArray));
+        
+        var FirstIndex = 0
+        var SecondIndex = 0
+
+        if (Stage === "FirstLine") {
+        if (i < 18) {
+            FirstIndex = 0
+            if (i < 3) {
+                SecondIndex = 0
+            }
+            else if (i < 6) {
+                SecondIndex = 1
+            }
+            else if (i < 9) {
+                SecondIndex = 2
+            }
+            else if (i < 12) {
+                SecondIndex = 3
+            }
+            else if (i < 15) {
+                SecondIndex = 4
+            }
+            else if (i < 18) {
+                SecondIndex = 5
+            }
+        }
+        if (17 < i && i < 36) {
+            FirstIndex = 1
+            if (i < 21) {
+                SecondIndex = 0
+            }
+            else if (i < 24) {
+                SecondIndex = 1
+            }
+            else if (i < 27) {
+                SecondIndex = 2
+            }
+            else if (i < 30) {
+                SecondIndex = 3
+            }
+            else if (i < 33) {
+                SecondIndex = 4
+            }
+            else if (i < 36) {
+                SecondIndex = 5
+            }
+        }
+        if (35 < i && i < 54) {
+            FirstIndex = 2
+            if (i < 39) {
+                SecondIndex = 0
+            }
+            else if (i < 42) {
+                SecondIndex = 1
+            }
+            else if (i < 45) {
+                SecondIndex = 2
+            }
+            else if (i < 48) {
+                SecondIndex = 3
+            }
+            else if (i < 51) {
+                SecondIndex = 4
+            }
+            else if (i < 54) {
+                SecondIndex = 5
+            }
+        }
+    }
+        else {
+            if (i < 6) {
+                FirstIndex = 0
+                SecondIndex = i
+            }
+            
+            else if (i < 12) {
+                FirstIndex = 0
+                if (i === 6) {
+                    SecondIndex = 0
+                }
+                if (i === 7) {
+                    SecondIndex = 1
+                }
+                if (i === 8) {
+                    SecondIndex = 2
+                }
+                if (i === 9) {
+                    SecondIndex = 3
+                }
+                if (i === 10) {
+                    SecondIndex = 4
+                }
+                if (i === 11) {
+                    SecondIndex = 5
+                }
+            }
+
+            else if (i < 18) {
+                FirstIndex = 0
+                if (i === 12) {
+                    SecondIndex = 0
+                }
+                if (i === 13) {
+                    SecondIndex = 1
+                }
+                if (i === 14) {
+                    SecondIndex = 2
+                }
+                if (i === 15) {
+                    SecondIndex = 3
+                }
+                if (i === 16) {
+                    SecondIndex = 4
+                }
+                if (i === 17) {
+                    SecondIndex = 5
+                }
+            }
+        }
+        return gameState.BooksForCurrentGame[FirstIndex][SecondIndex]
+    }
 
     const onChange = (event) => {
         event.persist();
@@ -384,42 +760,39 @@ const JoinGame = () => {
                 </thead>
                 <tbody>
                     <tr className="table-secondary">
-                        <td id="box1">1</td>
-                        <td id="box2">2</td>
-                        <td id="box3">3</td>
-                        <td id="box4">4</td>
-                        <td id="box5">5</td>
-                        <td id="box6">6</td>
-                        <td id="box7">7</td>
-                        <td id="box9">8</td>
-                        <td id="box9">9</td>
-                        <td id="box10">10</td>
+                        <td id="box1"></td>
+                        <td id="box2"></td>
+                        <td id="box3"></td>
+                        <td id="box4"></td>
+                        <td id="box5"></td>
+                        <td id="box6"></td>
+                        <td id="box7"></td>
+                        <td id="box8"></td>
+                        <td id="box9"></td>
                     </tr>
                 
                     <tr className="table-secondary">
-                        <td id="box11">11</td>
-                        <td id="box12">12</td>
-                        <td id="box13">13</td>
-                        <td id="box14">14</td>
-                        <td id="box15">15</td>
-                        <td id="box16">16</td>
-                        <td id="box17">17</td>
-                        <td id="box18">18</td>
-                        <td id="box19">19</td>
-                        <td id="box20">20</td>
+                        <td id="box10"></td>
+                        <td id="box11"></td>
+                        <td id="box12"></td>
+                        <td id="box13"></td>
+                        <td id="box14"></td>
+                        <td id="box15"></td>
+                        <td id="box16"></td>
+                        <td id="box17"></td>
+                        <td id="box18"></td>
                     </tr>
                 
                     <tr className="table-secondary">
-                            <td id="box21">21</td>
-                            <td id="box22">22</td>
-                            <td id="box23">23</td>
-                            <td id="box24">24</td>
-                            <td id="box25">25</td>
-                            <td id="box26">26</td>
-                            <td id="box27">27</td>
-                            <td id="box28">28</td>
-                            <td id="box29">29</td>
-                            <td id="box30">30</td>
+                            <td id="box19"></td>
+                            <td id="box20"></td>
+                            <td id="box21"></td>
+                            <td id="box22"></td>
+                            <td id="box23"></td>
+                            <td id="box24"></td>
+                            <td id="box25"></td>
+                            <td id="box26"></td>
+                            <td id="box27"></td>
 
                     </tr>
                     </tbody>
