@@ -195,10 +195,88 @@ function HostGame () {
                 console.log(Players)
                 console.log(PlayersInSession)
             }
+        });
+
+        isWebSocket.on("PlayerCheck", (PlayerSocket, BooksToCheck, SelectedPackage, Stage, Game) => {
+
+            console.log(PlayerSocket)
+            console.log(BooksToCheck)
+            console.log(SelectedPackage)
+            console.log(Stage)
+
+            var NumberOfBooks = 0
+
+            if (SelectedPackage === "Package1") {
+                NumberOfBooks = 3
+            }
+            if (SelectedPackage === "Package2") {
+                NumberOfBooks = 6
+            }
+            if (SelectedPackage === "Package3") {
+                NumberOfBooks = 9
+            }
+            if (SelectedPackage === "Package4") {
+                NumberOfBooks = 12
+            }
+            
+            const temp = BooksToCheck.split(' ')
+            var CurrentLine = []
+            var CurrentTicket = []
+            var CurrentBook = []
+            var WinnerBooks = []
+            var x = 1
+
+            while (x < temp.length) {
+              if (x != 0) {
+                CurrentLine.push(parseInt(temp[x]))
+              }
+              if (x % 5 === 0) {
+                CurrentTicket.push(CurrentLine)
+                CurrentLine = []
+                }  
+    
+              if (x % 15 === 0) {
+                CurrentBook.push(CurrentTicket)
+                CurrentTicket = []
+              }
+    
+              if (x % 90 === 0) {
+                WinnerBooks.push(CurrentBook)
+                CurrentBook = []
+              }
+              x += 1
+            }
+
+            console.log(WinnerBooks)
+
+            var i = 0
+
+            var Prize = 0
+
+            if (Stage === "FirstLine") {
+                console.log("Im In the First If")
+                Prize = gameState.games[Game - 1]["PrizeFL"]
+            }
+            if (Stage === "DoubleLine") {
+                Prize = gameState.games[Game - 1]["PrizeDL"]
+            }
+            if (Stage === "FullHouse") {
+                Prize = gameState.games[Game - 1]["PrizeFH"]
+            }
+
+            console.log("Prize Money is " + Prize)
+
+            if (isWebSocket !== null) {        
+            isWebSocket.emit("Winner", Prize, PlayerSocket)
+            }
+        });
+
+        isWebSocket.on("SuccesfulWinner", () =>  {
+            console.log("User Wants Next Stage")
+            isWebSocket.emit("UpdatePlayer", gameState.games.length)
         })
     }
     }, [isWebSocket], [PlayersInSession], [Numbers]);
-
 
     const onChange = (e) => {
         e.persist();
@@ -414,6 +492,7 @@ function HostGame () {
     }
 
     console.log(numbers)
+    console.log(PermBooks)
           
 
     const {configurationStage} = gameState;
@@ -650,7 +729,7 @@ function HostGame () {
 					<td id="box5">5</td>
 					<td id="box6">6</td>
 					<td id="box7">7</td>
-					<td id="box9">8</td>
+					<td id="box8">8</td>
 					<td id="box9">9</td>
 					<td id="box10">10</td>
 				</tr>

@@ -281,11 +281,59 @@ io.on("connection", (socket) => {
     })
     }
   });
-})
-  // Socket.on("Check"), () => {
-  //  
-  //}
+    
+  socket.on("Check", (BooksToCheck, SelectedPackage, CurrentStage, Game) => {
+    if (socket.handshake.headers.usertype === "Player") {
+      var result = Rooms.filter(room => {
+        if (room.roomName === socket.handshake.headers.roomtojoin) {
+          var HostSocket = room.roomHostSocketID
+          var PlayerSocket = socket.id
+        }
 
+        console.log(BooksToCheck)
+        console.log(SelectedPackage)
+        console.log(PlayerSocket)
+
+        socket.to(HostSocket).emit("PlayerCheck", PlayerSocket, BooksToCheck, SelectedPackage, CurrentStage, Game)
+      })
+    }
+  });
+
+  socket.on("Winner", (Amount, PlayerSocket) => {
+    if (socket.handshake.headers.usertype === "Host") {
+      console.log(Amount)
+      socket.to(PlayerSocket).emit("Winnings", Amount)
+    }
+  })
+
+  socket.on("UpdatePlayer", (HowManyGames) => {
+    console.log("Updating Stage For Players")
+    if (socket.handshake.headers.usertype === "Host") {
+      var result = Rooms.filter(room => {
+        if (room.roomName === socket.handshake.headers.username) {
+          var Room = room.roomName
+
+          socket.to(Room).emit("UpdateStage", HowManyGames)
+        }
+      })
+    }
+  })
+
+  socket.on("NextStage", () => {
+    console.log("MovingToNextStage")
+  if (socket.handshake.headers.usertype === "Player") {
+    var result = Rooms.filter(room => {
+      if (room.roomName === socket.handshake.headers.roomtojoin) {
+        var HostID = room.roomHostSocketID
+      }
+
+      
+
+      socket.to(HostID).emit("SuccesfulWinner")
+    })
+  }
+  })
+});
   // Socket.on("EndGame"), () => {
   //
   //}
