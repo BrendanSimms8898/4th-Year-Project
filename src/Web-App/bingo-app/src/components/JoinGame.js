@@ -59,6 +59,7 @@ const JoinGame = () => {
 
     console.log(CurrentStage)
 
+
     function BooksForCurrentGame (CurrentGame) {
          var Index = 0
          var StartPoint =  0
@@ -660,12 +661,37 @@ const JoinGame = () => {
 
 
                 var i = 1
+                var ballGraphicElement = document.getElementById('ballGraphic')
+                var ballGraphicText = document.getElementById('ballText')
 
                 document.getElementById(ElementID).innerText = ArrayNumber
                 
 
                 if (Numbers.includes((parseInt(ArrayNumber)))) {
                     document.getElementById(ElementID).style.backgroundColor = 'green'
+
+                    if (Number < 10){
+                        ballGraphicText.className = "single"
+                    }
+                    if (Number > 10){
+                        ballGraphicText.className = ""
+                    }
+                    if (Number < 18){
+                        ballGraphicElement.className = "valign-wrapper blue"
+                    }
+                    else if (Number < 36){
+                        ballGraphicElement.className = "valign-wrapper green"
+                    }
+                    else if (Number < 54){
+                        ballGraphicElement.className = "valign-wrapper orange"
+                    }
+                    else if (Number < 72){
+                        ballGraphicElement.className = "valign-wrapper white"
+                    }
+                    else if (Number < 91){
+                        ballGraphicElement.className = "valign-wrapper red"
+                    }
+
                 }
                 y += 1
             }
@@ -1371,6 +1397,7 @@ const JoinGame = () => {
         {formState === "PurchasePackage" && (
         <>
         <PlayerNavBar/>
+        <div id = "package-page">
         <div id="Pack">
             <div id="Card1">
             <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
@@ -1416,6 +1443,7 @@ const JoinGame = () => {
             </MDBCardBody>
             </MDBCard>
         </div>
+        </div>
         </>
         )}
         {formState === "WaitingForHostToStartGame" &&(
@@ -1450,15 +1478,11 @@ const JoinGame = () => {
             </div>
 
             <div class="col-lg-4 col-md-6 mb-4">
-              <div class="card">
+
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
                 </div>
-                <div class="game-card-body">
-                    <h5 id="Number">{Number}</h5>
-                  
+                <div id="currentBall" class="valign-wrapper"><div id="ballGraphic" class="valign-wrapper"><span id="ballText">{Number}</span></div><span id="callNumber"></span></div>
 
-                </div>
-              </div>
             </div>
 
             <div class="col-lg-4 col-md-6 mb-4">
