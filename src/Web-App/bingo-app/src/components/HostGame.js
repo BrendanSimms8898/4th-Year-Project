@@ -148,11 +148,33 @@ function HostGame () {
 
     function WhatNumberWhatChanges (Number) {
         var i = 1
-
+        var ballGraphicElement = document.getElementById('ballGraphic')
+        var ballGraphicText = document.getElementById('ballText')
         while (i <= 90) {
             var IDstring = "box" + i
             if (Number === i) {
                 document.getElementById(IDstring).style.backgroundColor = 'green'
+            }
+            if (Number < 10){
+                ballGraphicText.className = "single"
+            }
+            if (Number > 10){
+                ballGraphicText.className = ""
+            }
+            if (Number < 18){
+                ballGraphicElement.className = "valign-wrapper blue"
+            }
+            else if (Number < 36){
+                ballGraphicElement.className = "valign-wrapper green"
+            }
+            else if (Number < 54){
+                ballGraphicElement.className = "valign-wrapper orange"
+            }
+            else if (Number < 72){
+                ballGraphicElement.className = "valign-wrapper white"
+            }
+            else if (Number < 91){
+                ballGraphicElement.className = "valign-wrapper red"
             }
         i += 1
     }
@@ -705,14 +727,11 @@ function HostGame () {
             </div>
 
             <div class="col-lg-4 col-md-6 mb-4">
-              <div class="card">
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
                 </div>
-                <div class="game-card-body">
-                    <h5 id="Number">{Numbers[Numbers.length - 1]}</h5>
-                </div>
-              </div>
+                <div id="currentBall" class="valign-wrapper"><div id="ballGraphic" class="valign-wrapper"><span id="ballText">{Numbers[Numbers.length - 1]}</span></div><span id="callNumber"></span></div>
             </div>
+
           </div>
         </section>
 		<table className="numtable table-bordered">

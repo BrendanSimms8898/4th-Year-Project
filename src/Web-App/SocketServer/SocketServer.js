@@ -144,20 +144,28 @@ io.on("connection", (socket) => {
         socket.join(RoomToJoin)
       }
 
+      var temArray = []
       var result = Rooms.filter(room => {
         if (room.roomName === RoomToJoin){
           if (room.Players.length != 0) {
             room.Players.filter(player => {
+              console.log(player.username)
+              console.log("whats this", username)
               if (player.username === username) {
                 player.socketID = SocketID
               }
               else {
-                room.Players.push(PlayerObjectInstance(username, SocketID))
+                if (temArray.includes(username) !== true){
+                  room.Players.push(PlayerObjectInstance(username, SocketID))
+                  temArray.push(username)
+                }
+                  
               }
             })
           }
           else {
             room.Players.push(PlayerObjectInstance(username, SocketID))
+            temArray.push(username)
           }
         }
 

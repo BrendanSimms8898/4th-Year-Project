@@ -13,7 +13,11 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import {Outlet, Link} from 'react-router-dom';
-import {Auth} from 'aws-amplify';
+import "./JoinGame.js"
+import {Auth, Amplify} from 'aws-amplify';
+import awsExports from '../aws-exports.js';
+
+Amplify.configure(awsExports);
 
 const pages = ['JoinGame', 'Reports'];
 const settings = ['Profile', 'Balance', 'Logout'];
@@ -70,7 +74,7 @@ function PlayerNavBar() {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            href="/playerhome"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -113,11 +117,26 @@ function PlayerNavBar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+               <MenuItem onClick={handleCloseNavMenu}>
+              <Link to={"/Reports"}>
+              <Button
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'black', display: 'block' }}
+              >
+                Reports
+              </Button>
+              </Link>
                 </MenuItem>
-              ))}
+                <MenuItem onClick={handleCloseNavMenu}>
+                <Link to={`/joingame`}>
+              <Button
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'black', display: 'block' }}
+              >
+                JoinGame
+              </Button>
+              </Link>
+                </MenuItem>
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -125,7 +144,7 @@ function PlayerNavBar() {
             variant="h5"
             noWrap
             component="a"
-            href=""
+            href="/playerhome"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -137,20 +156,25 @@ function PlayerNavBar() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            Bingo Bonanza
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Link to={`/${page}`}>
+              <Link to={`/joingame`}>
               <Button
-                key={page}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                JoinGame
               </Button>
               </Link>
-            ))}
+              <Link to={"/Reports"}>
+              <Button
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                Reports
+              </Button>
+              </Link>
             <Outlet />
           </Box>
 
@@ -178,7 +202,7 @@ function PlayerNavBar() {
               onClose={handleCloseUserMenu}
             >
                 <MenuItem onClick={handleCloseUserMenu}>
-                  <div id="SettingsMenu">
+                  <div id="/SettingsMenu">
                   <Link to="/Profile">
                   <Button> Profile</Button>
                   </Link>

@@ -45,7 +45,7 @@ export default function AddBalance() {
            <MDBCol col='12'>
                <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
                <h2 className="fw-bold mb-2 text-center">How much would you like to add?</h2>
-                   <MDBCardBody className='p-5 vw-30 d-flex flex-column'>
+                   <MDBCardBody className='p-5 vw-30 d-flex  justify-content-center align-items-center flex-column'>
                    <MDBInput onChange={onChange} wrapperClass='mb-4 vw-30' name="amount" label='€' size="lg" />
                    </MDBCardBody>
                 </MDBCard>
@@ -101,7 +101,7 @@ export default function AddBalance() {
                <MDBCol col='12'>
                    <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
                    <h2 className="fw-bold mb-2 text-center">How much would you like to add?</h2>
-                       <MDBCardBody className='p-5 vw-30 d-flex flex-column'>
+                       <MDBCardBody className='p-5 vw-30 d-flex flex-column justify-content-center align-items-center'>
                        <MDBInput onChange={onChange} wrapperClass='mb-4 vw-30' name="amount" label='€' size="lg" />
                        </MDBCardBody>
                     </MDBCard>
