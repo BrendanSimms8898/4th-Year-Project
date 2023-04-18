@@ -149,8 +149,6 @@ io.on("connection", (socket) => {
         if (room.roomName === RoomToJoin){
           if (room.Players.length != 0) {
             room.Players.filter(player => {
-              console.log(player.username)
-              console.log("whats this", username)
               if (player.username === username) {
                 player.socketID = SocketID
               }

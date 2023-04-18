@@ -149,6 +149,7 @@ code {
   background-color: #bebebe;
 
  }
+ 
 
  @media only screen and (min-width: 1024px) {
 
@@ -369,6 +370,87 @@ code {
   border: 0.15rem solid #FFA500;
 }
 
+#waitingballGraphic, #waitingballText {
+  padding: 4%;
+  margin: 0.5em auto;
+  border-radius: 100%;
+}
+#waitingballText {
+  line-height: 1.3;
+  padding: 0.8em 1.2em;
+  font-weight: bold;
+}
+#waitingBall {
+  padding-top: 3%;
+  position: relative;
+}
+#waitingballText:not(:empty) {
+  border: 1px solid red;
+  box-shadow: inset -0.5rem -0.5rem 2rem 0 rgba(0, 0, 0, 0.16), 0 0 0 0.25rem white;
+  background: radial-gradient(circle at 20% 20%, white, #efefef);
+}
+#waitingballText.single {
+  padding: 0.8em 1.5em;
+}
+#waitingcallNumber:not(:empty) {
+  position: absolute;
+  bottom: 0.5em;
+  right: 0.5em;
+  background: white;
+  color: #444;
+  font-size: 1rem;
+  font-weight: normal;
+  padding: 0.5em;
+}
+#waitingballGraphic.blue, #waitingballGraphic.red, #waitingballGraphic.white, #waitingballGraphic.green, #waitingballGraphic.orange {
+  margin-top: -0.5rem;
+  position: relative;
+  box-shadow: inset 0.5rem 0.5rem 1.5rem 0.25rem rgba(255,255,255,0.3), inset -0.25rem -0.25rem 1.5rem 0.5rem rgba(0,0,0,0.4);
+}
+
+#waitingballGraphic.blue:after, #waitingballGraphic.red:after,
+#waitingballGraphic.white:after, #waitingballGraphic.green:after, #waitingballGraphic.orange:after {
+  content: '';
+  background: radial-gradient(circle at 50% -150%, rgba(0,0,0,0.4), transparent);
+  height: 0.75rem;
+  position: absolute;
+  bottom: -1rem;
+  width: 70%;
+  left: 17%;
+  border-radius: 100%;
+  margin: 0 auto;
+}
+/* Ball Colors */
+#waitingballGraphic.blue {
+  background: radial-gradient(circle at 20% 20%, #0000FF, #0000ad);
+}
+#waitingballGraphic.blue #ballText {
+  border: 0.15rem solid #0000FF;
+}
+#waitingballGraphic.red {
+  background: radial-gradient(circle at 20% 20%, #FF0000, #910000);
+}
+#waitingballGraphic.red #ballText {
+  border: 0.15rem solid #FF0000;
+}
+#waitingballGraphic.white {
+  background: radial-gradient(circle at 20% 20%, #ffffff, #b6b6b6);
+}
+#waitingballGraphic.white #ballText {
+  border: 0.15rem solid #FF0000;
+}
+#waitingballGraphic.green {
+  background: radial-gradient(circle at 20% 20%, #008000, #004a00);
+}
+#waitingballGraphic.green #ballText {
+  border: 0.15rem solid #008000;
+}
+#waitingballGraphic.orange {
+  background: radial-gradient(circle at 20% 20%, #FFA500, #9c6400);
+}
+#waitingballGraphic.orange #ballText {
+  border: 0.15rem solid #FFA500;
+}
 
 
 @media only screen and (max-width: 1024px) {
