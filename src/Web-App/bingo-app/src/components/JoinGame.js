@@ -23,6 +23,8 @@ Amplify.configure(awsExports);
 
 var CurrentStage = "FirstLine"
 
+var CurrentGame = 0
+
 const JoinGame = () => {
     const [user, setUser] = React.useState(null);
 
@@ -66,33 +68,33 @@ const JoinGame = () => {
             if (gameState.SelectedPackage === "Package1") {
                 Index = 3
                  if (CurrentGame != 1) {
-                    Index = 3 + (CurrentGame * 12)
+                    Index = 3 + ((CurrentGame - 1) * 3)
                     StartPoint = 3 * (CurrentGame - 1)
                 }
             }
             if (gameState.SelectedPackage === "Package2") {
                 Index = 6
                 if (CurrentGame != 1) {
-                    Index = 6 + (CurrentGame * 12)
+                    Index = 6 + ((CurrentGame - 1) * 6)
                     StartPoint = 6 * (CurrentGame - 1)
                  }
             }
             if (gameState.SelectedPackage === "Package3") {
                 Index = 9
                 if (CurrentGame != 1) {
-                    Index = 9 + (CurrentGame * 12)
+                    Index = 9 + ((CurrentGame - 1) * 9)
                     StartPoint = 9 * (CurrentGame - 1)
                 }
              }
              if (gameState.SelectedPackage === "Package4") {
                  Index = 12
                  if (CurrentGame != 1) {
-                     Index = 12 + (CurrentGame * 12)
+                     Index = 12 + ((CurrentGame - 1) * 12)
                      StartPoint = 12 * (CurrentGame - 1)
                  }
              }
 
-             BooksForGame = gameState.books.slice(0, Index)
+             BooksForGame = gameState.books.slice(StartPoint, Index)
 
              return BooksForGame
      }
@@ -172,6 +174,7 @@ const JoinGame = () => {
         socket.once("StartGame", () => {
 
             updateGameState((previous) => ({...previous, formState: "InGame", CurrentGame: 1, CurrentStage: "FirstLine"}))
+            CurrentGame = 1
         })
 
         socket.on("Winnings", (Amount) => {
@@ -197,14 +200,17 @@ const JoinGame = () => {
             
             if (CurrentStage === "FirstLine") {
             CurrentStage = "DoubleLine"
+            updateWaitingNumbers([])
             console.log(gameState)
             }
 
             else if (CurrentStage === "DoubleLine") {
             CurrentStage = "FullHouse"
+            updateWaitingNumbers([])
             }
             else if (CurrentStage === "FullHouse" && HowManyGames !== gameState.CurrentGame){
             CurrentStage = "FirstLine"
+            updateWaitingNumbers([])
             }
             else if (gameState.CurrentStage === "FullHouse" && HowManyGames === gameState.CurrentGame) {
             updateGameState(() => ({...gameState, formState: "SessionCompleted"}))
@@ -229,23 +235,16 @@ const JoinGame = () => {
         if (bestTicket !== null) {
         ClearTicketUI();
         updateTicketUI();
-        updateWaitingOnNumbers(bestTicket);
+        updateWaitingOnNumbers(gameState.BooksForCurrentGame);
         }
     }, [Number])
 
     React.useEffect(() => {
         console.log(WaitingNumbers)
+        /*
+        updateWaitingUI();
+        */
     }, [WaitingNumbers])
-
-    React.useEffect(() => {
-        console.log("Use Effect For Current Stage Triggered")
-    }, [gameState.CurrentStage])
-
-    React.useEffect(() => {
-        if (TempWaitingNumbers.length !== 0) {
-        console.log("TempWaitingNumbers UseEffect Activated")
-        }
-    }, [TempWaitingNumbers])
 
     React.useEffect(() => {
         if (gameState.books !== null & gameState.CurrentGame !== 0) {
@@ -422,102 +421,122 @@ const JoinGame = () => {
         console.log(CheckIsValid)
     }
 
-    function updateWaitingOnNumbers (HighestScoringTicket) {
-        var LastNumber = null
+    function updateWaitingOnNumbers (BooksForCurrentGame) {
+        var LastNumber = []
         if (CurrentStage === "FirstLine") {
             var Counter = 0
-            var BestTicket = HighestScoringTicket.filter(lines => {
-                var score = 0
-                var i = 0
-                var x = 0
-                Counter += 1
-                while (i < 5) {
-                    if (Numbers.includes(parseInt(lines[i]))) {
-                        score += 1
-                    }
-
-                    if (score === 4) {
-                        while (x < 5) {
-                        if (!(Numbers.includes(parseInt(lines[x])))) {
-                            LastNumber = parseInt(lines[x])
+            var BestTicket = BooksForCurrentGame.filter(books => {
+                books.filter(ticket => {
+                    ticket.filter( lines => {
+                        var score = 0
+                        var i = 0
+                        var x = 0
+                        Counter += 1
+                        while (i < 5) {
+                            if (Numbers.includes(parseInt(lines[i]))) {
+                                score += 1
+                            }
+        
+                            if (score === 4) {
+                                while (x < 5) {
+                                if (!(Numbers.includes(parseInt(lines[x])))) {
+                                    LastNumber.push(parseInt(lines[x]))
+                                }
+                                x += 1
+                                }
+                            }
+                            i += 1
                         }
-                        x += 1
-                        }
-                    }
-                    i += 1
-                }
+                    })
+                })  
             })
         }
 
         if (CurrentStage === "DoubleLine") {
-            var FirstScore = 0
-            var SecondScore = 0
-            var ThirdScore = 0
-            var TicketsToCheck = []
             var x = 0
 
-            while (x < 3) {
-                var i = 0
-                while (i < 5) {
-                    if (Numbers.includes(parseInt(HighestScoringTicket[x][i]))) {
-                        if (x === 0) {
-                            FirstScore += 1
+                BooksForCurrentGame.filter(books => {
+                    books.filter(tickets => {
+                        var FirstScore = 0
+                        var SecondScore = 0
+                        var ThirdScore = 0
+                        var Score = 0
+                        var OneAndTwo = 0
+                        var OneAndThree = 0
+                        var TwoAndThree = 0
+                        var TicketsToCheck = []
+                x = 0
+                while (x < 3) {
+                    var i = 0
+                    while (i < 5) {
+                        if (Numbers.includes(parseInt(tickets[x][i]))) {
+                            if (x === 0) {
+                                FirstScore += 1
+                            }
+                            if (x === 1) {
+                                SecondScore += 1
+                            }
+                            if (x === 2) {
+                                ThirdScore += 1
+                            }
                         }
-                        if (x === 1) {
-                            SecondScore += 1
-                        }
-                        if (x === 2) {
-                            ThirdScore += 1
-                        }
+                    i += 1
                     }
-                  i += 1
-                }
                 x += 1
-            }
+                }
 
-            var OneAndTwo = FirstScore + SecondScore
-            var OneAndThree = FirstScore + ThirdScore
-            var TwoAndThree = SecondScore + ThirdScore
+            OneAndTwo = FirstScore + SecondScore
+            OneAndThree = FirstScore + ThirdScore
+            TwoAndThree = SecondScore + ThirdScore
             
-            var Score = Math.max(OneAndTwo, OneAndThree, TwoAndThree)
+            Score = Math.max(OneAndTwo, OneAndThree, TwoAndThree)
+
+            console.log(Score)
 
             if (Score === 9) {
                 if (OneAndTwo === Score) {
-                    TicketsToCheck.push(HighestScoringTicket[0])
-                    TicketsToCheck.push(HighestScoringTicket[1])
+                    TicketsToCheck.push(tickets[0])
+                    TicketsToCheck.push(tickets[1])
                 }
                 if (OneAndThree === Score) {
-                    TicketsToCheck.push(HighestScoringTicket[0])
-                    TicketsToCheck.push(HighestScoringTicket[2])
+                    TicketsToCheck.push(tickets[0])
+                    TicketsToCheck.push(tickets[2])
                 }
                 if (TwoAndThree === Score) {
-                    TicketsToCheck.push(HighestScoringTicket[1])
-                    TicketsToCheck.push(HighestScoringTicket[2])
+                    TicketsToCheck.push(tickets[1])
+                    TicketsToCheck.push(tickets[2])
                 }
 
+
+                console.log(TicketsToCheck)
 
                 x = 0
                 while (x < 2) {
                     i = 0
                     while (i < 5) {
                         if (!(Numbers.includes(parseInt(TicketsToCheck[x][i])))) {
-                            LastNumber = parseInt(TicketsToCheck[x][i])
+                            if (!(LastNumber.includes(parseInt(TicketsToCheck[x][i]))))
+                            LastNumber.push(parseInt(TicketsToCheck[x][i]))
                         }
                         i += 1
                     }
                     x += 1
                 }
             }
+
+            })
+        })
         }
 
         if (CurrentStage === "FullHouse") {
-            var score = 0
-            var x = 0
-
+            BooksForCurrentGame.filter(books => {
+                books.filter(tickets => {
+                    var x = 0
+                    var score = 0
             while (x < 3) {
-                i = 0
+                var i = 0
                 while (i < 5) {
-                    if (Numbers.includes(parseInt(HighestScoringTicket[x][i]))) {
+                    if (Numbers.includes(parseInt(tickets[x][i]))) {
                         score += 1
                     }
                     i += 1     
@@ -530,25 +549,67 @@ const JoinGame = () => {
                 while (x < 3) {
                     i = 0
                     while (i < 5) {
-                        if (!(Numbers.includes(parseInt(HighestScoringTicket[x][i])))) {
-                            LastNumber = parseInt(HighestScoringTicket[x][i])
+                        if (!(Numbers.includes(parseInt(tickets[x][i])))) {
+                            if (!(LastNumber.includes(parseInt(tickets[x][i])))) {
+                            LastNumber.push(parseInt(tickets[x][i]))
+                            }
                         }
                         i += 1
                     }
                     x += 1
                 }
             }
+            })
+        })
         }
     
         if (LastNumber !== null) {
-        TempWaitingNumbers.push(LastNumber)
+        var TempList = LastNumber.slice(0, LastNumber.length)
 
-        console.log(TempWaitingNumbers)
+        console.log(TempList)
+        console.log(LastNumber)
 
-        var TempList = TempWaitingNumbers.slice(0, TempWaitingNumbers.length)
         updateWaitingNumbers(TempList)
         }
     }
+    /*
+    function updateWaitingUI() {
+        var i = 0
+
+        var waitingballGraphicElement = document.getElementById('waitingballGraphic')
+        var waitingballGraphicText = document.getElementById('waitingballText')
+
+        if (WaitingNumbers.length !== 0){
+
+        while (i < WaitingNumbers.length){
+            document.getElementById(waitingballText).innerText = "" + WaitingNumbers[i]
+            if (WaitingNumbers[i] < 10){
+                waitingballGraphicText.className = "single"
+            }
+            if (WaitingNumbers[i] > 10){
+                waitingballGraphicText.className = ""
+            }
+            if (WaitingNumbers[i] < 18){
+               waitingballGraphicElement.className = "valign-wrapper blue"
+            }
+            else if (WaitingNumbers[i] < 36){
+                waitingballGraphicElement.className = "valign-wrapper green"
+            }
+            else if (WaitingNumbers[i] < 54){
+                waitingballGraphicElement.className = "valign-wrapper orange"
+            }
+            else if (WaitingNumbers[i] < 72){
+                waitingballGraphicElement.className = "valign-wrapper white"
+            }
+            else if (WaitingNumbers[i] < 91){
+                waitingballGraphicElement.className = "valign-wrapper red"
+            }
+            i += 1
+        }
+    }
+    }
+    */
+
 
     function updateTicketUI () {
         var x = 0
@@ -700,11 +761,26 @@ const JoinGame = () => {
     }
 
     function DetermineBestTicket (Stage) {
-        var MaxScore = 0
+        var Multiplier = 0
         var ScoreArray = []
 
+        if (gameState.SelectedPackage === "Package1") {
+            Multiplier = 1
+        }
+
+        if (gameState.SelectedPackage === "Package2") {
+            Multiplier = 2
+        }
+
+        if (gameState.SelectedPackage === "Package3") {
+            Multiplier = 3
+        }
+
+        if (gameState.SelectedPackage === "Package4") {
+            Multiplier = 4
+        }
+
         if (Stage === "FirstLine") {
-            MaxScore = 5
          var BestTicket = gameState.BooksForCurrentGame.filter(books => {
              books.filter(tickets => {
                  var Score = 0
@@ -725,7 +801,6 @@ const JoinGame = () => {
 
         if (Stage === "DoubleLine") {
             var BestTicket = gameState.BooksForCurrentGame.filter(books => {
-                MaxScore = 10
                 books.filter(tickets => {
                     var FirstScore = 0
                     var SecondScore = 0
@@ -767,7 +842,6 @@ const JoinGame = () => {
         
 
         if (Stage === "FullHouse") {
-            MaxScore = 15
         var BestTicket = gameState.BooksForCurrentGame.filter(books => {
             books.filter(tickets => {
                 var Score = 0
@@ -1465,15 +1539,8 @@ const JoinGame = () => {
 
           <div class="rows">
             <div class="col-lg-4 col-md-12 mb-4">
-              <div class="card">
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                </div>
-                <div class="game-card-body">
-                  <p class="card-text">
-                    Some quick example text to build on the card title and make up the bulk of the
-                    card's content.
-                  </p>
-                </div>
+                <div id="waitingBall" class="valign-wrapper"><div id="waitingballGraphic" class="valign-wrapper"><span id="waitingballText"></span></div><span id="waitingcallNumber"></span></div>
               </div>
             </div>
 
