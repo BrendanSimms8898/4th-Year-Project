@@ -241,9 +241,7 @@ const JoinGame = () => {
 
     React.useEffect(() => {
         console.log(WaitingNumbers)
-        /*
         updateWaitingUI();
-        */
     }, [WaitingNumbers])
 
     React.useEffect(() => {
@@ -562,53 +560,66 @@ const JoinGame = () => {
             })
         })
         }
-    
+
         if (LastNumber !== null) {
-        var TempList = LastNumber.slice(0, LastNumber.length)
+            var TempList = LastNumber.slice(0, LastNumber.length)
 
-        console.log(TempList)
-        console.log(LastNumber)
+            console.log(TempList)
+            console.log(LastNumber)
 
-        updateWaitingNumbers(TempList)
+            updateWaitingNumbers(TempList)
         }
     }
-    /*
+    
     function updateWaitingUI() {
         var i = 0
 
-        var waitingballGraphicElement = document.getElementById('waitingballGraphic')
-        var waitingballGraphicText = document.getElementById('waitingballText')
 
         if (WaitingNumbers.length !== 0){
+            while (i < WaitingNumbers.length){
+            var waitingballGraphicElement = document.querySelectorAll("[id='waitingballGraphic']")
+            var waitingballGraphicText = document.querySelectorAll('waitingballText')
 
-        while (i < WaitingNumbers.length){
-            document.getElementById(waitingballText).innerText = "" + WaitingNumbers[i]
-            if (WaitingNumbers[i] < 10){
-                waitingballGraphicText.className = "single"
+                for(var x = 0; x < waitingballGraphicElement.length; x++){
+                
+ 
+                    console.log(WaitingNumbers[i])
+        
+        
+                    if (WaitingNumbers[i] < 10){
+                        waitingballGraphicText.className = "single"
+                    }
+                    if (WaitingNumbers[i] > 10){
+                        waitingballGraphicText.className = ""
+                    }
+                    if (WaitingNumbers[i] < 18){
+                        waitingballGraphicElement[x].className = "valign-wrapper blue"
+        
+                    }
+                    else if (WaitingNumbers[i] < 36){
+                        waitingballGraphicElement[x].className = "valign-wrapper green"
+        
+                    }
+                    else if (WaitingNumbers[i] < 54){
+                        waitingballGraphicElement[x].className = "valign-wrapper orange"
+        
+                    }
+                    else if (WaitingNumbers[i] < 72){
+                        waitingballGraphicElement[x].className = "valign-wrapper white"
+        
+                    }
+                    else if (WaitingNumbers[i] < 91){
+                        waitingballGraphicElement[x].className = "valign-wrapper red"
+        
+                    }
+                    i += 1
+                }
             }
-            if (WaitingNumbers[i] > 10){
-                waitingballGraphicText.className = ""
-            }
-            if (WaitingNumbers[i] < 18){
-               waitingballGraphicElement.className = "valign-wrapper blue"
-            }
-            else if (WaitingNumbers[i] < 36){
-                waitingballGraphicElement.className = "valign-wrapper green"
-            }
-            else if (WaitingNumbers[i] < 54){
-                waitingballGraphicElement.className = "valign-wrapper orange"
-            }
-            else if (WaitingNumbers[i] < 72){
-                waitingballGraphicElement.className = "valign-wrapper white"
-            }
-            else if (WaitingNumbers[i] < 91){
-                waitingballGraphicElement.className = "valign-wrapper red"
-            }
-            i += 1
-        }
+            
+
     }
     }
-    */
+    
 
 
     function updateTicketUI () {
@@ -1537,10 +1548,9 @@ const JoinGame = () => {
             <PlayerNavBar/>
             <section class="text-center">
 
-          <div class="rows">
+          <div class="waitingrows">
             <div class="col-lg-4 col-md-12 mb-4">
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                <div id="waitingBall" class="valign-wrapper"><div id="waitingballGraphic" class="valign-wrapper"><span id="waitingballText"></span></div><span id="waitingcallNumber"></span></div>
               </div>
             </div>
 
@@ -1609,10 +1619,38 @@ const JoinGame = () => {
                     </tbody>
                 </table>
             </div>
+            <div class="rows">
+            <div class="col-lg-4 col-md-12 mb-4">
+                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+
+                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                </div>
+                <div id="waitingBall"  class="valign-wrapper">
+                    {WaitingNumbers.slice(0, 4).map((num) => {
+                        return(
+                        <>
+                        <div id="waitingballGraphic" class="valign-wrapper"><span id="waitingballText">{num}</span></div><span id="waitingcallNumber"></span>
+                        </>
+                        )
+                        })}
+                    </div>
+
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+            </div>
+          </div>
             </>
+
         )}
+
         </>
     )
+
 };
 
 export default JoinGame;
