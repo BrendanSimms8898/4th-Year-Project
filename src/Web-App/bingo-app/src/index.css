@@ -221,6 +221,25 @@ code {
   margin-top: var(--mdb-gutter-y);
 }
 
+.waitingrows{
+  --mdb-gutter-x: 1.5rem; 
+  --mdb-gutter-y: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: calc(-1 * var(--mdb-gutter-y));
+  margin-right: calc(0 * var(--mdb-gutter-x));
+  margin-left: calc(-0.5 * var(--mdb-gutter-x));
+}
+
+.waitingrows>* {
+flex-shrink: 0;
+width: 100%;
+max-width: 100%;
+padding-right: calc(var(--mdb-gutter-x) * 0);
+padding-left: calc(var(--mdb-gutter-x) * 0.5);
+margin-top: var(--mdb-gutter-y);
+}
+
 .game-card-body {
   display: flex;
   justify-content: center;
@@ -424,32 +443,35 @@ code {
 #waitingballGraphic.blue {
   background: radial-gradient(circle at 20% 20%, #0000FF, #0000ad);
 }
-#waitingballGraphic.blue #ballText {
+#waitingballGraphic.blue #waitingballText {
   border: 0.15rem solid #0000FF;
 }
 #waitingballGraphic.red {
   background: radial-gradient(circle at 20% 20%, #FF0000, #910000);
 }
-#waitingballGraphic.red #ballText {
+#waitingballGraphic.red #waitingballText {
   border: 0.15rem solid #FF0000;
 }
 #waitingballGraphic.white {
   background: radial-gradient(circle at 20% 20%, #ffffff, #b6b6b6);
 }
-#waitingballGraphic.white #ballText {
+#waitingballGraphic.white #waitingballText {
   border: 0.15rem solid #FF0000;
 }
 #waitingballGraphic.green {
   background: radial-gradient(circle at 20% 20%, #008000, #004a00);
 }
-#waitingballGraphic.green #ballText {
+#waitingballGraphic.green #waitingballText {
   border: 0.15rem solid #008000;
 }
 #waitingballGraphic.orange {
   background: radial-gradient(circle at 20% 20%, #FFA500, #9c6400);
 }
-#waitingballGraphic.orange #ballText {
+#waitingballGraphic.orange #waitingballText {
   border: 0.15rem solid #FFA500;
+}
+#playerpage {
+  background-color: #bebebe;
 }
 
 
