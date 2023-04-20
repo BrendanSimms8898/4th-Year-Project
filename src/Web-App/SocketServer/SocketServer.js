@@ -339,6 +339,52 @@ io.on("connection", (socket) => {
     })
   }
   })
+
+  socket.on("AdvanceGame", (CurrentGame) => {
+      console.log("The Current Game Is " + CurrentGame)
+
+      if (socket.handshake.headers.usertype === "Player") {
+      var result = Rooms.filter(room => {
+        if (room.roomName === socket.handshake.headers.roomtojoin) {
+          var HostID = room.roomHostSocketID
+
+          socket.to(HostID).emit("NextGame", CurrentGame)
+        }
+      })
+    }
+  })
+
+  socket.on("EndSession", () => {
+    var RoomIndex = null
+    if (socket.handshake.headers.usertype === "Host") {
+      var result = Rooms.filter(room => {
+        if (room.roomName === socket.handshake.headers.username) {
+          var Room = room.roomName
+
+
+          socket.to(Room).emit("SessionOver")
+
+          var i = 0
+          while (i < Rooms.length) {
+
+            console.log(Room[i]['roomName'])
+            
+            if (Rooms[i]['roomName'] === socket.handshake.headers.username) {
+              RoomIndex = i
+            }
+
+            i += 1
+          }
+
+          if (RoomIndex !== null) {
+          Rooms.splice(RoomIndex, 1)
+          }
+                    
+          socket.disconnect()
+        }
+      })
+    }
+  })
 });
   // Socket.on("EndGame"), () => {
   //
@@ -355,6 +401,10 @@ io.of("/").adapter.on("create-room", (room) => {
 
 io.of("/").adapter.on("join-room", (room, id) => {
   console.log(`socket ${id} has joined room ${room}`);
+});
+
+io.of("/").adapter.on("delete-room", (room) => {
+  console.log(`room ${room} was deleted`);
 });
 
 console.log("hi");
