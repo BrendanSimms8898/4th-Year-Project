@@ -58,10 +58,6 @@ function HostGame () {
       setUser(user);
     }
 
-    if (isConfigured === true) {
-        updateGameState(() => ({...gameState, configurationStage: "GameStart"}))
-    }
-
     function SetGameObject (name) {
         const currentGameObject = {
             gamename: name,
@@ -150,33 +146,62 @@ function HostGame () {
         var i = 1
         var ballGraphicElement = document.getElementById('ballGraphic')
         var ballGraphicText = document.getElementById('ballText')
+
+        console.log(Numbers.length)
+
+        console.log(gameState.currentGame)
+        
+        console.log(Number)
+
+        if (numbers.length === 0 && gameState.currentGame !== 1) {
+            var x = 1
+            
+            while (x <= 90) {
+                var IDstring = "box" + x
+
+                document.getElementById(IDstring).style.backgroundColor = ''
+
+
+                x += 1
+            }
+        }
+
         while (i <= 90) {
             var IDstring = "box" + i
             if (Number === i) {
                 document.getElementById(IDstring).style.backgroundColor = 'green'
             }
-            if (Number < 10){
-                ballGraphicText.className = "single"
-            }
-            if (Number > 10){
-                ballGraphicText.className = ""
-            }
-            if (Number < 18){
-                ballGraphicElement.className = "valign-wrapper blue"
-            }
-            else if (Number < 36){
-                ballGraphicElement.className = "valign-wrapper green"
-            }
-            else if (Number < 54){
-                ballGraphicElement.className = "valign-wrapper orange"
-            }
-            else if (Number < 72){
-                ballGraphicElement.className = "valign-wrapper white"
-            }
-            else if (Number < 91){
-                ballGraphicElement.className = "valign-wrapper red"
-            }
         i += 1
+    }
+
+    console.log(Number)
+    if (Number < 10 && Number !== null){
+        console.log("Im In this condition")
+        ballGraphicText.className = "single"
+    }
+    if (Number > 10 && Number !== null){
+        ballGraphicText.className = ""
+    }
+    if (Number === null){
+        console.log("Im In the correct IF condition")
+        ballGraphicElement.className = "valign-wrapper"
+        ballGraphicText.className = ""
+    }
+    else if (Number < 18){
+        console.log("Im In this condition")
+        ballGraphicElement.className = "valign-wrapper blue"
+    }
+    else if (Number < 36){
+        ballGraphicElement.className = "valign-wrapper green"
+    }
+    else if (Number < 54){
+        ballGraphicElement.className = "valign-wrapper orange"
+    }
+    else if (Number < 72){
+        ballGraphicElement.className = "valign-wrapper white"
+    }
+    else if (Number < 91){
+        ballGraphicElement.className = "valign-wrapper red"
     }
 
     }
@@ -295,7 +320,41 @@ function HostGame () {
 
         isWebSocket.on("SuccesfulWinner", () =>  {
             console.log("User Wants Next Stage")
+
+            window.alert("We are moving onto the Next Stage")
+
             isWebSocket.emit("UpdatePlayer", gameState.games.length)
+        })
+
+        isWebSocket.on("NextGame", (CurrentGame) => {
+            if (gameState.games.length > CurrentGame) {
+                console.log("Theres More Games to Play")
+                CurrentGame = CurrentGame + 1
+
+                var NewNumbersList = []
+
+                NewNumbersList = NewNumbersList.slice(0, NewNumbersList.length)
+
+                updateNumbers(NewNumbersList)
+
+                numbers.splice(0, numbers.length)
+
+                console.log(Numbers)
+
+                WhatNumberWhatChanges(null, Numbers)
+
+                updateGameState(() => ({...gameState, CurrentPrizeSL: gameState.games[CurrentGame - 1]["PrizeFL"], CurrentPrizeDL: gameState.games[CurrentGame - 1]["PrizeDL"], CurrentPrizeFH: gameState.games[CurrentGame - 1]["PrizeFH"], CurrentGame: CurrentGame, configurationStage: "Completed"}))
+            }
+
+            else {
+                console.log("Session Is Over")
+
+                isWebSocket.emit("EndSession")
+
+                window.alert("The Session is Over.")
+            
+                window.location.reload()
+            }
         })
     }
     }, [isWebSocket], [PlayersInSession], [Numbers]);
@@ -475,7 +534,7 @@ function HostGame () {
         var number_already_called = false
 
         while (i < numbers.length) {
-            if (number == numbers[i]) {
+            if (number === numbers[i]) {
                 number_already_called = true
             }
 

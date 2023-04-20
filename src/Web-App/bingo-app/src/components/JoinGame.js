@@ -25,12 +25,14 @@ var CurrentStage = "FirstLine"
 
 var CurrentGame = 0
 
+var BooksForGame = []
+
+var TempNumbersContainer = []
+
 const JoinGame = () => {
     const [user, setUser] = React.useState(null);
 
     const [gameState, updateGameState] = React.useState(initialState)
-
-    const forcestate = React.useCallback(() => updateGameState({}), []);
 
     const [socket, setSocket] = React.useState(null);
 
@@ -42,13 +44,11 @@ const JoinGame = () => {
 
     const [WaitingNumbers, updateWaitingNumbers] = React.useState([]);
 
+    const [currentGame, updateCurrentGame] = React.useState(0);
+
     const Books = []
 
-    var TempNumbers = []
-
-    const TempWaitingNumbers = []
-
-    var BooksForGame = []
+    var TempBooksForGame = []
 
     var CheckIsValid = false
 
@@ -94,9 +94,9 @@ const JoinGame = () => {
                  }
              }
 
-             BooksForGame = gameState.books.slice(StartPoint, Index)
+             TempBooksForGame = gameState.books.slice(StartPoint, Index)
 
-             return BooksForGame
+             return TempBooksForGame
      }
     
     React.useEffect(() => {
@@ -104,10 +104,11 @@ const JoinGame = () => {
 
         if (socket !== null) {
         socket.on("PlayerNextNumber", (LatestNumber) => {
+            console.log(TempNumbersContainer)
+
             var NewNumber = LatestNumber
-            TempNumbers.push(NewNumber)
-            var NewNumberList = TempNumbers
-            NewNumberList = NewNumberList.slice(0, NewNumberList.length)
+            TempNumbersContainer.push(NewNumber)
+            const NewNumberList = TempNumbersContainer.slice(0, TempNumbersContainer.length)
             updateNumbers(NewNumberList)
             updateNumber(NewNumber)
         })
@@ -175,10 +176,12 @@ const JoinGame = () => {
 
             updateGameState((previous) => ({...previous, formState: "InGame", CurrentGame: 1, CurrentStage: "FirstLine"}))
             CurrentGame = 1
+            updateCurrentGame([])
         })
 
         socket.on("Winnings", (Amount) => {
             console.log(Amount)
+            window.alert("You Just won €" + Amount + " for winning the " + CurrentStage)
 
             if (user !== null) {
                 var AmountToBeAdded = Amount
@@ -195,28 +198,50 @@ const JoinGame = () => {
             }
         })
 
-        socket.on("UpdateStage", (HowManyGames) => {
-            console.log("We have updated stage")
-            
+        socket.on("UpdateStage", (HowManyGames) => {            
             if (CurrentStage === "FirstLine") {
             CurrentStage = "DoubleLine"
+            window.alert("Someone has won Single Line, Now moving on to Double Line")
             updateWaitingNumbers([])
-            console.log(gameState)
             }
 
             else if (CurrentStage === "DoubleLine") {
             CurrentStage = "FullHouse"
+            window.alert("Someone has won Double Line, Now moving on to Full House")
             updateWaitingNumbers([])
-            }
-            else if (CurrentStage === "FullHouse" && HowManyGames !== gameState.CurrentGame){
-            CurrentStage = "FirstLine"
-            updateWaitingNumbers([])
-            }
-            else if (gameState.CurrentStage === "FullHouse" && HowManyGames === gameState.CurrentGame) {
-            updateGameState(() => ({...gameState, formState: "SessionCompleted"}))
             }
 
-            console.log(gameState)
+            else if (CurrentStage === "FullHouse"){
+            if (socket !== null) {
+                socket.emit("AdvanceGame", CurrentGame)
+            }
+
+            CurrentStage = "FirstLine"
+
+            var TempGameNumber = CurrentGame + 1
+
+            console.log(TempGameNumber)
+
+            CurrentGame = 0
+
+            CurrentGame = TempGameNumber
+
+            if (CurrentGame <= HowManyGames) {
+                window.alert("Now Moving on to Game " + CurrentGame)
+            }
+
+            updateCurrentGame(null)
+
+            console.log(CurrentGame)
+            }
+        })
+
+        socket.on("SessionOver", () => {
+            socket.disconnect()
+
+            window.alert("This Session Is over if you won your prize money has been added to your account")
+
+            window.location.reload()
         })
     }
 
@@ -229,40 +254,73 @@ const JoinGame = () => {
             updateTicketUI();
         }
 
+        console.log(bestTicket)
+
     }, [bestTicket])
 
     React.useEffect(() => {
-        if (bestTicket !== null) {
+        if (bestTicket !== null && Number !== null) {
         ClearTicketUI();
         updateTicketUI();
-        updateWaitingOnNumbers(gameState.BooksForCurrentGame);
+        updateWaitingOnNumbers(BooksForGame);
+        PlayAudio(Number)
         }
+
+        console.log(Number)
     }, [Number])
 
     React.useEffect(() => {
         console.log(WaitingNumbers)
         updateWaitingUI();
+
     }, [WaitingNumbers])
 
     React.useEffect(() => {
-        if (gameState.books !== null & gameState.CurrentGame !== 0) {
-            var GameBooks = BooksForCurrentGame(gameState.CurrentGame)
+        if (gameState.books !== null & CurrentGame !== 0) {
+            var GameBooks = BooksForCurrentGame(CurrentGame)
 
-            updateGameState((previous) => ({...previous, BooksForCurrentGame: GameBooks}))
+            BooksForGame = GameBooks
+
+            console.log(BooksForGame)
         }
 
-    }, [gameState.CurrentGame]) 
+        if (CurrentGame > 1) {
+            updateNumbers([])
+            updateNumber(null)
+            updateBestTicket(null)
+            updateWaitingNumbers([])
+            TempNumbersContainer = []
+
+            ClearTicketUI();
+            ClearBallUI();
+        }
+    }, [currentGame]) 
 
     React.useEffect(() => {
         if (Numbers.length !== 0){
+
+            console.log(BooksForGame)
 
             console.log(CurrentStage)
 
             var NewBestTicket = DetermineBestTicket(CurrentStage)
             
             updateBestTicket(NewBestTicket)
+
+            PlayAudio(Number)
         }
-    }, [Numbers], [gameState.BooksForCurrentGame])
+
+        console.log(Numbers)
+
+    }, [Numbers])
+
+    function ClearBallUI () {
+        var ballGraphicElement = document.getElementById('ballGraphic')
+        var ballGraphicText = document.getElementById('ballText')
+        ballGraphicElement.className = "valign-wrapper"
+        ballGraphicText.className = ""
+        
+    }
 
     function ClearTicketUI () {
         var i = 1
@@ -286,7 +344,7 @@ const JoinGame = () => {
             if (socket !== null) {
                 var ArrayString = DeconstructTheBooks()
                 console.log(ArrayString)
-                socket.emit("Check", ArrayString, gameState.SelectedPackage, CurrentStage, gameState.CurrentGame)
+                socket.emit("Check", ArrayString, gameState.SelectedPackage, CurrentStage, CurrentGame)
             }
         }
 
@@ -335,7 +393,7 @@ const JoinGame = () => {
 
     function CheckValid () {
         if (CurrentStage === "FirstLine") {
-        var IsBest = gameState.books.filter(books => {
+        var IsBest = BooksForGame.filter(books => {
             books.filter(tickets => {
                 tickets.filter(lines => {
                     var i = 0
@@ -356,7 +414,7 @@ const JoinGame = () => {
         }
 
         if (CurrentStage === "DoubleLine") {
-            var BestTicket = gameState.BooksForCurrentGame.filter(books => {
+            var BestTicket = BooksForGame.filter(books => {
                 books.filter(tickets => {
                     var FirstScore = 0
                     var SecondScore = 0
@@ -393,7 +451,7 @@ const JoinGame = () => {
         }
 
         if (CurrentStage === "FullHouse") {
-            var BestTicket = gameState.BooksForCurrentGame.filter(books => {
+            var BestTicket = BooksForGame.filter(books => {
                 books.filter(tickets => {
                     var Score = 0
                     var i = 0
@@ -578,19 +636,25 @@ const JoinGame = () => {
         if (WaitingNumbers.length !== 0){
             while (i < WaitingNumbers.length){
             var waitingballGraphicElement = document.querySelectorAll("[id='waitingballGraphic']")
-            var waitingballGraphicText = document.querySelectorAll('waitingballText')
+            var waitingballGraphicText = document.querySelectorAll("[id='waitingballText']")
+            console.log(waitingballGraphicText)
 
                 for(var x = 0; x < waitingballGraphicElement.length; x++){
                 
  
                     console.log(WaitingNumbers[i])
         
-        
+
                     if (WaitingNumbers[i] < 10){
-                        waitingballGraphicText.className = "single"
-                    }
-                    if (WaitingNumbers[i] > 10){
-                        waitingballGraphicText.className = ""
+                        for(var z = 0; z < waitingballGraphicText.length; z++){
+                            console.log(waitingballGraphicText[z].innerText)
+                            if (parseInt(waitingballGraphicText[z].innerText) < 10 ){
+                                waitingballGraphicText[z].className = "single"
+                            }
+                            else {
+                                waitingballGraphicText[z].className = ""
+                            }
+                        }
                     }
                     if (WaitingNumbers[i] < 18){
                         waitingballGraphicElement[x].className = "valign-wrapper blue"
@@ -742,6 +806,8 @@ const JoinGame = () => {
                 if (Numbers.includes((parseInt(ArrayNumber)))) {
                     document.getElementById(ElementID).style.backgroundColor = 'green'
 
+
+
                     if (Number < 10){
                         ballGraphicText.className = "single"
                     }
@@ -792,7 +858,7 @@ const JoinGame = () => {
         }
 
         if (Stage === "FirstLine") {
-         var BestTicket = gameState.BooksForCurrentGame.filter(books => {
+         var BestTicket = BooksForGame.filter(books => {
              books.filter(tickets => {
                  var Score = 0
                  tickets.filter(lines => {
@@ -811,7 +877,7 @@ const JoinGame = () => {
         }
 
         if (Stage === "DoubleLine") {
-            var BestTicket = gameState.BooksForCurrentGame.filter(books => {
+            var BestTicket = BooksForGame.filter(books => {
                 books.filter(tickets => {
                     var FirstScore = 0
                     var SecondScore = 0
@@ -853,7 +919,7 @@ const JoinGame = () => {
         
 
         if (Stage === "FullHouse") {
-        var BestTicket = gameState.BooksForCurrentGame.filter(books => {
+        var BestTicket = BooksForGame.filter(books => {
             books.filter(tickets => {
                 var Score = 0
                 var i = 0
@@ -1374,7 +1440,13 @@ const JoinGame = () => {
                 }
             }
         }
-        return gameState.BooksForCurrentGame[FirstIndex][SecondIndex]
+
+        console.log(Stage)
+        console.log(BooksForGame)
+        console.log(FirstIndex)
+        console.log(SecondIndex)
+
+        return BooksForGame[FirstIndex][SecondIndex]
     }
 
     const onChange = (event) => {
@@ -1452,6 +1524,22 @@ const JoinGame = () => {
             window.alert(err)
             isError = true;
         }
+    }
+
+    function PlayAudio (Number) {
+        var AudioNumber = 1
+                while (AudioNumber <= 90) {
+                if (parseInt(Number) === AudioNumber) {
+
+                    var audio = document.getElementById(`Number_${AudioNumber}_Audio`)
+
+                    audio.play()
+
+                    console.log(document.getElementById(`Number_${AudioNumber}_Audio`))
+
+                }
+                AudioNumber += 1
+                }
     }
 
     console.log(gameState);
@@ -1546,6 +1634,96 @@ const JoinGame = () => {
         {formState === "InGame" && (
             <>
             <PlayerNavBar/>
+            <audio src="./AudioFiles/Number_1.mp3" id="Number_1_Audio"></audio>
+            <audio src="./AudioFiles/Number_2.mp3" id="Number_2_Audio"></audio>
+            <audio src="./AudioFiles/Number_3.mp3" id="Number_3_Audio"></audio>
+            <audio src="./AudioFiles/Number_4.mp3" id="Number_4_Audio"></audio>
+            <audio src="./AudioFiles/Number_5.mp3" id="Number_5_Audio"></audio>
+            <audio src="./AudioFiles/Number_6.mp3" id="Number_6_Audio"></audio>
+            <audio src="./AudioFiles/Number_7.mp3" id="Number_7_Audio"></audio>
+            <audio src="./AudioFiles/Number_8.mp3" id="Number_8_Audio"></audio>
+            <audio src="./AudioFiles/Number_9.mp3" id="Number_9_Audio"></audio>
+            <audio src="./AudioFiles/Number_10.mp3" id="Number_10_Audio"></audio>
+            <audio src="./AudioFiles/Number_11.mp3" id="Number_11_Audio"></audio>
+            <audio src="./AudioFiles/Number_12.mp3" id="Number_12_Audio"></audio>
+            <audio src="./AudioFiles/Number_13.mp3" id="Number_13_Audio"></audio>
+            <audio src="./AudioFiles/Number_14.mp3" id="Number_14_Audio"></audio>
+            <audio src="./AudioFiles/Number_15.mp3" id="Number_15_Audio"></audio>
+            <audio src="./AudioFiles/Number_16.mp3" id="Number_16_Audio"></audio>
+            <audio src="./AudioFiles/Number_17.mp3" id="Number_17_Audio"></audio>
+            <audio src="./AudioFiles/Number_18.mp3" id="Number_18_Audio"></audio>
+            <audio src="./AudioFiles/Number_19.mp3" id="Number_19_Audio"></audio>
+            <audio src="./AudioFiles/Number_20.mp3" id="Number_20_Audio"></audio>
+            <audio src="./AudioFiles/Number_21.mp3" id="Number_21_Audio"></audio>
+            <audio src="./AudioFiles/Number_22.mp3" id="Number_22_Audio"></audio>
+            <audio src="./AudioFiles/Number_23.mp3" id="Number_23_Audio"></audio>
+            <audio src="./AudioFiles/Number_24.mp3" id="Number_24_Audio"></audio>
+            <audio src="./AudioFiles/Number_25.mp3" id="Number_25_Audio"></audio>
+            <audio src="./AudioFiles/Number_26.mp3" id="Number_26_Audio"></audio>
+            <audio src="./AudioFiles/Number_27.mp3" id="Number_27_Audio"></audio>
+            <audio src="./AudioFiles/Number_28.mp3" id="Number_28_Audio"></audio>
+            <audio src="./AudioFiles/Number_29.mp3" id="Number_29_Audio"></audio>
+            <audio src="./AudioFiles/Number_30.mp3" id="Number_30_Audio"></audio>
+            <audio src="./AudioFiles/Number_31.mp3" id="Number_31_Audio"></audio>
+            <audio src="./AudioFiles/Number_32.mp3" id="Number_32_Audio"></audio>
+            <audio src="./AudioFiles/Number_33.mp3" id="Number_33_Audio"></audio>
+            <audio src="./AudioFiles/Number_34.mp3" id="Number_34_Audio"></audio>
+            <audio src="./AudioFiles/Number_35.mp3" id="Number_35_Audio"></audio>
+            <audio src="./AudioFiles/Number_36.mp3" id="Number_36_Audio"></audio>
+            <audio src="./AudioFiles/Number_37.mp3" id="Number_37_Audio"></audio>
+            <audio src="./AudioFiles/Number_38.mp3" id="Number_38_Audio"></audio>
+            <audio src="./AudioFiles/Number_39.mp3" id="Number_39_Audio"></audio>
+            <audio src="./AudioFiles/Number_40.mp3" id="Number_40_Audio"></audio>
+            <audio src="./AudioFiles/Number_41.mp3" id="Number_41_Audio"></audio>
+            <audio src="./AudioFiles/Number_42.mp3" id="Number_42_Audio"></audio>
+            <audio src="./AudioFiles/Number_43.mp3" id="Number_43_Audio"></audio>
+            <audio src="./AudioFiles/Number_44.mp3" id="Number_44_Audio"></audio>
+            <audio src="./AudioFiles/Number_45.mp3" id="Number_45_Audio"></audio>
+            <audio src="./AudioFiles/Number_46.mp3" id="Number_46_Audio"></audio>
+            <audio src="./AudioFiles/Number_47.mp3" id="Number_47_Audio"></audio>
+            <audio src="./AudioFiles/Number_48.mp3" id="Number_48_Audio"></audio>
+            <audio src="./AudioFiles/Number_49.mp3" id="Number_49_Audio"></audio>
+            <audio src="./AudioFiles/Number_50.mp3" id="Number_50_Audio"></audio>
+            <audio src="./AudioFiles/Number_51.mp3" id="Number_51_Audio"></audio>
+            <audio src="./AudioFiles/Number_52.mp3" id="Number_52_Audio"></audio>
+            <audio src="./AudioFiles/Number_53.mp3" id="Number_53_Audio"></audio>
+            <audio src="./AudioFiles/Number_54.mp3" id="Number_54_Audio"></audio>
+            <audio src="./AudioFiles/Number_55.mp3" id="Number_55_Audio"></audio>
+            <audio src="./AudioFiles/Number_56.mp3" id="Number_56_Audio"></audio>
+            <audio src="./AudioFiles/Number_57.mp3" id="Number_57_Audio"></audio>
+            <audio src="./AudioFiles/Number_58.mp3" id="Number_58_Audio"></audio>
+            <audio src="./AudioFiles/Number_59.mp3" id="Number_59_Audio"></audio>
+            <audio src="./AudioFiles/Number_60.mp3" id="Number_60_Audio"></audio>
+            <audio src="./AudioFiles/Number_61.mp3" id="Number_61_Audio"></audio>
+            <audio src="./AudioFiles/Number_62.mp3" id="Number_62_Audio"></audio>
+            <audio src="./AudioFiles/Number_63.mp3" id="Number_63_Audio"></audio>
+            <audio src="./AudioFiles/Number_64.mp3" id="Number_64_Audio"></audio>
+            <audio src="./AudioFiles/Number_65.mp3" id="Number_65_Audio"></audio>
+            <audio src="./AudioFiles/Number_66.mp3" id="Number_66_Audio"></audio>
+            <audio src="./AudioFiles/Number_67.mp3" id="Number_67_Audio"></audio>
+            <audio src="./AudioFiles/Number_68.mp3" id="Number_68_Audio"></audio>
+            <audio src="./AudioFiles/Number_69.mp3" id="Number_69_Audio"></audio>
+            <audio src="./AudioFiles/Number_70.mp3" id="Number_70_Audio"></audio>
+            <audio src="./AudioFiles/Number_71.mp3" id="Number_71_Audio"></audio>
+            <audio src="./AudioFiles/Number_72.mp3" id="Number_72_Audio"></audio>
+            <audio src="./AudioFiles/Number_73.mp3" id="Number_73_Audio"></audio>
+            <audio src="./AudioFiles/Number_74.mp3" id="Number_74_Audio"></audio>
+            <audio src="./AudioFiles/Number_75.mp3" id="Number_75_Audio"></audio>
+            <audio src="./AudioFiles/Number_76.mp3" id="Number_76_Audio"></audio>
+            <audio src="./AudioFiles/Number_77.mp3" id="Number_77_Audio"></audio>
+            <audio src="./AudioFiles/Number_78.mp3" id="Number_78_Audio"></audio>
+            <audio src="./AudioFiles/Number_79.mp3" id="Number_79_Audio"></audio>
+            <audio src="./AudioFiles/Number_80.mp3" id="Number_80_Audio"></audio>
+            <audio src="./AudioFiles/Number_81.mp3" id="Number_81_Audio"></audio>
+            <audio src="./AudioFiles/Number_82.mp3" id="Number_82_Audio"></audio>
+            <audio src="./AudioFiles/Number_83.mp3" id="Number_83_Audio"></audio>
+            <audio src="./AudioFiles/Number_84.mp3" id="Number_84_Audio"></audio>
+            <audio src="./AudioFiles/Number_85.mp3" id="Number_85_Audio"></audio>
+            <audio src="./AudioFiles/Number_86.mp3" id="Number_86_Audio"></audio>
+            <audio src="./AudioFiles/Number_87.mp3" id="Number_87_Audio"></audio>
+            <audio src="./AudioFiles/Number_88.mp3" id="Number_88_Audio"></audio>
+            <audio src="./AudioFiles/Number_89.mp3" id="Number_89_Audio"></audio>
+            <audio src="./AudioFiles/Number_90.mp3" id="Number_90_Audio"></audio>
             <section class="text-center">
 
           <div class="waitingrows">
@@ -1567,7 +1745,7 @@ const JoinGame = () => {
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
                 </div>
                 <div class="game-card-body">
-                    <MDBBtn className="mb-4" size='lg' onClick={CheckButton}>Check Number </MDBBtn>
+                    <MDBBtn className="mb-4" size='lg' onClick={CheckButton}>Check</MDBBtn>
                 </div>
               </div>
             </div>
@@ -1646,6 +1824,14 @@ const JoinGame = () => {
           </div>
             </>
 
+        )}
+
+        {formState === "SessionEnd" && (
+        <>
+        <PlayerNavBar/>
+
+        <h2> Game Is Over </h2>
+        </>
         )}
 
         </>
