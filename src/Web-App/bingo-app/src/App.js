@@ -54,6 +54,7 @@ export default function App () {
             <Route path="Balance" element={<BalanceManager/>}></Route>
             <Route path="AddBalance" element={<AddBalance/>}></Route>
             <Route path="WithdrawBalance" element={<WithdrawBalance/>}></Route>
+            <Route path="HostHome" element={<HostHome/>}></Route>
           </Routes>
         </BrowserRouter>
       )

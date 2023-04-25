@@ -160,6 +160,7 @@ function HostGame () {
                 var IDstring = "box" + x
 
                 document.getElementById(IDstring).style.backgroundColor = ''
+                document.getElementById(IDstring).style.color = 'black'
 
 
                 x += 1
@@ -170,6 +171,7 @@ function HostGame () {
             var IDstring = "box" + i
             if (Number === i) {
                 document.getElementById(IDstring).style.backgroundColor = 'green'
+                document.getElementById(IDstring).style.color = 'white'
             }
         i += 1
     }
@@ -187,21 +189,24 @@ function HostGame () {
         ballGraphicElement.className = "valign-wrapper"
         ballGraphicText.className = ""
     }
-    else if (Number < 18){
+    else if (Number < 15){
         console.log("Im In this condition")
         ballGraphicElement.className = "valign-wrapper blue"
     }
-    else if (Number < 36){
+    else if (Number < 30){
         ballGraphicElement.className = "valign-wrapper green"
     }
-    else if (Number < 54){
+    else if (Number < 45){
         ballGraphicElement.className = "valign-wrapper orange"
     }
-    else if (Number < 72){
+    else if (Number < 60){
         ballGraphicElement.className = "valign-wrapper white"
     }
-    else if (Number < 91){
+    else if (Number < 75){
         ballGraphicElement.className = "valign-wrapper red"
+    }
+    else if (Number < 90){
+        ballGraphicElement.className = "valign-wrapper pink"
     }
 
     }
@@ -609,12 +614,13 @@ function HostGame () {
     {configurationStage === "WhatPrizeMoney" && (
         <>
             <HostNavBar/>
+            <div id="prizemoneywrap">
             <div id="PrizeMoneyConfigurationTitle">
             <MDBContainer fluid>
             <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
                 <MDBCol col='12'>
                     <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
-                    <MDBCardBody className='p-5 vw-30 d-flex flex-column'>     
+                    <MDBCardBody className=' vw-30 d-flex flex-column'>     
                         <h2 className="fw-bold mb-2 text-center">Please Set your Prize Money for Each individual game</h2>
                     </MDBCardBody>
                     </MDBCard>
@@ -626,23 +632,23 @@ function HostGame () {
             <HorizontalScroll>
             {games.map((game, index) => {
                 return (
-    <MDBContainer fluid>
-        <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
-           <MDBCol col='12'>
-               <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
-                   <MDBCardBody className='p-5 vw-30 d-flex flex-column'>
-                    <h2 key={games.gamename} className="fw-bold mb-2 text-center">{game.gamename}</h2>
-                   <MDBInput  wrapperClass='mb-4 vw-30' onChange={onPrizeMoneyChange} name="PrizeFL" label='Single Line Prize Money?' id='formControlLg' index={index} size="lg" />
-                   <MDBInput  wrapperClass='mb-4 vw-30' onChange={onPrizeMoneyChange} name="PrizeDL" label='Double Line Prize Money?' id='formControlLg' index={index} size="lg" />
-                   <MDBInput  wrapperClass='mb-4 vw-30' onChange={onPrizeMoneyChange} name="PrizeFH" label='Full House Prize Money?' id='formControlLg' index={index} size="lg" />
-                   </MDBCardBody>
-                </MDBCard>
-            </MDBCol>
-       </MDBRow>
-    </MDBContainer>
-        );
-                })}
-    </HorizontalScroll>
+                    <MDBContainer fluid>
+                        <MDBRow className='d-flex justify-content-center align-items-center vh-30'>
+                        <MDBCol col='12'>
+                            <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'}}>
+                                <MDBCardBody className='p-5 vw-30 d-flex flex-column'>
+                                    <h2 key={games.gamename} className="fw-bold mb-2 text-center">{game.gamename}</h2>
+                                <MDBInput  wrapperClass='mb-4 vw-30' onChange={onPrizeMoneyChange} name="PrizeFL" label='Single Line Prize Money?' id='formControlLg' index={index} size="lg" />
+                                <MDBInput  wrapperClass='mb-4 vw-30' onChange={onPrizeMoneyChange} name="PrizeDL" label='Double Line Prize Money?' id='formControlLg' index={index} size="lg" />
+                                <MDBInput  wrapperClass='mb-4 vw-30' onChange={onPrizeMoneyChange} name="PrizeFH" label='Full House Prize Money?' id='formControlLg' index={index} size="lg" />
+                                </MDBCardBody>
+                                </MDBCard>
+                            </MDBCol>
+                    </MDBRow>
+                    </MDBContainer>
+                );
+            })}
+            </HorizontalScroll>
     </div>
     <div id="PrizeMoneyConfigurationSubmit">
         <MDBContainer fluid>
@@ -656,6 +662,7 @@ function HostGame () {
                 </MDBCol>
             </MDBRow>
         </MDBContainer>
+    </div>
     </div>
     </>
     )}
@@ -758,20 +765,18 @@ function HostGame () {
     {configurationStage === "Completed" && (
         <>
         <HostNavBar/>
+        <div id="hostpage">
         <section class="text-center">
 
           <div class="rows">
             <div class="col-lg-4 col-md-12 mb-4">
-              <div class="card">
+            </div>
+
+
+            <div class="col-lg-4 col-md-6 mb-4">
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
                 </div>
-                <div class="game-card-body">
-                  <p class="card-text">
-                    Some quick example text to build on the card title and make up the bulk of the
-                    card's content.
-                  </p>
-                </div>
-              </div>
+                <div id="currentBall" class="valign-wrapper"><div id="ballGraphic" class="valign-wrapper"><span id="ballText">{Numbers[Numbers.length - 1]}</span></div><span id="callNumber"></span></div>
             </div>
 
             <div class="col-lg-4 col-md-6 mb-4">
@@ -785,11 +790,7 @@ function HostGame () {
               </div>
             </div>
 
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                </div>
-                <div id="currentBall" class="valign-wrapper"><div id="ballGraphic" class="valign-wrapper"><span id="ballText">{Numbers[Numbers.length - 1]}</span></div><span id="callNumber"></span></div>
-            </div>
+
 
           </div>
         </section>
@@ -916,6 +917,7 @@ function HostGame () {
 				</tr>
                 </tbody>
 			</table>
+            </div>
         </>
     )}
     </>

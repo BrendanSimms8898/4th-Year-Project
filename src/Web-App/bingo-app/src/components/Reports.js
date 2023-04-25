@@ -30,15 +30,6 @@ const Reports = () => {
                 </>
             )
         }
-        if (user.attributes['custom:UserType'] === "Player") {
-            return (
-                <>
-                <PlayerNavBar/>
-                <h1>We are in reports</h1>
-                </>
-            )
-        }
-
     }
 };
 

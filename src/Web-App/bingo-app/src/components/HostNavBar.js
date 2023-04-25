@@ -16,6 +16,9 @@ import {Outlet, Link} from 'react-router-dom';
 import "./HostGame.js"
 import {Auth, Amplify} from 'aws-amplify';
 import awsExports from '../aws-exports.js';
+import bingonav from './bingo-nav.png'
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import mobilebingonav from "./mobile-bingo-nav.png"
 
 Amplify.configure(awsExports);
 
@@ -70,12 +73,16 @@ function HostNavBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+        <img className='navlogo'
+          src={bingonav} 
+          alt="Bingo Game" 
+          style={{}}
+        />
           <Typography
             variant="h6"
             noWrap
             component="a"
-            href=""
+            href="/hosthome"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -141,7 +148,13 @@ function HostNavBar() {
                 </MenuItem>
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <a href="/hosthome">
+          <img className='mobilelogo'
+          src={mobilebingonav} 
+          alt="Bingo Game" 
+          style={{}}
+        />
+        </a>
           <Typography
             variant="h5"
             noWrap
@@ -158,7 +171,6 @@ function HostNavBar() {
               textDecoration: 'none',
             }}
           >
-            Bingo Bonanza
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               <Link to={`/${user.attributes.email}`}>
@@ -183,8 +195,15 @@ function HostNavBar() {
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <h5 id="AccountName"> {user.attributes.name} </h5>
+            <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenUserMenu}
+                color="inherit"
+              >
+                <AccountCircle />
               </IconButton>
             </Tooltip>
             <Menu
