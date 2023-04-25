@@ -12,14 +12,17 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import bingonav from './bingo-nav.png'
 import {Outlet, Link} from 'react-router-dom';
 import "./JoinGame.js"
+import AccountCircle from '@mui/icons-material/AccountCircle';
 import {Auth, Amplify} from 'aws-amplify';
 import awsExports from '../aws-exports.js';
+import mobilebingonav from "./mobile-bingo-nav.png"
 
 Amplify.configure(awsExports);
 
-const pages = ['JoinGame', 'Reports'];
+const pages = ['JoinGame'];
 const settings = ['Profile', 'Balance', 'Logout'];
 
 function PlayerNavBar() {
@@ -69,7 +72,11 @@ function PlayerNavBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+        <img className='navlogo'
+          src={bingonav} 
+          alt="Bingo Game" 
+          style={{}}
+        />
           <Typography
             variant="h6"
             noWrap
@@ -117,16 +124,6 @@ function PlayerNavBar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-               <MenuItem onClick={handleCloseNavMenu}>
-              <Link to={"/Reports"}>
-              <Button
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'black', display: 'block' }}
-              >
-                Reports
-              </Button>
-              </Link>
-                </MenuItem>
                 <MenuItem onClick={handleCloseNavMenu}>
                 <Link to={`/joingame`}>
               <Button
@@ -139,8 +136,14 @@ function PlayerNavBar() {
                 </MenuItem>
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
+          <a href="/playerhome">
+          <img className='mobilelogo'
+          src={mobilebingonav} 
+          alt="Bingo Game" 
+          style={{}}
+        />
+        </a>
+        <Typography
             variant="h5"
             noWrap
             component="a"
@@ -156,8 +159,8 @@ function PlayerNavBar() {
               textDecoration: 'none',
             }}
           >
-            Bingo Bonanza
           </Typography>
+
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               <Link to={`/joingame`}>
               <Button
@@ -167,22 +170,21 @@ function PlayerNavBar() {
                 JoinGame
               </Button>
               </Link>
-              <Link to={"/Reports"}>
-              <Button
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                Reports
-              </Button>
-              </Link>
             <Outlet />
           </Box>
 
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <h5 id="AccountName"> {user.attributes.name} </h5>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenUserMenu}
+                color="inherit"
+              >
+                <AccountCircle />
               </IconButton>
             </Tooltip>
             <Menu

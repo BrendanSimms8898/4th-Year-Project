@@ -107,6 +107,7 @@ const JoinGame = () => {
             console.log(TempNumbersContainer)
 
             var NewNumber = LatestNumber
+            console.log(TempNumbersContainer)
             TempNumbersContainer.push(NewNumber)
             const NewNumberList = TempNumbersContainer.slice(0, TempNumbersContainer.length)
             updateNumbers(NewNumberList)
@@ -230,7 +231,13 @@ const JoinGame = () => {
                 window.alert("Now Moving on to Game " + CurrentGame)
             }
 
-            updateCurrentGame(null)
+            if (CurrentGame % 2 !== 0) {
+                updateCurrentGame(null)
+            }
+
+            if (CurrentGame % 2 === 0) {
+                updateCurrentGame(0)
+            }
 
             console.log(CurrentGame)
             }
@@ -285,6 +292,7 @@ const JoinGame = () => {
         }
 
         if (CurrentGame > 1) {
+            console.log("IM HERE", CurrentGame)
             updateNumbers([])
             updateNumber(null)
             updateBestTicket(null)
@@ -328,6 +336,7 @@ const JoinGame = () => {
         if (document.getElementById("box" + i).innerText !== "") {
             document.getElementById("box" + i).innerText = ""
             document.getElementById("box" + i).style.backgroundColor = '#ecedf0'
+            document.getElementById("box" + i).style.color = 'black'
         }
 
             i += 1
@@ -642,38 +651,39 @@ const JoinGame = () => {
                 for(var x = 0; x < waitingballGraphicElement.length; x++){
                 
  
-                    console.log(WaitingNumbers[i])
         
 
-                    if (WaitingNumbers[i] < 10){
-                        for(var z = 0; z < waitingballGraphicText.length; z++){
-                            console.log(waitingballGraphicText[z].innerText)
-                            if (parseInt(waitingballGraphicText[z].innerText) < 10 ){
-                                waitingballGraphicText[z].className = "single"
-                            }
-                            else {
-                                waitingballGraphicText[z].className = ""
-                            }
+                    for(var z = 0; z < waitingballGraphicText.length; z++){
+                        if (parseInt(waitingballGraphicText[z].innerText) < 10 ){
+                            waitingballGraphicText[z].className = "single"
+                        }
+                        else {
+                            waitingballGraphicText[z].className = ""
                         }
                     }
-                    if (WaitingNumbers[i] < 18){
+                    
+                    if (WaitingNumbers[i] < 15){
                         waitingballGraphicElement[x].className = "valign-wrapper blue"
         
                     }
-                    else if (WaitingNumbers[i] < 36){
+                    else if (WaitingNumbers[i] < 30){
                         waitingballGraphicElement[x].className = "valign-wrapper green"
         
                     }
-                    else if (WaitingNumbers[i] < 54){
+                    else if (WaitingNumbers[i] < 45){
                         waitingballGraphicElement[x].className = "valign-wrapper orange"
         
                     }
-                    else if (WaitingNumbers[i] < 72){
+                    else if (WaitingNumbers[i] < 60){
                         waitingballGraphicElement[x].className = "valign-wrapper white"
         
                     }
-                    else if (WaitingNumbers[i] < 91){
+                    else if (WaitingNumbers[i] < 75){
                         waitingballGraphicElement[x].className = "valign-wrapper red"
+        
+                    }
+                    else if (WaitingNumbers[i] < 91){
+                        waitingballGraphicElement[x].className = "valign-wrapper pink"
         
                     }
                     i += 1
@@ -805,6 +815,7 @@ const JoinGame = () => {
 
                 if (Numbers.includes((parseInt(ArrayNumber)))) {
                     document.getElementById(ElementID).style.backgroundColor = 'green'
+                    document.getElementById(ElementID).style.color = 'white'
 
 
 
@@ -814,20 +825,23 @@ const JoinGame = () => {
                     if (Number > 10){
                         ballGraphicText.className = ""
                     }
-                    if (Number < 18){
+                    if (Number < 15){
                         ballGraphicElement.className = "valign-wrapper blue"
                     }
-                    else if (Number < 36){
+                    else if (Number < 30){
                         ballGraphicElement.className = "valign-wrapper green"
                     }
-                    else if (Number < 54){
+                    else if (Number < 45){
                         ballGraphicElement.className = "valign-wrapper orange"
                     }
-                    else if (Number < 72){
+                    else if (Number < 60){
                         ballGraphicElement.className = "valign-wrapper white"
                     }
-                    else if (Number < 91){
+                    else if (Number < 75){
                         ballGraphicElement.className = "valign-wrapper red"
+                    }
+                    else if (Number < 91){
+                        ballGraphicElement.className = "valign-wrapper pink"
                     }
 
                 }
@@ -1615,7 +1629,7 @@ const JoinGame = () => {
             <MDBBtn className="mb-4" size='lg' onClick={PackageSubmit}>Submit</MDBBtn>
             </MDBCardBody>
             </MDBCard>
-        </div>
+            </div>
         </div>
         </>
         )}
@@ -1634,6 +1648,7 @@ const JoinGame = () => {
         {formState === "InGame" && (
             <>
             <PlayerNavBar/>
+            <div id="playerpage">
             <audio src="./AudioFiles/Number_1.mp3" id="Number_1_Audio"></audio>
             <audio src="./AudioFiles/Number_2.mp3" id="Number_2_Audio"></audio>
             <audio src="./AudioFiles/Number_3.mp3" id="Number_3_Audio"></audio>
@@ -1726,6 +1741,7 @@ const JoinGame = () => {
             <audio src="./AudioFiles/Number_90.mp3" id="Number_90_Audio"></audio>
             <section class="text-center">
 
+
           <div class="waitingrows">
             <div class="col-lg-4 col-md-12 mb-4">
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
@@ -1797,6 +1813,13 @@ const JoinGame = () => {
                     </tbody>
                 </table>
             </div>
+            <div class="waiting-card">
+                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                </div>
+                <div class="game-card-body">
+                    <p>Waiting Numbers</p>
+                </div>
+              </div>
             <div class="rows">
             <div class="col-lg-4 col-md-12 mb-4">
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
@@ -1821,6 +1844,7 @@ const JoinGame = () => {
 
             <div class="col-lg-4 col-md-6 mb-4">
             </div>
+          </div>
           </div>
             </>
 

@@ -2,7 +2,6 @@ import { Amplify, Auth} from 'aws-amplify';
 import awsExports from './aws-exports';
 import React, {useState} from 'react';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
-import "@fortawesome/fontawesome-free/css/all.min.css";
 import {Routes, Route,BrowserRouter} from 'react-router-dom';
 import 'react-toastify'
 import HostHome from './components/HostHome.js';
@@ -54,6 +53,7 @@ export default function App () {
             <Route path="Balance" element={<BalanceManager/>}></Route>
             <Route path="AddBalance" element={<AddBalance/>}></Route>
             <Route path="WithdrawBalance" element={<WithdrawBalance/>}></Route>
+            <Route path="HostHome" element={<HostHome/>}></Route>
           </Routes>
         </BrowserRouter>
       )

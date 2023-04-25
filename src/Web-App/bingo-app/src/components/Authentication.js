@@ -2,7 +2,6 @@ import { Amplify, Hub, Auth} from 'aws-amplify';
 import awsExports from '../aws-exports';
 import React, {useEffect, useState} from 'react';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
-import "@fortawesome/fontawesome-free/css/all.min.css";
 import { MDBBtn, MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput} from 'mdb-react-ui-kit';
 import {Routes, Route,BrowserRouter} from 'react-router-dom';
 import 'react-toastify'

@@ -34,7 +34,7 @@ div.app {
 }
 
 #ConfigurationContainer {
-    background-color: #bebebe;
+    background-color: #dbdbdb;
     position: fixed;
     padding-top: 10%;
     width: 100%;
@@ -42,37 +42,35 @@ div.app {
 }
 
 #PrizeMoneyConfiguration {
-  padding-top: 6%;
-  background-color: #bebebe;
+  background-color: #dbdbdb;
   width: 100%;
-  height: 25%;
+  height: 20%;
 } 
 
 #PrizeMoneyConfigurationTitle {
   padding-top: 1%;
   height: 20%;
-  background-color: #bebebe;
+  background-color: #dbdbdb;
 }
 
 #PrizeMoneyConfigurationSubmit {
-  padding-top: 20%;
-  background-color: #bebebe;
+  background-color: #dbdbdb;
 }
 
 #GameStartContainer {
-  background-color: #bebebe;
+  background-color: #dbdbdb;
   display: inline-block;
   vertical-align: middle;
 
   width: 50%;
 }
 #StartConf {
-  background-color: #bebebe;
+  background-color: #dbdbdb;
   padding-left: 15%;
 }
 
 #RestConf {
-  background-color: #bebebe;
+  background-color: #dbdbdb;
   padding-right: 15%;
 }
 
@@ -86,7 +84,7 @@ code {
 }
 
 .HorizontalScroll {
-  background-color: #bebebe;
+  background-color: #dbdbdb;
 }
 
 .Paypalcenter {
@@ -105,12 +103,12 @@ code {
 }
 
 #navcontainer{
-  background-color: #bebebe;
+  background-color: #dbdbdb;
   height: 100%;
   width: 100%;
 }
 #PaypalPage{
-  background-color: #bebebe;
+  background-color: #dbdbdb;
   height: 100%;
   width: 100%;
   padding-top: 7.5%;
@@ -146,21 +144,26 @@ code {
  #PackageSubmit {
   margin-top: 1vh;
   float: center;
-  background-color: #bebebe;
+  background-color: #dbdbdb;
 
  }
+ #Gamestart {
+  background-color: #dbdbdb;
+  height: 100%;
+}
  
 
  @media only screen and (min-width: 1024px) {
 
   #Gamestart {
-    background-color: #bebebe;
+    background-color: #dbdbdb;
     height: 100%;
   }
 
+
 }
  #Gamestart {
-  background-color: #bebebe;
+  background-color: #dbdbdb;
 }
 
  #PlayerList {
@@ -175,7 +178,7 @@ code {
 }
 
 #WaitingForGame {
-  background-color: #bebebe;
+  background-color: #dbdbdb;
   height: 100%
 }
 
@@ -249,6 +252,22 @@ margin-top: var(--mdb-gutter-y);
   align-content: center;
   flex-wrap: wrap;
 }
+.waiting-card{
+  padding-top: 50%;
+  margin-right: auto;
+  margin-left: auto;
+  display: flex;
+  border-radius: 1rem;
+  justify-content: center;
+  flex: 1 1 auto;
+  padding: 1.5rem 1.5rem;
+  height: 2vh;
+  color:white;
+  align-content: center;
+  text-align: center;
+  flex-wrap: wrap;
+  background-color: #3b71ca;
+}
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -269,9 +288,13 @@ margin-top: var(--mdb-gutter-y);
   margin-top: var(--mdb-gutter-y);
 }
 .game-start-card-body {
+  display: flex;
+  justify-content: center;
   flex: 1 1 auto;
   padding: 1.5rem 1.5rem;
   height: 15vh;
+  align-content: center;
+  flex-wrap: wrap;
 }
 
 
@@ -290,11 +313,12 @@ margin-top: var(--mdb-gutter-y);
   flex-wrap: wrap;
   justify-content: center;
   align-content: center;
-  background-color: #bebebe;
+  background-color: #dbdbdb;
 }
 #package-page{
-  background-color: #bebebe;
+  background-color: #dbdbdb;
 }
+
 
 .valign-wrapper {
   display: -webkit-box;
@@ -339,14 +363,14 @@ margin-top: var(--mdb-gutter-y);
   font-weight: normal;
   padding: 0.5em;
 }
-#ballGraphic.blue, #ballGraphic.red, #ballGraphic.white, #ballGraphic.green, #ballGraphic.orange {
+#ballGraphic.blue, #ballGraphic.red, #ballGraphic.white, #ballGraphic.green, #ballGraphic.orange, #ballGraphic.pink {
   margin-top: -0.5rem;
   position: relative;
   box-shadow: inset 0.5rem 0.5rem 1.5rem 0.25rem rgba(255,255,255,0.3), inset -0.25rem -0.25rem 1.5rem 0.5rem rgba(0,0,0,0.4);
 }
 
 #ballGraphic.blue:after, #ballGraphic.red:after,
-#ballGraphic.white:after, #ballGraphic.green:after, #ballGraphic.orange:after {
+#ballGraphic.white:after, #ballGraphic.green:after, #ballGraphic.orange:after, #ballGraphic.pink:after {
   content: '';
   background: radial-gradient(circle at 50% -150%, rgba(0,0,0,0.4), transparent);
   height: 0.75rem;
@@ -388,6 +412,12 @@ margin-top: var(--mdb-gutter-y);
 #ballGraphic.orange #ballText {
   border: 0.15rem solid #FFA500;
 }
+#ballGraphic.pink {
+  background: radial-gradient(circle at 20% 20%, #ff00b3, #990091);
+}
+#ballGraphic.pink #ballText {
+  border: 0.15rem solid #ff00b3;
+}
 
 #waitingballGraphic, #waitingballText {
   padding: 4%;
@@ -421,14 +451,14 @@ margin-top: var(--mdb-gutter-y);
   font-weight: normal;
   padding: 0.5em;
 }
-#waitingballGraphic.blue, #waitingballGraphic.red, #waitingballGraphic.white, #waitingballGraphic.green, #waitingballGraphic.orange {
+#waitingballGraphic.blue, #waitingballGraphic.red, #waitingballGraphic.white, #waitingballGraphic.green, #waitingballGraphic.orange, #waitingballGraphic.pink {
   margin-top: -0.5rem;
   position: relative;
   box-shadow: inset 0.5rem 0.5rem 1.5rem 0.25rem rgba(255,255,255,0.3), inset -0.25rem -0.25rem 1.5rem 0.5rem rgba(0,0,0,0.4);
 }
 
 #waitingballGraphic.blue:after, #waitingballGraphic.red:after,
-#waitingballGraphic.white:after, #waitingballGraphic.green:after, #waitingballGraphic.orange:after {
+#waitingballGraphic.white:after, #waitingballGraphic.green:after, #waitingballGraphic.orange:after, #waitingballGraphic.orange:after,#waitingballGraphic.pink:after {
   content: '';
   background: radial-gradient(circle at 50% -150%, rgba(0,0,0,0.4), transparent);
   height: 0.75rem;
@@ -470,8 +500,38 @@ margin-top: var(--mdb-gutter-y);
 #waitingballGraphic.orange #waitingballText {
   border: 0.15rem solid #FFA500;
 }
+#waitingballGraphic.pink {
+  background: radial-gradient(circle at 20% 20%, #ff00b3, #990091);
+}
+#waitingballGraphic.pink #waitingballText {
+  border: 0.15rem solid #ff00b3;
+}
 #playerpage {
-  background-color: #bebebe;
+  height: 100%;
+  background-color: #dbdbdb;
+}
+#hostpage {
+  height: 100%;
+  background-color: #dbdbdb;
+}
+
+
+.navlogo {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 2em;
+    height: 2em;
+    display: inline-block;
+    fill: currentColor;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    font-size: 1.5rem;
+    margin-right: 8px;
 }
 
 
@@ -490,4 +550,27 @@ margin-top: var(--mdb-gutter-y);
     padding-top: 15vh;
   }
 
+}
+
+@media (max-width: 900px){
+
+.navlogo {
+    display: none;
+}
+}
+
+
+@media (min-width: 900px){
+.mobilelogo {
+    display: none;
+}
+}
+
+.paypal-button-row  paypal-button-number-1{
+  display: none;
+}
+
+#prizemoneywrap{
+  display: flex;
+  flex-direction: column;
 }
