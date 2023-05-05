@@ -5,7 +5,7 @@ const Profile = () => {
     return (
     <>
     <HostNavBar/>
-    <h1>We are in your Host Profile</h1>
+    <h1 id="comingsoon">Coming Soon!</h1>
     </>
     )
 };

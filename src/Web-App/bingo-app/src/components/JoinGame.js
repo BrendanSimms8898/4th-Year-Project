@@ -1,8 +1,7 @@
 import React from "react";
 import PlayerNavBar from "./PlayerNavBar"
 import { MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput, MDBBtn} from 'mdb-react-ui-kit';
-import WebSocket from 'ws';
-import { Amplify, Hub, Auth} from 'aws-amplify';
+import { Amplify, Auth} from 'aws-amplify';
 import awsExports from "../aws-exports.js";
 
 const initialState = {
@@ -59,7 +58,7 @@ const JoinGame = () => {
         
     }
 
-    console.log(CurrentStage)
+
 
 
     function BooksForCurrentGame (CurrentGame) {
@@ -267,6 +266,7 @@ const JoinGame = () => {
 
     React.useEffect(() => {
         if (bestTicket !== null && Number !== null) {
+        console.log(Number)
         ClearTicketUI();
         updateTicketUI();
         updateWaitingOnNumbers(BooksForGame);
@@ -292,7 +292,6 @@ const JoinGame = () => {
         }
 
         if (CurrentGame > 1) {
-            console.log("IM HERE", CurrentGame)
             updateNumbers([])
             updateNumber(null)
             updateBestTicket(null)
@@ -315,7 +314,9 @@ const JoinGame = () => {
             
             updateBestTicket(NewBestTicket)
 
+            if (Numbers.length === 1) {
             PlayAudio(Number)
+            }
         }
 
         console.log(Numbers)
@@ -1749,15 +1750,16 @@ const JoinGame = () => {
             </div>
 
             <div class="col-lg-4 col-md-6 mb-4">
-
+            <div class="waitingcard"> 
+                <h3 id="WaitingNumbersHeader">Current Number</h3>
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
                 </div>
                 <div id="currentBall" class="valign-wrapper"><div id="ballGraphic" class="valign-wrapper"><span id="ballText">{Number}</span></div><span id="callNumber"></span></div>
-
+                </div>
             </div>
 
             <div class="col-lg-4 col-md-6 mb-4">
-              <div class="card">
+              <div class="waitingcard">
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
                 </div>
                 <div class="game-card-body">
@@ -1813,13 +1815,6 @@ const JoinGame = () => {
                     </tbody>
                 </table>
             </div>
-            <div class="waiting-card">
-                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                </div>
-                <div class="game-card-body">
-                    <p>Waiting Numbers</p>
-                </div>
-              </div>
             <div class="rows">
             <div class="col-lg-4 col-md-12 mb-4">
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
@@ -1827,7 +1822,8 @@ const JoinGame = () => {
             </div>
 
             <div class="col-lg-4 col-md-6 mb-4">
-
+            <div class="waitingcard"> 
+            <h3 id="WaitingNumbersHeader">Waiting Numbers</h3>
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
                 </div>
                 <div id="waitingBall"  class="valign-wrapper">
@@ -1841,7 +1837,7 @@ const JoinGame = () => {
                     </div>
 
             </div>
-
+            </div>
             <div class="col-lg-4 col-md-6 mb-4">
             </div>
           </div>

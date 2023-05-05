@@ -1,13 +1,11 @@
 import React from "react";
 import { MDBBtn, MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput} from 'mdb-react-ui-kit';
-import { Amplify, Hub, Auth} from 'aws-amplify';
+import { Amplify, Auth} from 'aws-amplify';
 import HostNavBar from "./HostNavBar";
 import awsExports from "../aws-exports.js";
 import HorizontalScroll from 'react-horizontal-scrolling'
-import WebSocket from 'ws';
-import { Button } from "@mui/material";
 import axios from 'axios'
-import zIndex from "@mui/material/styles/zIndex";
+
 
 Amplify.configure(awsExports);
 
@@ -30,7 +28,6 @@ const initialGameState = {
 const numbers = []
 
 const Players = []
-
 
 
 function HostGame () {
@@ -178,19 +175,19 @@ function HostGame () {
 
     console.log(Number)
     if (Number < 10 && Number !== null){
-        console.log("Im In this condition")
+
         ballGraphicText.className = "single"
     }
     if (Number > 10 && Number !== null){
         ballGraphicText.className = ""
     }
     if (Number === null){
-        console.log("Im In the correct IF condition")
+
         ballGraphicElement.className = "valign-wrapper"
         ballGraphicText.className = ""
     }
     else if (Number < 15){
-        console.log("Im In this condition")
+
         ballGraphicElement.className = "valign-wrapper blue"
     }
     else if (Number < 30){
@@ -210,6 +207,7 @@ function HostGame () {
     }
 
     }
+
 
     React.useEffect(() => {
       getUser();
@@ -306,7 +304,6 @@ function HostGame () {
             var Prize = 0
 
             if (Stage === "FirstLine") {
-                console.log("Im In the First If")
                 Prize = gameState.games[Game - 1]["PrizeFL"]
             }
             if (Stage === "DoubleLine") {
@@ -453,7 +450,8 @@ function HostGame () {
     }
 
     const StartGame = async () => {
-        updateGameState(() => ({ ...gameState, configurationStage: "Completed", currentGame: 1, CurrentPrizeSL: gameState.games[0]["PrizeFL"], CurrentPrizeDL: gameState.games[0]["PrizeDL"], CurrentPrizeFH: gameState.games[0]["PrizeFH"]})) 
+        updateGameState(() => ({ ...gameState, configurationStage: "Completed", currentGame: 1, CurrentPrizeSL: gameState.games[0]["PrizeFL"], CurrentPrizeDL: gameState.games[0]["PrizeDL"], CurrentPrizeFH: gameState.games[0]["PrizeFH"]
+    })) 
         if (isWebSocket != null) {
         isWebSocket.emit("GameStart")
         }
@@ -774,13 +772,16 @@ function HostGame () {
 
 
             <div class="col-lg-4 col-md-6 mb-4">
+            <div class="waitingcard"> 
+                <h3 id="WaitingNumbersHeader">Current Number</h3>
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
                 </div>
                 <div id="currentBall" class="valign-wrapper"><div id="ballGraphic" class="valign-wrapper"><span id="ballText">{Numbers[Numbers.length - 1]}</span></div><span id="callNumber"></span></div>
             </div>
+            </div>
 
             <div class="col-lg-4 col-md-6 mb-4">
-              <div class="card">
+              <div class="waitingcard">
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
                 </div>
                 <div class="game-card-body">

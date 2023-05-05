@@ -44,7 +44,7 @@
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-bingoapp-dev-161235-deployment/amplify-cfn-templates/auth/bingoapp0ccc17a6-cloudformation-template.json",
         "logicalId": "authbingoapp0ccc17a6"
       },
-      "lastPushTimeStamp": "2023-04-16T02:34:00.801Z",
+      "lastPushTimeStamp": "2023-05-04T11:32:18.338Z",
       "output": {
         "UserPoolId": "eu-west-1_FYm9eQUYe",
         "AppClientIDWeb": "2je2rg3b2qrtsqi9v1umvmqd6e",
@@ -67,7 +67,7 @@
         "Region": "eu-west-1",
         "HostingBucketName": "bingoapp-20230329125729-hostingbucket-dev"
       },
-      "lastPushTimeStamp": "2023-04-16T02:34:00.987Z",
+      "lastPushTimeStamp": "2023-05-04T11:32:18.344Z",
       "providerMetadata": {
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-bingoapp-dev-161235-deployment/amplify-cfn-templates/hosting/template.json",
         "logicalId": "hostingS3AndCloudFront"

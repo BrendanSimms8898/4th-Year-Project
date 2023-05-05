@@ -61,12 +61,3 @@ def XORStarMain():
     x = decimalToBinary(x)
     FinalAnswer = binary_to_decimal(x)
     return FinalAnswer
-
-def XORStarTest():
-    test_count = 20000
-    test_results = []
-
-    while len(test_results) <= test_count:
-        Result = XORStarMain()
-        test_results.append(Result)
-    return test_results

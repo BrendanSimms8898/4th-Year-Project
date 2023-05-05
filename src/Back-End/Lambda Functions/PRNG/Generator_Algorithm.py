@@ -58,8 +58,8 @@ def Test_Run():
     
     return test_results
 
-#print(Decide_Algorithim())
-print(Test_Run())
+print(Decide_Algorithim())
+
 
 '''
 Code for Testing

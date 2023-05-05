@@ -243,7 +243,7 @@ def GenerateBook():
     while len(Numbers) != 0:
         PopulateTickets(Numbers, Book, Ticket_One, Ticket_Two, Ticket_Three, Ticket_Four, Ticket_Five, Ticket_Six)
 
-    print(Book)
+    return Book
 
 GenerateBook()
 

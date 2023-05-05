@@ -1,6 +1,5 @@
 import React from "react";
 import HostNavBar from "./HostNavBar";
-import PlayerNavBar from "./PlayerNavBar";
 import { Amplify, Auth} from 'aws-amplify';
 import awsExports from "../aws-exports.js";
 
@@ -26,7 +25,7 @@ const Reports = () => {
             return (
                 <>
                 <HostNavBar/>
-                <h1>We are in reports</h1>
+                <h1 id="comingsoon">Currently In Development</h1>
                 </>
             )
         }
