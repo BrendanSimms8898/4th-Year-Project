@@ -3,7 +3,7 @@ import PlayerNavBar from "./PlayerNavBar";
 import bingoImage from "./player-bingo.png";
 import { motion } from "framer-motion";
 import "./JoinGame.js";
-import { Outlet, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const PlayerHome = () => {
   return (

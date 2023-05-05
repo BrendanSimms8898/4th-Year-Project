@@ -3,7 +3,7 @@ import HostNavBar from "./HostNavBar";
 import bingoImage from "./bingo.png";
 import { motion } from "framer-motion";
 import "./JoinGame.js";
-import { Outlet, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const HostHome = () => {
   return (

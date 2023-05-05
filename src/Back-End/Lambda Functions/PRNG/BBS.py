@@ -109,12 +109,4 @@ def BBS_Main():
         FinalNumber = gen_num(seed)
     return FinalNumber
 
-#test function to run the BBS 20,000 times for us to use        
-def BBS_Test():
-    test_results = []
-    test_count = 20000
-    
-    while len(test_results) <= test_count:
-        Result = BBS_Main()
-        test_results.append(Result)
-    return test_results
+

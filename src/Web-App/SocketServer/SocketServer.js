@@ -407,7 +407,7 @@ io.of("/").adapter.on("delete-room", (room) => {
   console.log(`room ${room} was deleted`);
 });
 
-console.log("hi");
+console.log("Server Started");
 
 httpServer.listen(1025);
 
